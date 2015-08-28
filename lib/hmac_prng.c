@@ -138,7 +138,7 @@ int32_t tc_hmac_prng_reseed (
       seedlen < MIN_SLEN ||
       seedlen > MAX_SLEN) {
     return TC_FAIL;
-  } 
+  }
   
   if (additional_input != (const uint8_t *) 0) {
     /* Abort if additional_input is provided but has inappropriate length */

@@ -150,7 +150,9 @@ static const uint32_t k256[64] = {
   0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
 };
 
-#define ROTR(a,n) (((a) >> n) | ((a) << (32 - n)))
+static inline uint32_t ROTR (uint32_t a, uint32_t n) {
+  return (((a) >> n) | ((a) << (32 - n)));
+}
 
 #define Sigma0(a) (ROTR((a),2) ^ ROTR((a),13) ^ ROTR((a),22))
 #define Sigma1(a) (ROTR((a),6) ^ ROTR((a),11) ^ ROTR((a),25))
