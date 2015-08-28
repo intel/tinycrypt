@@ -65,26 +65,29 @@
 
 #include "aes.h"
 
-/*
- *  CTR mode encryption/decryption procedure.
- *
- *  Assumes:    - The current value in ctr has NOT been used with sched;
- *              - out points to inlen bytes;
- *              - in points to inlen bytes;
- *              - ctr is an integer counter in littleEndian format;
- *              - sched was initialized by aes_set_encrypt_key.
- *
- *  Effects:    CTR mode encrypts (or decrypts) inlen bytes from in buffer into
- *              out buffer and returns 1.
- *
- *  Exceptions: Returns 0 if:
+/**
+ *  @brief CTR mode encryption/decryption procedure.
+ *  CTR mode encrypts (or decrypts) inlen bytes from in buffer into out buffer
+ *  @return returns TC_SUCCESS (1)
+ *  @exception returns TC_FAIL (0) if:
  *                out == NULL or
  *                in == NULL or
  *                ctr == NULL or
  *                sched == NULL or
  *                inlen == 0 or
  *                outlen == 0 or
- *                inlen != outlen.
+ *                inlen != outlen
+ *  @note Assumes:- The current value in ctr has NOT been used with sched
+ *              - out points to inlen bytes
+ *              - in points to inlen bytes
+ *              - ctr is an integer counter in littleEndian format
+ *              - sched was initialized by aes_set_encrypt_key
+ * @param out OUT -- produced ciphertext (plaintext)
+ * @param outlen IN -- length of ciphertext buffer in bytes
+ * @param in IN -- data to encrypt (or decrypt)
+ * @param inlen IN -- length of input data in bytes
+ * @param ctr IN/OUT -- the current counter value
+ * @param sched IN -- an initialized AES key schedule
  */
 int32_t tc_ctr_mode (
   uint8_t *out,

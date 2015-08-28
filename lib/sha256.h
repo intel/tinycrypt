@@ -69,51 +69,48 @@ struct tc_sha256_state_struct {
 
 typedef struct tc_sha256_state_struct *TCSha256State_t;
 
-/*
- *  SHA256 initialization procedure.
- *
- *  Effects:    Initializes s and returns 1
- *
- *  Exceptions: Returns 0 if:
- *                s == NULL.
+/**
+ *  @brief SHA256 initialization procedure
+ *  Initializes s
+ *  @return returns TC_SUCCESS (1)
+ *  @exception returns TC_FAIL (0) if s == NULL
+ *  @param s Sha256 state struct
  */
 int32_t tc_sha256_init (TCSha256State_t s);
 
-/*
- *  SHA256 update procedure.
- *
- *  Assumes:    s has been initialized by sha256_init
- *
- *  Effects:    Hashes data_length bytes addressed by data into state s and
- *              returns 1
- *
- *  Exceptions: Returns 0 if:
+/**
+ *  @brief SHA256 update procedure
+ *  Hashes data_length bytes addressed by data into state s
+ *  @return returns TC_SUCCESS (1)
+ *  @exception returns TC_FAIl (0) if:
  *                s == NULL,
  *                s->iv == NULL,
- *                data == NULL.
- *
- *  Note:       The state buffer 'leftover' is left in memory after processing.
- *              If your application intends to have sensitive data in this
- *              buffer, remind to erase it after the data has been processed.
+ *                data == NULL
+ *  @note Assumes s has been initialized by tc_sha256_init
+ *  @warning The state buffer 'leftover' is left in memory after processing
+ *           If your application intends to have sensitive data in this
+ *           buffer, remind to erase it after the data has been processed
+ *  @param s Sha256 state struct
+ *  @param data message to hash
+ *  @param datalen length of message to hash
  */
 int32_t tc_sha256_update (TCSha256State_t s, const uint8_t *data, size_t datalen);
 
-/*
- *  SHA256 final procedure.
- *
- *  Assumes:    s has been initialized by sha256_init
- *              digest points to at least SHA256_DIGEST_SIZE bytes
- *
- *  Effects:    Inserts the completed hash computation into digest and returns 1
- *
- *  Exceptions: Returns 0 if:
+/**
+ *  @brief SHA256 final procedure
+ *  Inserts the completed hash computation into digest
+ *  @return returns TC_SUCCESS (1)
+ *  @exception returns TC_FAIL (0) if:
  *                s == NULL,
  *                s->iv == NULL,
- *                digest == NULL.
- *
- *  Note:       The state buffer 'leftover' is left in memory after processing.
- *              If your application intends to have sensitive data in this
- *              buffer, remind to erase it after the data has been processed.
+ *                digest == NULL
+ *  @note Assumes: s has been initialized by tc_sha256_init
+ *        digest points to at least TC_SHA256_DIGEST_SIZE bytes
+ *  @warning The state buffer 'leftover' is left in memory after processing
+ *           If your application intends to have sensitive data in this
+ *           buffer, remind to erase it after the data has been processed
+ *  @param digest unigned eight bit integer
+ *  @param Sha256 state struct
  */
 int32_t tc_sha256_final (uint8_t *digest, TCSha256State_t s);
 

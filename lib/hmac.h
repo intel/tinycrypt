@@ -67,65 +67,62 @@ struct tc_hmac_state_struct {
 };
 typedef struct tc_hmac_state_struct *TCHmacState_t;
 
-/*
- *  HMAC set key procedure.
- *
- *  Effects:  Configures ctx to use key and returns 1
- *
- *  Exceptions:  Returns 0 if
+/**
+ *  @brief HMAC set key procedure
+ *  Configures ctx to use key
+ *  @return returns TC_SUCCESS (1)
+ *  @exception returns TC_FAIL (0) if
  *                ctx == NULL or
  *                key == NULL or
- *                key_size == 0.
+ *                key_size == 0
+ * @param ctx IN/OUT -- the struct tc_hmac_state_struct to initial
+ * @param key IN -- the HMAC key to configure
+ * @param key_size IN -- the HMAC key size
  */
 int32_t tc_hmac_set_key (
   TCHmacState_t ctx,
   const uint8_t *key,
   uint32_t key_size);
 
-/*
- *  HMAC init procedure.
- *
- *  Effects:  Initializes ctx to begin the next HMAC operation and returns 1
- *
- *  Exceptions: Returns 0 if:
- *                ctx == NULL or
- *                key == NULL.
+/**
+ * @brief HMAC init procedure
+ * Initializes ctx to begin the next HMAC operation
+ * @return returns TC_SUCCESS (1)
+ * @exception returns TC_FAIL (0) if: ctx == NULL or key == NULL
+ * @param ctx IN/OUT -- struct tc_hmac_state_struct buffer to init
  */
 int32_t tc_hmac_init (
   TCHmacState_t ctx);
 
-/*
- *  HMAC update procedure.
- *
- *  Assumes:    state has been initialized by hmac_init
- *
- *  Effects:    Mixes data_length bytes addressed by data into state and
- *              returns 1
- *
- *  Exceptions: Returns 0 if:
- *                ctx == NULL or
- *                key == NULL.
- *
+/**
+ *  @brief HMAC update procedure
+ *  Mixes data_length bytes addressed by data into state
+ *  @return returns TC_SUCCCESS (1)
+ *  @exception returns TC_FAIL (0) if: ctx == NULL or key == NULL
+ *  @note Assumes state has been initialized by tc_hmac_init
+ *  @param ctx IN/OUT -- state of HMAC computation so far
+ *  @param data IN -- data to incorporate into state
+ *  @param data_length IN -- size of data in bytes
  */
 int32_t tc_hmac_update (
   TCHmacState_t ctx,
   const void *data,
   uint32_t data_length);
 
-/*
- *  HMAC final procedure.
- *
- *  Assumes:    The tag bufer is at least sizeof(hmac_tag_size(state)) bytes
- *              state has been initialized by hmac_init
- *
- *  Effects:    Writes the HMAC tag into the tag buffer and returns 1
- *
- *  Exceptions: Returns 0 if:
+/**
+ *  @brief HMAC final procedure
+ *  Writes the HMAC tag into the tag buffer
+ *  @return returns TC_SUCCESS (1)
+ *  @exception returns TC_FAIL (0) if:
  *                tag == NULL or
  *                ctx == NULL or
  *                key == NULL or
- *                taglen != SHA256_DIGEST_SIZE.
- *
+ *                taglen != TC_SHA256_DIGEST_SIZE
+ *  @note Assumes the tag bufer is at least sizeof(hmac_tag_size(state)) bytes
+ *  state has been initialized by tc_hmac_init
+ *  @param tag IN/OUT -- buffer to receive computed HMAC tag
+ *  @param taglen IN -- size of tag in bytes
+ *  @param ctx IN -- the HMAC state for computing tag
  */
 int32_t tc_hmac_final (
   uint8_t *tag,

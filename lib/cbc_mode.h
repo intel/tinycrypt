@@ -72,29 +72,32 @@
 
 #include "aes.h"
 
-/*
- *  CBC encryption procedure.
- *
- *  Assumes:    - sched has been configured by aes_set_encrypt_key;
- *              - iv contains a 16 byte random string;
- *              - out buffer is large enough to hold the ciphertext + iv;
- *              - out buffer is a contiguous buffer;
- *              - in holds the plaintext and is a contiguous buffer;
- *              - inlen gives the number of bytes in the in buffer.
- *
- *  Effects:    CBC encrypts inlen bytes of the in buffer into the out buffer
- *              using the encryption key schedule provided, prepends iv
- *              to out, and returns 1.
- *
- *  Exceptions: Returns 0 if:
+/**
+ *  @brief CBC encryption procedure
+ *  CBC encrypts inlen bytes of the in buffer into the out buffer
+ *  using the encryption key schedule provided, prepends iv to out
+ *  @return returns TC_SUCCESS (1)
+ *  @exception Returns TC_FAIL (0) if:
  *                out == NULL or
  *                in == NULL or
  *                ctr == NULL or
  *                sched == NULL or
  *                inlen == 0 or
- *                (inlen % AES_BLOCK_SIZE) != 0 or
- *                (outlen % AES_BLOCK_SIZE) != 0 or
- *                outlen != inlen + AES_BLOCK_SIZE.
+ *                (inlen % TC_AES_BLOCK_SIZE) != 0 or
+ *                (outlen % TC_AES_BLOCK_SIZE) != 0 or
+ *                outlen != inlen + TC_AES_BLOCK_SIZE
+ *  @note Assumes: - sched has been configured by aes_set_encrypt_key
+ *              - iv contains a 16 byte random string
+ *              - out buffer is large enough to hold the ciphertext + iv
+ *              - out buffer is a contiguous buffer
+ *              - in holds the plaintext and is a contiguous buffer
+ *              - inlen gives the number of bytes in the in buffer
+ *  @param out IN/OUT -- buffer to receive the ciphertext
+ *  @param outlen IN -- length of ciphertext buffer in bytes
+ *  @param in IN -- plaintext to encrypt
+ *  @param inlen IN -- length of plaintext buffer in bytes
+ *  @param iv IN -- the IV for the this encrypt/decrypt
+ *  @param sched IN --  AES key schedule for this encrypt
  */
 int32_t tc_cbc_mode_encrypt (
   uint8_t *out,
@@ -104,29 +107,33 @@ int32_t tc_cbc_mode_encrypt (
   const uint8_t *iv,
   const TCAesKeySched_t sched);
 
-/*
- *  CBC decryption procedure.
- *
- *  Assumes:    - in == iv + ciphertext, i.e. the iv and the ciphertext are
- *                contiguous. This allows for a very efficient decryption
- *                algorithm that would not otherwise be possible;
- *              - sched was configured by aes_set_decrypt_key;
- *              - out buffer is large enough to hold the decrypted plaintext
- *              and is a contiguous buffer;
- *              - inlen gives the number of bytes in the in buffer.
- *
- *  Effects:    CBC decrypts inlen bytes of the in buffer into the out buffer
- *              using the encryption key schedule provided by a, and returns 1.
- *
- *  Exceptions: Returns 0 if:
+/**
+ * @brief CBC decryption procedure
+ * CBC decrypts inlen bytes of the in buffer into the out buffer
+ * using the encryption key schedule provided by a
+ * @return returns TC_SUCCESS (1)
+ * @exception returns TC_FAIL (0) if:
  *                out == NULL or
  *                in == NULL or
  *                sched == NULL or
  *                inlen == 0 or
  *                outlen == 0 or
- *                (inlen % AES_BLOCK_SIZE) != 0 or
- *                (outlen % AES_BLOCK_SIZE) != 0 or
- *                outlen != inlen + AES_BLOCK_SIZE.
+ *                (inlen % TC_AES_BLOCK_SIZE) != 0 or
+ *                (outlen % TC_AES_BLOCK_SIZE) != 0 or
+ *                outlen != inlen + TC_AES_BLOCK_SIZE
+ * @note Assumes:- in == iv + ciphertext, i.e. the iv and the ciphertext are
+ *                contiguous. This allows for a very efficient decryption
+ *                algorithm that would not otherwise be possible
+ *              - sched was configured by aes_set_decrypt_key
+ *              - out buffer is large enough to hold the decrypted plaintext
+ *              and is a contiguous buffer
+ *              - inlen gives the number of bytes in the in buffer
+ * @param out IN/OUT -- buffer to receive decrypted data
+ * @param outlen IN -- length of plaintext buffer in bytes
+ * @param in IN -- ciphertext to decrypt, including IV
+ * @param inlen IN -- length of ciphertext buffer in bytes
+ * @param iv IN -- the IV for the this encrypt/decrypt
+ * @param sched IN --  AES key schedule for this decrypt
  *
  */
 int32_t tc_cbc_mode_decrypt (

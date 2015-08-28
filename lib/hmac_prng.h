@@ -76,50 +76,52 @@ struct tc_hmac_prng_struct {
 
 typedef struct tc_hmac_prng_struct *TCHmacPrng_t;
 
-/*
- *  HMAC-PRNG initialization procedure.
- *
- *  Assumes:    - personalization != NULL.
- *              The personalization is a platform unique string (e.g., the host
- *              name) and is the last line of defense against failure of the
- *              entropy source.
- *
- *  Effects:    Initializes prng with personalization, disables
- *              hmac_prng_generate, and returns 1.
- *
- *  Exceptions: Returns 0 if:
+/**
+ *  @brief HMAC-PRNG initialization procedure
+ *  Initializes prng with personalization, disables tc_hmac_prng_generate
+ *  @return returns TC_SUCCESS (1)
+ *  @exception returns TC_FAIL (0) if:
  *                prng == NULL,
  *                personalization == NULL,
- *                plen > MAX_PLEN.
- *
- *  Note:       NIST SP 800-90A specifies 3 items as seed material during
+ *                plen > MAX_PLEN
+ *  @note Assumes: - personalization != NULL.
+ *              The personalization is a platform unique string (e.g., the host
+ *              name) and is the last line of defense against failure of the
+ *              entropy source
+ *  @warning    NIST SP 800-90A specifies 3 items as seed material during
  *              initialization: entropy seed, personalization, and an optional
  *              nonce. TinyCrypts requires instead a non-null personalization
  *              (which is easily computed) and indirectly requires an entropy
  *              seed (since the reseed function is mandatorily called after
- *              init).
- *
+ *              init)
+ *  @param prng IN/OUT -- the PRNG state to initialize
+ *  @param personalization IN -- personalization string
+ *  @param plen IN -- personalization length in bytes
  */
 int32_t tc_hmac_prng_init (
     TCHmacPrng_t prng,
     const uint8_t *personalization,
     uint32_t plen);
 
-/*
- *  HMAC-PRNG reseed procedure.
- *
- *  Assumes:    - hmac_prng_init has been called for prng
- *              - seed has sufficient entropy.
- *
- *  Effects:    Mixes seed into prng, enables hmac_prng_generate, and returns 1
- *
- *  Exceptions: Returns 0 if:
+/**
+ *  @brief HMAC-PRNG reseed procedure
+ *  Mixes seed into prng, enables tc_hmac_prng_generate
+ *  @return returns  TC_SUCCESS (1)
+ *  @exception returns TC_FAIL (0) if:
  *          prng == NULL,
  *          seed == NULL,
  *          seedlen < MIN_SLEN,
  *          seendlen > MAX_SLEN,
  *          additional_input != (const uint8_t *) 0 && additionallen == 0,
- *          additional_input != (const uint8_t *) 0 && additionallen > MAX_ALEN.
+ *          additional_input != (const uint8_t *) 0 && additionallen > MAX_ALEN
+ *  @note Assumes:- tc_hmac_prng_init has been called for prng
+ *              - seed has sufficient entropy.
+ *
+ *  @param prng IN/OUT -- the PRNG state
+ *  @param seed IN -- entropy to mix into the prng
+ *  @param seedlen IN -- length of seed in bytes
+ *  @param additional_input IN -- additional input to the prng
+ *  @param additionallen IN -- additional input length in bytes
  */
 int32_t tc_hmac_prng_reseed (
     TCHmacPrng_t prng,
@@ -128,22 +130,20 @@ int32_t tc_hmac_prng_reseed (
     const uint8_t *additional_input,
     uint32_t additionallen);
 
-/*
- *  HMAC-PRNG generate procedure.
- *
- *  Assumes:    - hmac_prng_init has been called for prng.
- *
- *  Effects:    Generates outlen pseudo-random bytes into out buffer, updates
- *              prng, and returns 1
- *
- *  Exceptions: Returns -1 if:
- *                a reseed is needed
- *
- *               Returns 0 if:
+/**
+ *  @brief HMAC-PRNG generate procedure
+ *  Generates outlen pseudo-random bytes into out buffer, updates prng
+ *  @return returns TC_SUCCESS (1)
+ *  @exception returns TC_RESEED_REQ (-1) if a reseed is needed
+ *             returns TC_FAIL (0) if:
  *                out == NULL,
  *                prng == NULL,
  *                outlen == 0,
- *                outlen >= MAX_OUT.
+ *                outlen >= MAX_OUT
+ *  @note Assumes tc_hmac_prng_init has been called for prng
+ *  @param out IN/OUT -- buffer to receive output
+ *  @param outlen IN -- size of out buffer in bytes
+ *  @param prng IN/OUT -- the PRNG state
  */
 int32_t tc_hmac_prng_generate (
     uint8_t *out,
