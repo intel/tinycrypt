@@ -134,7 +134,7 @@ int32_t tc_sha256_final (uint8_t *digest, TCSha256State_t s) {
 }
 
 /* Initializing SHA-256 Hash constant words K.
-   These values correspond to the first 32 bits of the fractional parts of the 
+   These values correspond to the first 32 bits of the fractional parts of the
    cube roots of the first 64 primes between 2 and 311. */
 static const uint32_t k256[64] = {
   0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1,

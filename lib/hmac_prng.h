@@ -31,17 +31,17 @@
  *  hmac_prng.h -- Interface to an HMAC-PRNG implementation.
  *
  *  Overview:   A pseudo-random number generator (PRNG) generates a sequence
- *  		        of numbers that have a distribution close to the one expected
- *  		        for a sequence of truly random numbers. The NIST Special
- *  		        Publication 800-90A specifies several mechanisms to generate
- *  		        sequences of pseudo random numbers, including the HMAC-PRNG one
- *  		        which is based on HMAC. TinyCrypt implements HMAC-PRNG with
- *  		        certain modifications from the NIST SP 800-90A spec.
+ *                      of numbers that have a distribution close to the one expected
+ *                      for a sequence of truly random numbers. The NIST Special
+ *                      Publication 800-90A specifies several mechanisms to generate
+ *                      sequences of pseudo random numbers, including the HMAC-PRNG one
+ *                      which is based on HMAC. TinyCrypt implements HMAC-PRNG with
+ *                      certain modifications from the NIST SP 800-90A spec.
  *
  *  Security:   A cryptographically secure PRNG depends on the existence of an
- *  		        entropy source to provide a truly random seed as well as the
- *  		        security of the primitives used as the building blocks (HMAC and
- *  		        SHA256, for TinyCrypt).
+ *                      entropy source to provide a truly random seed as well as the
+ *                      security of the primitives used as the building blocks (HMAC and
+ *                      SHA256, for TinyCrypt).
  *
  *              The NIST SP 800-90A standard tolerates a null personalization,
  *              while TinyCrypt requires a non-null personalization. This is
