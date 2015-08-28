@@ -58,7 +58,7 @@ int32_t tc_hmac_set_key (TCHmacState_t ctx, const uint8_t *key, uint32_t key_siz
   if (ctx == (TCHmacState_t) 0 ||
       key == (const uint8_t *) 0 ||
       key_size == 0) {
-    return 0;
+    return TC_FAIL;
   }
 
   const uint8_t dummy_key[key_size];
@@ -83,7 +83,7 @@ int32_t tc_hmac_set_key (TCHmacState_t ctx, const uint8_t *key, uint32_t key_siz
     rekey (ctx->key, &ctx->key[TC_SHA256_DIGEST_SIZE], TC_SHA256_DIGEST_SIZE);
   }
 
-  return 1;
+  return TC_SUCCESS;
 }
 
 int32_t tc_hmac_init (TCHmacState_t ctx) {
@@ -91,13 +91,13 @@ int32_t tc_hmac_init (TCHmacState_t ctx) {
   /* input sanity check: */
   if (ctx == (TCHmacState_t) 0 ||
       ctx->key == (uint8_t *) 0) {
-    return 0;
+    return TC_FAIL;
   }
 
   (void) tc_sha256_init (&ctx->hash_state);
   (void) tc_sha256_update (&ctx->hash_state, ctx->key, TC_SHA256_BLOCK_SIZE);
 
-  return 1;
+  return TC_SUCCESS;
 }
 
 int32_t tc_hmac_update (TCHmacState_t ctx, const void *data, uint32_t data_length) {
@@ -105,12 +105,12 @@ int32_t tc_hmac_update (TCHmacState_t ctx, const void *data, uint32_t data_lengt
   /* input sanity check: */
   if (ctx == (TCHmacState_t) 0 ||
       ctx->key == (uint8_t *) 0) {
-    return 0;
+    return TC_FAIL;
   }
 
   (void) tc_sha256_update (&ctx->hash_state, data, data_length);
 
-  return 1;
+  return TC_SUCCESS;
 }
 
 int32_t tc_hmac_final (uint8_t *tag, uint32_t taglen, TCHmacState_t ctx) {
@@ -120,7 +120,7 @@ int32_t tc_hmac_final (uint8_t *tag, uint32_t taglen, TCHmacState_t ctx) {
       taglen != TC_SHA256_DIGEST_SIZE ||
       ctx == (TCHmacState_t) 0 ||
       ctx->key == (uint8_t *) 0) {
-    return 0;
+    return TC_FAIL;
   }
 
   (void) tc_sha256_final (tag, &ctx->hash_state);
@@ -131,5 +131,5 @@ int32_t tc_hmac_final (uint8_t *tag, uint32_t taglen, TCHmacState_t ctx) {
   (void) tc_sha256_update (&ctx->hash_state, tag, TC_SHA256_DIGEST_SIZE);
   (void) tc_sha256_final (tag, &ctx->hash_state);
 
-  return 1;
+  return TC_SUCCESS;
 }

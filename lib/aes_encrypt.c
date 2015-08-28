@@ -75,9 +75,9 @@ int32_t tc_aes128_set_encrypt_key (TCAesKeySched_t s, const uint8_t *k) {
   uint32_t t;
 
   if (s == (TCAesKeySched_t) 0) {
-    return 0;
+    return TC_FAIL;
   } else if (k == (const uint8_t *) 0) {
-    return 0;
+    return TC_FAIL;
   }
 
   for (i = 0; i < Nk; ++i) {
@@ -91,7 +91,7 @@ int32_t tc_aes128_set_encrypt_key (TCAesKeySched_t s, const uint8_t *k) {
     s->words[i] = s->words[i-Nk] ^ t;
   }
 
-  return 1;
+  return TC_SUCCESS;
 }
 
 static inline void add_round_key (uint8_t *s, const uint32_t *k) {
@@ -151,11 +151,11 @@ int32_t tc_aes_encrypt (
   uint32_t i;
 
   if (out == (uint8_t *) 0) {
-    return 0;
+    return TC_FAIL;
   } else if (in == (const uint8_t *) 0) {
-    return 0;
+    return TC_FAIL;
   } else if (s == (TCAesKeySched_t) 0) {
-    return 0;
+    return TC_FAIL;
   }
 
   (void) copy (state, sizeof (state), in, sizeof (state));
@@ -175,5 +175,5 @@ int32_t tc_aes_encrypt (
   (void) copy (out, sizeof (state), state, sizeof (state));
   set (state, 0x00, sizeof (state));
 
-  return 1;
+  return TC_SUCCESS;
 }

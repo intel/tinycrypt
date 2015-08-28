@@ -57,7 +57,7 @@ int32_t tc_cbc_mode_encrypt (
       (inlen % TC_AES_BLOCK_SIZE) != 0 ||
       (outlen % TC_AES_BLOCK_SIZE) != 0 ||
       outlen != inlen + TC_AES_BLOCK_SIZE) {
-    return 0;
+    return TC_FAIL;
   }
 
   /* copy iv to the buffer */
@@ -76,7 +76,7 @@ int32_t tc_cbc_mode_encrypt (
     }
   }
 
-  return 1;
+  return TC_SUCCESS;
 }
 
 int32_t tc_cbc_mode_decrypt (
@@ -100,7 +100,7 @@ int32_t tc_cbc_mode_decrypt (
       (inlen % TC_AES_BLOCK_SIZE) != 0 ||
       (outlen % TC_AES_BLOCK_SIZE) != 0 ||
       outlen != inlen - TC_AES_BLOCK_SIZE) {
-    return 0;
+    return TC_FAIL;
   }
 
   /* Note that in == iv + ciphertext, i.e. the iv and the ciphertext are
@@ -116,5 +116,5 @@ int32_t tc_cbc_mode_decrypt (
     *out++ = buffer[m++] ^ *p++;
   }
 
-  return 1;
+  return TC_SUCCESS;
 }

@@ -36,6 +36,9 @@
 
 #include <string.h>
 
+#define MASK_MOST_SIG_BIT 0x80
+#define MASK_TWENTY_SEVEN 0x1b
+
 uint32_t  copy (uint8_t *to,
     uint32_t to_len,
     const uint8_t *from,
@@ -45,7 +48,7 @@ uint32_t  copy (uint8_t *to,
     (void) memcpy (to, from, from_len);
     return from_len;
   } else {
-    return 0;
+    return TC_FAIL;
   }
 }
 
@@ -53,6 +56,7 @@ void set (uint8_t *to, uint8_t val, uint32_t len) {
   (void) memset (to, val, len);
 }
 
+/*Doubles the value of a byte for values up to 127. Original 'return ((a<<1) ^ ((a>>7) * 0x1b))' re-written to avoid extra multiplicaiton which the compiler won't be able to optimize */
 uint8_t double_byte (uint8_t a) {
-  return (a & 0x80) ? ((a << 1) ^ 0x1b) : (a << 1);
+  return (a & MASK_MOST_SIG_BIT) ? ((a << 1) ^ MASK_TWENTY_SEVEN) : (a << 1);
 }

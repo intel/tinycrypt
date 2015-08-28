@@ -37,6 +37,7 @@
 #include "aes.h"
 #include "utils.h"
 
+#define ZERO_BYTE 0x00
 static const uint8_t inv_sbox[256] = {
   0x52, 0x09, 0x6a, 0xd5, 0x30, 0x36, 0xa5, 0x38, 0xbf, 0x40, 0xa3, 0x9e,
   0x81, 0xf3, 0xd7, 0xfb, 0x7c, 0xe3, 0x39, 0x82, 0x9b, 0x2f, 0xff, 0x87,
@@ -129,11 +130,11 @@ int32_t tc_aes_decrypt (
   uint32_t i;
 
   if (out == (uint8_t *) 0) {
-    return 0;
+    return TC_FAIL;
   } else if (in == (const uint8_t *) 0) {
-    return 0;
+    return TC_FAIL;
   } else if (s == (TCAesKeySched_t) 0) {
-    return 0;
+    return TC_FAIL;
   }
 
   (void) copy (state, sizeof (state), in, sizeof (state));
@@ -152,7 +153,8 @@ int32_t tc_aes_decrypt (
   add_round_key (state, s->words);
 
   (void) copy (out, sizeof (state), state, sizeof (state));
-  set (state, 0x00, sizeof (state));
+  //zeroing out one byte state buffer
+  set (state, ZERO_BYTE, sizeof (state));
 
-  return 1;
+  return TC_SUCCESS;
 }

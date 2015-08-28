@@ -37,10 +37,14 @@
 
 #include <stdint.h>
 
+#define TC_SUCCESS 1
+#define TC_FAIL 0
+#define TC_RESEED_REQ -1
+
 /*
  * Copy the the buffer 'from' to the buffer 'to'.
  *
- * Exceptions: returns 0 if:
+ * Exceptions: returns TC_FAIL (0) if:
  *             from_len > to_len.
  */
 uint32_t copy (

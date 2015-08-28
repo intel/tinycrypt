@@ -58,7 +58,7 @@ int32_t tc_ctr_mode (
       inlen == 0 ||
       outlen == 0 ||
       outlen != inlen) {
-    return 0;
+    return TC_FAIL;
   }
 
   /* copy the ctr to the nonce */
@@ -76,7 +76,7 @@ int32_t tc_ctr_mode (
         nonce[14] = (uint8_t)(block_num >> 8);
         nonce[15] = (uint8_t)(block_num);
       } else {
-        return 0;
+        return TC_FAIL;
       }
     }
     /* update the output */
@@ -87,5 +87,5 @@ int32_t tc_ctr_mode (
   ctr[12] = nonce[12]; ctr[13] = nonce[13];
   ctr[14] = nonce[14]; ctr[15] = nonce[15];
 
-  return 1;
+  return TC_SUCCESS;
 }

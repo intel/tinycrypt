@@ -43,7 +43,7 @@ int32_t tc_sha256_init (TCSha256State_t s) {
 
   /* input sanity check: */
   if (s == (TCSha256State_t) 0) {
-    return 0;
+    return TC_FAIL;
   }
 
   /* Setting the initial state values.
@@ -59,7 +59,7 @@ int32_t tc_sha256_init (TCSha256State_t s) {
   s->iv[6] = 0x1f83d9ab;
   s->iv[7] = 0x5be0cd19;
 
-  return 1;
+  return TC_SUCCESS;
 }
 
 int32_t tc_sha256_update (TCSha256State_t s, const uint8_t* data, size_t datalen) {
@@ -68,9 +68,9 @@ int32_t tc_sha256_update (TCSha256State_t s, const uint8_t* data, size_t datalen
   if (s == (TCSha256State_t) 0 ||
       s->iv == (uint32_t *) 0 ||
       data == (void *) 0) {
-    return 0;
+    return TC_FAIL;
   } else if (datalen == 0) {
-    return  1;
+    return TC_SUCCESS;
   }
 
   while (datalen-- > 0) {
@@ -82,7 +82,7 @@ int32_t tc_sha256_update (TCSha256State_t s, const uint8_t* data, size_t datalen
     }
   }
 
-  return 1;
+  return TC_SUCCESS;
 }
 
 int32_t tc_sha256_final (uint8_t *digest, TCSha256State_t s) {
@@ -92,7 +92,7 @@ int32_t tc_sha256_final (uint8_t *digest, TCSha256State_t s) {
   if (digest == (uint8_t *) 0 ||
       s == (TCSha256State_t) 0 ||
       s->iv == (uint32_t *) 0) {
-    return 0;
+    return TC_FAIL;
   }
 
   s->bits_hashed += (s->leftover_offset << 3);
@@ -130,7 +130,7 @@ int32_t tc_sha256_final (uint8_t *digest, TCSha256State_t s) {
     *digest++ = (uint8_t)(t);
   }
 
-  return 1;
+  return TC_SUCCESS;
 }
 
 /* Initializing SHA-256 Hash constant words K.

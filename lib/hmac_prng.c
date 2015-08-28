@@ -108,7 +108,7 @@ int32_t tc_hmac_prng_init (
   if (prng == (TCHmacPrng_t) 0 ||
       personalization == (uint8_t*) 0 ||
       plen > MAX_PLEN) {
-    return 0;
+    return TC_FAIL;
   }
 
   /* put the generator into a known state: */
@@ -122,7 +122,7 @@ int32_t tc_hmac_prng_init (
   /* force a reseed before allowing tc_hmac_prng_generate to succeed: */
   prng->countdown = 0;
 
-  return 1;
+  return TC_SUCCESS;
 }
 
 int32_t tc_hmac_prng_reseed (
@@ -137,12 +137,12 @@ int32_t tc_hmac_prng_reseed (
       seed == (const uint8_t *) 0 ||
       seedlen < MIN_SLEN ||
       seedlen > MAX_SLEN) {
-    return 0;
+    return TC_FAIL;
   } else if (additional_input != (const uint8_t *) 0) {
     /* Abort if additional_input is provided but has inappropriate length */
     if (additionallen == 0 ||
         additionallen > MAX_ALEN) {
-      return 0;
+      return TC_FAIL;
     } else {
       /* call update for the seed and additional_input */
       update (prng, seed, seedlen);
@@ -156,7 +156,7 @@ int32_t tc_hmac_prng_reseed (
   /* ... and enable hmac_prng_get */
   prng->countdown = MAX_GENS;
 
-  return 1;
+  return TC_SUCCESS;
 }
 
 int32_t tc_hmac_prng_generate (
@@ -170,9 +170,9 @@ int32_t tc_hmac_prng_generate (
       prng == (TCHmacPrng_t) 0 ||
       outlen == 0 ||
       outlen > MAX_OUT) {
-    return 0;
+    return TC_FAIL;
   } else if (prng->countdown == 0) {
-    return -1;
+    return TC_RESEED_REQ;
   }
 
   prng->countdown--;
@@ -193,5 +193,5 @@ int32_t tc_hmac_prng_generate (
   /* block future PRNG compromises from revealing past state */
   update (prng, prng->v, TC_SHA256_DIGEST_SIZE);
 
-  return 1;
+  return TC_SUCCESS;
 }
