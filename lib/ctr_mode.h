@@ -56,12 +56,12 @@
  *
  *  Requires: AES-128
  *
- *  Usage:     1) call ctr_mode to process the data to encrypt/decrypt.
+ *  Usage:     1) call tc_ctr_mode to process the data to encrypt/decrypt.
  *
  */
 
-#ifndef __CTR_MODE_H__
-#define __CTR_MODE_H__
+#ifndef __TC_CTR_MODE_H__
+#define __TC_CTR_MODE_H__
 
 #include "aes.h"
 
@@ -86,12 +86,12 @@
  *                outlen == 0 or
  *                inlen != outlen.
  */
-int32_t ctr_mode (
-  uint8_t *out,                 /* OUT -- produced ciphertext (plaintext) */
-  uint32_t outlen,              /* IN -- length of ciphertext buffer in bytes */
-  const uint8_t *in,            /* IN -- data to encrypt (or decrypt) */
-  uint32_t inlen,               /* IN -- length of input data in bytes */
-  uint8_t *ctr,                 /* IN/OUT -- the current counter value */
-  const AesKeySched_t sched);   /* IN -- an initialized AES key schedule */
+int32_t tc_ctr_mode (
+  uint8_t *out,
+  uint32_t outlen,
+  const uint8_t *in,
+  uint32_t inlen,
+  uint8_t *ctr,
+  const TCAesKeySched_t sched);
 
 #endif

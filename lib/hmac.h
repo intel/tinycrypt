@@ -44,28 +44,28 @@
  *
  *  Requires:   SHA-256
  *
- *  Usage:      1) call hmac_set_key to set the HMAC key.
+ *  Usage:      1) call tc_hmac_set_key to set the HMAC key.
  *
- *              2) call hmac_init to initialize a struct hash_state before
+ *              2) call tc_hmac_init to initialize a struct hash_state before
  *              processing the data.
  *
- *              3) call hmac_update to process the next input segment;
- *              hmac_update can be called as many times as needed to process
+ *              3) call tc_hmac_update to process the next input segment;
+ *              tc_hmac_update can be called as many times as needed to process
  *              all of the segments of the input; the order is important.
  *
- *              4) call hmac_final to out put the tag.
+ *              4) call tc_hmac_final to out put the tag.
  */
 
-#ifndef __HMAC_H__
-#define __HMAC_H__
+#ifndef __TC_HMAC_H__
+#define __TC_HMAC_H__
 
-#include "sha256.h"
+#include <sha256.h>
 
-struct hmac_state_struct {
-  struct sha256_state_struct hash_state; /* the internal state required by h */
-  uint8_t key[2*SHA256_BLOCK_SIZE];      /* HMAC key schedule */
+struct tc_hmac_state_struct {
+  struct tc_sha256_state_struct hash_state; /* the internal state required by h */
+  uint8_t key[2*TC_SHA256_BLOCK_SIZE];      /* HMAC key schedule */
 };
-typedef struct hmac_state_struct *HmacState_t;
+typedef struct tc_hmac_state_struct *TCHmacState_t;
 
 /*
  *  HMAC set key procedure.
@@ -77,9 +77,9 @@ typedef struct hmac_state_struct *HmacState_t;
  *                key == NULL or
  *                key_size == 0.
  */
-int32_t hmac_set_key (
-  HmacState_t ctx,      /* IN/OUT -- the struct hmac_state_struct to initial */
-  const uint8_t *key,   /* IN -- the HMAC key to configure */
+int32_t tc_hmac_set_key (
+  TCHmacState_t ctx,
+  const uint8_t *key,
   uint32_t key_size);
 
 /*
@@ -91,8 +91,8 @@ int32_t hmac_set_key (
  *                ctx == NULL or
  *                key == NULL.
  */
-int32_t hmac_init (
-  HmacState_t ctx);   /* IN/OUT -- struct hmac_state_struct buffer to init */
+int32_t tc_hmac_init (
+  TCHmacState_t ctx);
 
 /*
  *  HMAC update procedure.
@@ -107,10 +107,10 @@ int32_t hmac_init (
  *                key == NULL.
  *
  */
-int32_t hmac_update (
-  HmacState_t ctx,        /* IN/OUT -- state of HMAC computation so far */
-  const void *data,       /* IN -- data to incorporate into state */
-  uint32_t data_length);  /* IN -- size of data in bytes */
+int32_t tc_hmac_update (
+  TCHmacState_t ctx,
+  const void *data,
+  uint32_t data_length);
 
 /*
  *  HMAC final procedure.
@@ -127,9 +127,9 @@ int32_t hmac_update (
  *                taglen != SHA256_DIGEST_SIZE.
  *
  */
-int32_t hmac_final (
-  uint8_t *tag,       /* IN/OUT -- buffer to receive computed HMAC tag */
-  uint32_t taglen,    /* IN -- size of tag in bytes */
-  HmacState_t ctx);   /* IN -- the HMAC state for computing tag */
+int32_t tc_hmac_final (
+  uint8_t *tag,
+  uint32_t taglen,
+  TCHmacState_t ctx);
 
 #endif

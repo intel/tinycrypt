@@ -37,16 +37,16 @@
 #include "ctr_mode.h"
 #include "utils.h"
 
-int32_t ctr_mode (
+int32_t tc_ctr_mode (
     uint8_t *out,
     uint32_t outlen,
     const uint8_t *in,
     uint32_t inlen,
     uint8_t *ctr,
-    const AesKeySched_t sched) {
+    const TCAesKeySched_t sched) {
 
-  uint8_t buffer[AES_BLOCK_SIZE];
-  uint8_t nonce[AES_BLOCK_SIZE];
+  uint8_t buffer[TC_AES_BLOCK_SIZE];
+  uint8_t nonce[TC_AES_BLOCK_SIZE];
   uint32_t block_num;
   uint32_t i;
 
@@ -54,7 +54,7 @@ int32_t ctr_mode (
   if (out == (uint8_t *) 0 ||
       in == (uint8_t *) 0 ||
       ctr == (uint8_t *) 0 ||
-      sched == (AesKeySched_t) 0 ||
+      sched == (TCAesKeySched_t) 0 ||
       inlen == 0 ||
       outlen == 0 ||
       outlen != inlen) {
@@ -67,9 +67,9 @@ int32_t ctr_mode (
   /* select the last 4 bytes of the nonce to be incremented */
   block_num = (nonce[12] << 24)|(nonce[13] << 16)|(nonce[14] << 8)|(nonce[15]);
   for (i = 0; i < inlen; ++i) {
-    if ((i % (AES_BLOCK_SIZE)) == 0) {
+    if ((i % (TC_AES_BLOCK_SIZE)) == 0) {
       /* encrypt data using the current nonce */
-      if (aes_encrypt (buffer, nonce, sched)) {
+      if (tc_aes_encrypt (buffer, nonce, sched)) {
         block_num++;
         nonce[12] = (uint8_t)(block_num >> 24);
         nonce[13] = (uint8_t)(block_num >> 16);
@@ -80,7 +80,7 @@ int32_t ctr_mode (
       }
     }
     /* update the output */
-    *out++ = buffer[i%(AES_BLOCK_SIZE)] ^ *in++;
+    *out++ = buffer[i%(TC_AES_BLOCK_SIZE)] ^ *in++;
   }
 
   /* update the counter */

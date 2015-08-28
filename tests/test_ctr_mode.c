@@ -69,15 +69,15 @@ void test_1_2 (void) {
     0x0d, 0xb0, 0x3e, 0xab, 0x1e, 0x03, 0x1d, 0xda, 0x2f, 0xbe, 0x03, 0xd1,
     0x79, 0x21, 0x70, 0xa0, 0xf3, 0x00, 0x9c, 0xee 
   };
-  struct aes_key_sched_struct sched;
+  struct tc_aes_key_sched_struct sched;
   uint8_t out[80];
   uint8_t decrypted[64];
 
   printf ("\tPerforming CTR test #1 (encryption SP 800-38a tests)...");
-  (void) aes128_set_encrypt_key (&sched, key);
+  (void) tc_aes128_set_encrypt_key (&sched, key);
 
   (void) memcpy (out, ctr, sizeof (ctr));
-  if (ctr_mode (&out[AES_BLOCK_SIZE], sizeof (plaintext), plaintext, sizeof (plaintext),
+  if (tc_ctr_mode (&out[TC_AES_BLOCK_SIZE], sizeof (plaintext), plaintext, sizeof (plaintext),
 		ctr, &sched) == 0) {
     fprintf (stderr, "CTR test #1 (encryption SP 800-38a tests) failed.\n");
     exit (-1);
@@ -87,7 +87,7 @@ void test_1_2 (void) {
 
   printf ("\tPerforming CTR test #2 (decryption SP 800-38a tests)...");
   (void) memcpy (ctr, out, sizeof (ctr));
-  if (ctr_mode (decrypted, sizeof (decrypted), &out[AES_BLOCK_SIZE], sizeof (decrypted), ctr,
+   if (tc_ctr_mode (decrypted, sizeof (decrypted), &out[TC_AES_BLOCK_SIZE], sizeof (decrypted), ctr,
 		&sched) == 0) {
     fprintf (stderr, "CTR test #2 (decryption SP 800-38a tests) failed.\n");
     exit (-1);

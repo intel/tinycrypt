@@ -47,7 +47,7 @@ int32_t test_1() {
     0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6,
     0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c
   };
-  const struct aes_key_sched_struct expected = {{
+  const struct tc_aes_key_sched_struct expected = {{
     0x2b7e1516, 0x28aed2a6, 0xabf71588, 0x09cf4f3c, 
     0xa0fafe17, 0x88542cb1, 0x23a33939, 0x2a6c7605, 
     0xf2c295f2, 0x7a96b943, 0x5935807a, 0x7359f67f, 
@@ -60,9 +60,9 @@ int32_t test_1() {
     0xac7766f3, 0x19fadc21, 0x28d12941, 0x575c006e, 
     0xd014f9a8, 0xc9ee2589, 0xe13f0cc8, 0xb6630ca6
   }};
-  struct aes_key_sched_struct s;
+  struct tc_aes_key_sched_struct s;
 
-  if (aes128_set_encrypt_key (&s, nist_key) == 0) {
+  if (tc_aes128_set_encrypt_key (&s, nist_key) == 0) {
     fprintf (stderr, "AES128 test #1 (NIST key schedule test) failed.\n");
     exit (-1);
   }
@@ -91,11 +91,11 @@ int32_t test_2 (void) {
     0x39, 0x25, 0x84, 0x1d, 0x02, 0xdc, 0x09, 0xfb,
     0xdc, 0x11, 0x85, 0x97, 0x19, 0x6a, 0x0b, 0x32
   };
-  struct aes_key_sched_struct s;
+  struct tc_aes_key_sched_struct s;
   uint8_t ciphertext[16];
 
-  (void) aes128_set_encrypt_key (&s, nist_key);
-  if (aes_encrypt (ciphertext, nist_input, &s) == 0) {
+  (void) tc_aes128_set_encrypt_key (&s, nist_key);
+  if (tc_aes_encrypt (ciphertext, nist_input, &s) == 0) {
     fprintf (stderr, "AES128 test #2 (NIST encryption test) failed.\n");
     exit (-1);
   }
@@ -106,15 +106,15 @@ int32_t test_2 (void) {
 }
 
 void var_text_test (
-  uint32_t r, const uint8_t *in, const uint8_t *out, AesKeySched_t s) {
+  uint32_t r, const uint8_t *in, const uint8_t *out, TCAesKeySched_t s) {
   uint8_t ciphertext[16];
   uint8_t decrypted[16];
 
-  (void) aes_encrypt (ciphertext, in, s);
+  (void) tc_aes_encrypt (ciphertext, in, s);
   check_result(r, out, 16, ciphertext, sizeof(ciphertext), 0);
 
-  if (aes_decrypt (decrypted, ciphertext, s) == 0) {
-    fprintf (stderr, "aes_decrypt failed\n");
+  if (tc_aes_decrypt (decrypted, ciphertext, s) == 0) {
+    fprintf (stderr, "tc_aes_decrypt failed\n");
     exit (-1);
   } else {
     check_result(r, in, 16, decrypted, sizeof(decrypted), 0);
@@ -1031,10 +1031,10 @@ int32_t test_3() {
        0xfa, 0x73, 0x47, 0xd2, 0x3e, 0x8d, 0x66, 0x4e
     }}
   };
-  struct aes_key_sched_struct s;
+  struct tc_aes_key_sched_struct s;
   uint32_t i;
 
-  (void) aes128_set_encrypt_key (&s, key);
+  (void) tc_aes128_set_encrypt_key (&s, key);
 
   for (i = 0; i < 128; ++i) {
     var_text_test (i, kat_tbl[i].in, kat_tbl[i].out, &s);
@@ -1052,11 +1052,11 @@ void var_key_test (
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
   };
   uint8_t ciphertext[16];
-  struct aes_key_sched_struct s;
+  struct tc_aes_key_sched_struct s;
 
-  (void) aes128_set_encrypt_key (&s, in);
+  (void) tc_aes128_set_encrypt_key (&s, in);
 
-  (void) aes_encrypt (ciphertext, plaintext, &s);
+  (void) tc_aes_encrypt (ciphertext, plaintext, &s);
   check_result(r, out, 16, ciphertext, sizeof(ciphertext), 0);
 
 }

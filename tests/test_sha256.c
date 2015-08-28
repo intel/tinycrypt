@@ -51,11 +51,11 @@ void test_1 (void) {
   };
   const char *m = "abc";
   uint8_t digest[32];
-  struct sha256_state_struct s;
+  struct tc_sha256_state_struct s;
 
-  (void) sha256_init (&s);
-  sha256_update (&s, (const uint8_t *) m, strlen (m));
-  (void) sha256_final (digest, &s);
+  (void) tc_sha256_init (&s);
+  tc_sha256_update (&s, (const uint8_t *) m, strlen (m));
+  (void) tc_sha256_final (digest, &s);
 
   check_result(1, expected, sizeof(expected), digest, sizeof(digest), 1);
 }
@@ -72,11 +72,11 @@ void test_2 (void) {
   };
   const char *m = "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq";
   uint8_t digest[32];
-  struct sha256_state_struct s;
+  struct tc_sha256_state_struct s;
 
-  (void) sha256_init (&s);
-  sha256_update (&s, (const uint8_t *) m, strlen (m));
-  (void) sha256_final (digest, &s);
+  (void) tc_sha256_init (&s);
+  tc_sha256_update (&s, (const uint8_t *) m, strlen (m));
+  (void) tc_sha256_final (digest, &s);
 
   check_result(2, expected, sizeof(expected), digest, sizeof(digest), 1);
 }
@@ -90,11 +90,11 @@ void test_3 (void) {
   };
   const uint8_t m[1] = { 0xbd };
   uint8_t digest[32];
-  struct sha256_state_struct s;
+  struct tc_sha256_state_struct s;
 
-  (void) sha256_init (&s);
-  sha256_update (&s, m, sizeof (m));
-  (void) sha256_final (digest, &s);
+  (void) tc_sha256_init (&s);
+  tc_sha256_update (&s, m, sizeof (m));
+  (void) tc_sha256_final (digest, &s);
 
   check_result(3, expected, sizeof(expected), digest, sizeof(digest), 1);
 }
@@ -108,11 +108,11 @@ void test_4 (void) {
   };
   const uint8_t m[4] = { 0xc9, 0x8c, 0x8e, 0x55 };
   uint8_t digest[32];
-  struct sha256_state_struct s;
+  struct tc_sha256_state_struct s;
 
-  (void) sha256_init (&s);
-  sha256_update (&s, m, sizeof (m));
-  (void) sha256_final (digest, &s);
+  (void) tc_sha256_init (&s);
+  tc_sha256_update (&s, m, sizeof (m));
+  (void) tc_sha256_final (digest, &s);
 
   check_result(4, expected, sizeof(expected), digest, sizeof(digest), 1);
 }
@@ -126,13 +126,13 @@ void test_5 (void) {
   };
   uint8_t m[55];
   uint8_t digest[32];
-  struct sha256_state_struct s;
+  struct tc_sha256_state_struct s;
 
   (void) memset (m, 0x00, sizeof (m));
 
-  (void) sha256_init (&s);
-  sha256_update (&s, m, sizeof (m));
-  (void) sha256_final (digest, &s);
+  (void) tc_sha256_init (&s);
+  tc_sha256_update (&s, m, sizeof (m));
+  (void) tc_sha256_final (digest, &s);
 
   check_result(5, expected, sizeof(expected), digest, sizeof(digest), 1);
 }
@@ -146,13 +146,13 @@ void test_6 (void) {
   };
   uint8_t m[56];
   uint8_t digest[32];
-  struct sha256_state_struct s;
+  struct tc_sha256_state_struct s;
 
   (void) memset (m, 0x00, sizeof (m));
 
-  (void) sha256_init (&s);
-  sha256_update (&s, m, sizeof (m));
-  (void) sha256_final (digest, &s);
+  (void) tc_sha256_init (&s);
+  tc_sha256_update (&s, m, sizeof (m));
+  (void) tc_sha256_final (digest, &s);
 
   check_result(6, expected, sizeof(expected), digest, sizeof(digest), 1);
 }
@@ -166,13 +166,13 @@ void test_7 (void) {
   };
   uint8_t m[57];
   uint8_t digest[32];
-  struct sha256_state_struct s;
+  struct tc_sha256_state_struct s;
 
   (void) memset (m, 0x00, sizeof (m));
 
-  (void) sha256_init (&s);
-  sha256_update (&s, m, sizeof (m));
-  (void) sha256_final (digest, &s);
+  (void) tc_sha256_init (&s);
+  tc_sha256_update (&s, m, sizeof (m));
+  (void) tc_sha256_final (digest, &s);
 
   check_result(7, expected, sizeof(expected), digest, sizeof(digest), 1);
 }
@@ -186,13 +186,13 @@ void test_8 (void) {
   };
   uint8_t m[64];
   uint8_t digest[32];
-  struct sha256_state_struct s;
+  struct tc_sha256_state_struct s;
 
   (void) memset (m, 0x00, sizeof (m));
 
-  (void) sha256_init (&s);
-  sha256_update (&s, m, sizeof (m));
-  (void) sha256_final (digest, &s);
+  (void) tc_sha256_init (&s);
+  tc_sha256_update (&s, m, sizeof (m));
+  (void) tc_sha256_final (digest, &s);
 
   check_result(8, expected, sizeof(expected), digest, sizeof(digest), 1);
 }
@@ -206,13 +206,13 @@ void test_9 (void) {
   };
   uint8_t m[1000];
   uint8_t digest[32];
-  struct sha256_state_struct s;
+  struct tc_sha256_state_struct s;
 
   (void) memset (m, 0x00, sizeof (m));
 
-  (void) sha256_init (&s);
-  sha256_update (&s, m, sizeof (m));
-  (void) sha256_final (digest, &s);
+  (void) tc_sha256_init (&s);
+  tc_sha256_update (&s, m, sizeof (m));
+  (void) tc_sha256_final (digest, &s);
 
   check_result(9, expected, sizeof(expected), digest, sizeof(digest), 1);
 }
@@ -226,13 +226,13 @@ void test_10 (void) {
   };
   uint8_t m[1000];
   uint8_t digest[32];
-  struct sha256_state_struct s;
+  struct tc_sha256_state_struct s;
 
   (void) memset (m, 0x41, sizeof (m));
 
-  (void) sha256_init (&s);
-  sha256_update (&s, m, sizeof (m));
-  (void) sha256_final (digest, &s);
+  (void) tc_sha256_init (&s);
+  tc_sha256_update (&s, m, sizeof (m));
+  (void) tc_sha256_final (digest, &s);
 
   check_result(10, expected, sizeof(expected), digest, sizeof(digest), 1);
 }
@@ -246,13 +246,13 @@ void test_11 (void) {
   };
   uint8_t m[1005];
   uint8_t digest[32];
-  struct sha256_state_struct s;
+  struct tc_sha256_state_struct s;
 
   (void) memset (m, 0x55, sizeof (m));
 
-  (void) sha256_init (&s);
-  sha256_update (&s, m, sizeof (m));
-  (void) sha256_final (digest, &s);
+  (void) tc_sha256_init (&s);
+  tc_sha256_update (&s, m, sizeof (m));
+  (void) tc_sha256_final (digest, &s);
 
   check_result(11, expected, sizeof(expected), digest, sizeof(digest), 1);
 }
@@ -266,16 +266,16 @@ void test_12 (void) {
   };
   uint8_t m[1000];
   uint8_t digest[32];
-  struct sha256_state_struct s;
+  struct tc_sha256_state_struct s;
   uint32_t i;
 
   (void) memset (m, 0x00, sizeof (m));
 
-  (void) sha256_init (&s);
+  (void) tc_sha256_init (&s);
   for (i = 0; i < 1000; ++i) {
-    sha256_update (&s, m, sizeof (m));
+    tc_sha256_update (&s, m, sizeof (m));
   }
-  (void) sha256_final (digest, &s);
+  (void) tc_sha256_final (digest, &s);
 
   check_result(12, expected, sizeof(expected), digest, sizeof(digest), 1);
 }
@@ -289,16 +289,16 @@ void test_13 (void) {
   };
   uint8_t m[32768];
   uint8_t digest[32];
-  struct sha256_state_struct s;
+  struct tc_sha256_state_struct s;
   uint32_t i;
 
   (void) memset (m, 0x5a, sizeof (m));
 
-  (void) sha256_init (&s);
+  (void) tc_sha256_init (&s);
   for (i = 0; i < 16384; ++i) {
-    sha256_update (&s, m, sizeof (m));
+    tc_sha256_update (&s, m, sizeof (m));
   }
-  (void) sha256_final (digest, &s);
+  (void) tc_sha256_final (digest, &s);
 
   check_result(13, expected, sizeof(expected), digest, sizeof(digest), 1);
 }
@@ -312,16 +312,16 @@ void test_14 (void) {
   };
   uint8_t m[32768];
   uint8_t digest[32];
-  struct sha256_state_struct s;
+  struct tc_sha256_state_struct s;
   uint32_t i;
 
   (void) memset (m, 0x00, sizeof (m));
 
-  (void) sha256_init (&s);
+  (void) tc_sha256_init (&s);
   for (i = 0; i < 33280; ++i) {
-    sha256_update (&s, m, sizeof (m));
+    tc_sha256_update (&s, m, sizeof (m));
   }
-  (void) sha256_final (digest, &s);
+  (void) tc_sha256_final (digest, &s);
 
   check_result(14, expected, sizeof(expected), digest, sizeof(digest), 1);
 }

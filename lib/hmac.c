@@ -45,91 +45,91 @@ static void rekey (
 
   for (i = 0; i < key_size; ++i) {
     key[i] = inner_pad ^ new_key[i];
-    key[i + SHA256_BLOCK_SIZE] = outer_pad ^ new_key[i];
+    key[i + TC_SHA256_BLOCK_SIZE] = outer_pad ^ new_key[i];
   }
-  for (; i < SHA256_BLOCK_SIZE; ++i) {
-    key[i] = inner_pad; key[i + SHA256_BLOCK_SIZE] = outer_pad;
+  for (; i < TC_SHA256_BLOCK_SIZE; ++i) {
+    key[i] = inner_pad; key[i + TC_SHA256_BLOCK_SIZE] = outer_pad;
   }
 }
 
-int32_t hmac_set_key (HmacState_t ctx, const uint8_t *key, uint32_t key_size) {
+int32_t tc_hmac_set_key (TCHmacState_t ctx, const uint8_t *key, uint32_t key_size) {
 
   /* input sanity check: */
-  if (ctx == (HmacState_t) 0 ||
+  if (ctx == (TCHmacState_t) 0 ||
       key == (const uint8_t *) 0 ||
       key_size == 0) {
     return 0;
   }
 
   const uint8_t dummy_key[key_size];
-  struct hmac_state_struct dummy_state;
+  struct tc_hmac_state_struct dummy_state;
 
-  if (key_size <= SHA256_BLOCK_SIZE) {
+  if (key_size <= TC_SHA256_BLOCK_SIZE) {
     /* The next three lines consist of dummy calls just to avoid certain timing
      * attacks. Without these dummy calls, adversaries would be able to learn
-     * whether the key_size is greater than SHA256_BLOCK_SIZE by measuring the
+     * whether the key_size is greater than TC_SHA256_BLOCK_SIZE by measuring the
      * time consumed in this process.*/
-    (void) sha256_init (&dummy_state.hash_state);
-    (void) sha256_update (&dummy_state.hash_state, dummy_key, key_size);
-    (void) sha256_final (&dummy_state.key[SHA256_DIGEST_SIZE],
+    (void) tc_sha256_init (&dummy_state.hash_state);
+    (void) tc_sha256_update (&dummy_state.hash_state, dummy_key, key_size);
+    (void) tc_sha256_final (&dummy_state.key[TC_SHA256_DIGEST_SIZE],
         &dummy_state.hash_state);
 
-    /* Actual code for when key_size <= SHA256_BLOCK_SIZE: */
+    /* Actual code for when key_size <= TC_SHA256_BLOCK_SIZE: */
     rekey (ctx->key, key, key_size);
   } else {
-    (void) sha256_init (&ctx->hash_state);
-    (void) sha256_update (&ctx->hash_state, key, key_size);
-    (void) sha256_final (&ctx->key[SHA256_DIGEST_SIZE], &ctx->hash_state);
-    rekey (ctx->key, &ctx->key[SHA256_DIGEST_SIZE], SHA256_DIGEST_SIZE);
+    (void) tc_sha256_init (&ctx->hash_state);
+    (void) tc_sha256_update (&ctx->hash_state, key, key_size);
+    (void) tc_sha256_final (&ctx->key[TC_SHA256_DIGEST_SIZE], &ctx->hash_state);
+    rekey (ctx->key, &ctx->key[TC_SHA256_DIGEST_SIZE], TC_SHA256_DIGEST_SIZE);
   }
 
   return 1;
 }
 
-int32_t hmac_init (HmacState_t ctx) {
+int32_t tc_hmac_init (TCHmacState_t ctx) {
 
   /* input sanity check: */
-  if (ctx == (HmacState_t) 0 ||
+  if (ctx == (TCHmacState_t) 0 ||
       ctx->key == (uint8_t *) 0) {
     return 0;
   }
 
-  (void) sha256_init (&ctx->hash_state);
-  (void) sha256_update (&ctx->hash_state, ctx->key, SHA256_BLOCK_SIZE);
+  (void) tc_sha256_init (&ctx->hash_state);
+  (void) tc_sha256_update (&ctx->hash_state, ctx->key, TC_SHA256_BLOCK_SIZE);
 
   return 1;
 }
 
-int32_t hmac_update (HmacState_t ctx, const void *data, uint32_t data_length) {
+int32_t tc_hmac_update (TCHmacState_t ctx, const void *data, uint32_t data_length) {
 
   /* input sanity check: */
-  if (ctx == (HmacState_t) 0 ||
+  if (ctx == (TCHmacState_t) 0 ||
       ctx->key == (uint8_t *) 0) {
     return 0;
   }
 
-  (void) sha256_update (&ctx->hash_state, data, data_length);
+  (void) tc_sha256_update (&ctx->hash_state, data, data_length);
 
   return 1;
 }
 
-int32_t hmac_final (uint8_t *tag, uint32_t taglen, HmacState_t ctx) {
+int32_t tc_hmac_final (uint8_t *tag, uint32_t taglen, TCHmacState_t ctx) {
 
   /* input sanity check: */
   if (tag == (uint8_t *) 0 ||
-      taglen != SHA256_DIGEST_SIZE ||
-      ctx == (HmacState_t) 0 ||
+      taglen != TC_SHA256_DIGEST_SIZE ||
+      ctx == (TCHmacState_t) 0 ||
       ctx->key == (uint8_t *) 0) {
     return 0;
   }
 
-  (void) sha256_final (tag, &ctx->hash_state);
+  (void) tc_sha256_final (tag, &ctx->hash_state);
 
-  (void) sha256_init (&ctx->hash_state);
-  (void) sha256_update (&ctx->hash_state, &ctx->key[SHA256_BLOCK_SIZE],
-			SHA256_BLOCK_SIZE);
-  (void) sha256_update (&ctx->hash_state, tag, SHA256_DIGEST_SIZE);
-  (void) sha256_final (tag, &ctx->hash_state);
+  (void) tc_sha256_init (&ctx->hash_state);
+  (void) tc_sha256_update (&ctx->hash_state, &ctx->key[TC_SHA256_BLOCK_SIZE],
+                        TC_SHA256_BLOCK_SIZE);
+  (void) tc_sha256_update (&ctx->hash_state, tag, TC_SHA256_DIGEST_SIZE);
+  (void) tc_sha256_final (tag, &ctx->hash_state);
 
   return 1;
 }

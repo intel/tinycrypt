@@ -62,9 +62,9 @@ static const uint8_t inv_sbox[256] = {
   0x55, 0x21, 0x0c, 0x7d
 };
 
-int32_t aes128_set_decrypt_key (
-  AesKeySched_t s, const uint8_t *k) {
-  return aes128_set_encrypt_key (s, k);
+int32_t tc_aes128_set_decrypt_key (
+  TCAesKeySched_t s, const uint8_t *k) {
+  return tc_aes128_set_encrypt_key (s, k);
 }
 
 #define mult8(a) (double_byte (double_byte (double_byte (a))))
@@ -123,8 +123,8 @@ static inline void inv_shift_rows (uint8_t *s) {
   (void) copy (s, sizeof (t), t, sizeof (t));
 }
 
-int32_t aes_decrypt (
-  uint8_t *out, const uint8_t *in, const AesKeySched_t s) {
+int32_t tc_aes_decrypt (
+  uint8_t *out, const uint8_t *in, const TCAesKeySched_t s) {
   uint8_t state[Nk*Nb];
   uint32_t i;
 
@@ -132,7 +132,7 @@ int32_t aes_decrypt (
     return 0;
   } else if (in == (const uint8_t *) 0) {
     return 0;
-  } else if (s == (AesKeySched_t) 0) {
+  } else if (s == (TCAesKeySched_t) 0) {
     return 0;
   }
 

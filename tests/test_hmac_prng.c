@@ -63,7 +63,7 @@ int32_t main (void) {
   printf ("\tPerforming HMAC-PRNG test#1 (init, reseed, generate)...");
 
   uint8_t seed[128];
-  struct hmac_prng_struct h;
+   struct tc_hmac_prng_struct h;
   uint32_t size = (1 << 19);
   uint8_t random[size];
   uint32_t i;
@@ -76,16 +76,16 @@ int32_t main (void) {
   uint8_t *personalization = (uint8_t *) "HOSTNAME";//e.g.: hostname+timestamp
   uint8_t *additional_input = (uint8_t *) "additional input";
 
-  if (hmac_prng_init (&h, personalization, sizeof (personalization)) == 0) {
+  if (tc_hmac_prng_init (&h, personalization, sizeof (personalization)) == 0) {
     fatal ("HMAC-PRNG initialization failed.");
   }
 
-  if (hmac_prng_reseed (&h, seed, sizeof (seed), additional_input,
+  if (tc_hmac_prng_reseed (&h, seed, sizeof (seed), additional_input,
       sizeof (additional_input)) == 0) {
     fatal ("HMAC-PRNG reseed failed.");
   }
 
-  if (hmac_prng_generate (random, size, &h) < 1) {
+  if (tc_hmac_prng_generate (random, size, &h) < 1) {
     fatal ("HMAC-PRNG generate failed.");
   }
   //printBinaryFile(random, size);

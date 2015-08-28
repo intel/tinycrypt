@@ -94,19 +94,19 @@ const uint8_t ciphertext[80] = {
  * NIST SP 800-38a CBC Test for encryption and decryption.
  */
 void test_1_2 (void) {
-  struct aes_key_sched_struct a;
+  struct tc_aes_key_sched_struct a;
   uint8_t iv_buffer[16];
   uint8_t encrypted[80];
   uint8_t decrypted[64];
   uint8_t *p;
   uint32_t length;
 
-  (void) aes128_set_encrypt_key (&a, key);
+  (void) tc_aes128_set_encrypt_key (&a, key);
 
-  (void) memcpy (iv_buffer, iv, AES_BLOCK_SIZE);
+  (void) memcpy (iv_buffer, iv, TC_AES_BLOCK_SIZE);
 
   printf ("\tPerforming CBC test #1 (encryption SP 800-38a tests)...");
-  if (cbc_mode_encrypt (encrypted, sizeof (plaintext) + AES_BLOCK_SIZE,
+  if (tc_cbc_mode_encrypt (encrypted, sizeof (plaintext) + TC_AES_BLOCK_SIZE,
       plaintext, sizeof (plaintext), iv_buffer, &a) == 0) {
     fprintf (stderr, "CBC test #1 (encryption SP 800-38a tests) failed.\n");
     exit (-1);
@@ -115,12 +115,12 @@ void test_1_2 (void) {
   check_result(1, ciphertext, sizeof(encrypted), encrypted, sizeof(encrypted), 1);
 
   printf ("\tPerforming CBC test #2 (decryption SP 800-38a tests)...");
-  (void) aes128_set_decrypt_key (&a, key);
+  (void) tc_aes128_set_decrypt_key (&a, key);
 
-  p = &encrypted[AES_BLOCK_SIZE];
-  length = ((uint32_t) sizeof (encrypted)) - AES_BLOCK_SIZE;
+  p = &encrypted[TC_AES_BLOCK_SIZE];
+  length = ((uint32_t) sizeof (encrypted)) - TC_AES_BLOCK_SIZE;
 
-  if (cbc_mode_decrypt (decrypted, length - AES_BLOCK_SIZE, p,
+  if (tc_cbc_mode_decrypt (decrypted, length - TC_AES_BLOCK_SIZE, p,
       length, encrypted, &a)  == 0) {
     fprintf (stderr, "CBC test #2 (decryption SP 800-38a tests) failed.\n");
     exit (-1);

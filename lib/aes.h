@@ -37,26 +37,26 @@
  *
  *  Security:   AES-128 provides approximately 128 bits of security.
  *
- *  Usage:      1) call aes128_set_encrypt/decrypt_key to set the key.
+ *  Usage:      1) call tc_aes128_set_encrypt/decrypt_key to set the key.
  *
- *              2) call aes_encrypt/decrypt to process the data.
+ *              2) call tc_aes_encrypt/decrypt to process the data.
  */
 
-#ifndef __AES_H__
-#define __AES_H__
+#ifndef __TC_AES_H__
+#define __TC_AES_H__
 
 #include<stdint.h>
 
 #define Nb (4)  // number of columns (32-bit words) comprising the state
 #define Nk (4)  // number of 32-bit words comprising the key
 #define Nr (10) // number of rounds
-#define AES_BLOCK_SIZE (Nb*Nk)
-#define AES_KEY_SIZE (Nb*Nk)
+#define TC_AES_BLOCK_SIZE (Nb*Nk)
+#define TC_AES_KEY_SIZE (Nb*Nk)
 
-struct aes_key_sched_struct {
+struct tc_aes_key_sched_struct {
   uint32_t words[Nb*(Nr+1)];
 };
-typedef struct aes_key_sched_struct *AesKeySched_t;
+typedef struct tc_aes_key_sched_struct *TCAesKeySched_t;
 
 /*
  *  Set AES-128 encryption key.
@@ -72,9 +72,9 @@ typedef struct aes_key_sched_struct *AesKeySched_t;
  *              AES-256 key schedule -- see FIPS 197 for details.
  *
  */
-int32_t aes128_set_encrypt_key (
-  AesKeySched_t s,          /* IN/OUT -- inited struct aes_key_sched_struct */
-  const uint8_t *k);        /* IN -- points to the AES key */
+int32_t tc_aes128_set_encrypt_key (
+  TCAesKeySched_t s,
+  const uint8_t *k);
 
 /*
  *  AES-128 Encryption procedure.
@@ -90,10 +90,10 @@ int32_t aes128_set_encrypt_key (
  *                in == NULL or
  *                s == NULL.
  */
-int32_t aes_encrypt (
-  uint8_t *out,       			/* IN/OUT -- buffer to receive ciphertext block */
-  const uint8_t *in,  			/* IN -- a plaintext block to encrypt */
-  const AesKeySched_t s);   /* IN -- initialized AES key schedule */
+int32_t tc_aes_encrypt (
+  uint8_t *out,
+  const uint8_t *in,
+  const TCAesKeySched_t s);
 
 /*
  *  Set the AES-128 decryption key.
@@ -112,9 +112,9 @@ int32_t aes_encrypt (
  *              than 128, and must not be used for AES-192 or AES-256 key
  *              schedule -- see FIPS 197 for details.
  */
-int32_t aes128_set_decrypt_key (
-  AesKeySched_t s,         	/* IN/OUT -- inited struct aes_key_sched_struct */
-  const uint8_t *k); 				/* IN -- points to the AES key */
+int32_t tc_aes128_set_decrypt_key (
+  TCAesKeySched_t s,
+  const uint8_t *k);
 
 /*
  *  AES-128 Encryption procedure.
@@ -130,9 +130,9 @@ int32_t aes128_set_decrypt_key (
  *                in is NULL or
  *                s is NULL.
  */
-int32_t aes_decrypt (
-  uint8_t *out,       			/* IN/OUT -- buffer to receive ciphertext block */
-  const uint8_t *in,  			/* IN -- a plaintext block to encrypt */
-  const AesKeySched_t s);   /* IN -- initialized AES key schedule */
+int32_t tc_aes_decrypt (
+  uint8_t *out,
+  const uint8_t *in,
+  const TCAesKeySched_t s);
 
 #endif

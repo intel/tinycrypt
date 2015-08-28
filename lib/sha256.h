@@ -39,35 +39,35 @@
  *              NOT behave like a random oracle, but it can be used as one if
  *              the string being hashed is prefix-free encoded before hashing.
  *
- *  Usage:      1) call sha256_init to initialize a struct sha256_state_struct
+ *  Usage:      1) call tc_sha256_init to initialize a struct tc_sha256_state_struct
  *              before hashing a new string.
  *
- *              2) call sha256_update to hash the next string segment;
- *              sha256_update can be called as many times as needed to hash
+ *              2) call tc_sha256_update to hash the next string segment;
+ *              tc_sha256_update can be called as many times as needed to hash
  *              all of the segments of a string; the order is important.
  *
- *              3) call sha256_final to out put the digest from a hashing
+ *              3) call tc_sha256_final to out put the digest from a hashing
  *              operation.
  */
 
-#ifndef __SHA256_H__
-#define __SHA256_H__
+#ifndef __TC_SHA256_H__
+#define __TC_SHA256_H__
 
 #include <stddef.h>
 #include <stdint.h>
 
-#define SHA256_BLOCK_SIZE (64)
-#define SHA256_DIGEST_SIZE (32)
-#define SHA256_STATE_BLOCKS (SHA256_DIGEST_SIZE/4)
+#define TC_SHA256_BLOCK_SIZE (64)
+#define TC_SHA256_DIGEST_SIZE (32)
+#define TC_SHA256_STATE_BLOCKS (TC_SHA256_DIGEST_SIZE/4)
 
-struct sha256_state_struct {
-  uint32_t iv[SHA256_STATE_BLOCKS];
+struct tc_sha256_state_struct {
+  uint32_t iv[TC_SHA256_STATE_BLOCKS];
   uint64_t bits_hashed;
-  uint8_t leftover[SHA256_BLOCK_SIZE];
+  uint8_t leftover[TC_SHA256_BLOCK_SIZE];
   size_t leftover_offset;
 };
 
-typedef struct sha256_state_struct *Sha256State_t;
+typedef struct tc_sha256_state_struct *TCSha256State_t;
 
 /*
  *  SHA256 initialization procedure.
@@ -77,7 +77,7 @@ typedef struct sha256_state_struct *Sha256State_t;
  *  Exceptions: Returns 0 if:
  *                s == NULL.
  */
-int32_t sha256_init (Sha256State_t s);
+int32_t tc_sha256_init (TCSha256State_t s);
 
 /*
  *  SHA256 update procedure.
@@ -96,7 +96,7 @@ int32_t sha256_init (Sha256State_t s);
  *              If your application intends to have sensitive data in this
  *              buffer, remind to erase it after the data has been processed.
  */
-int32_t sha256_update (Sha256State_t s, const uint8_t *data, size_t datalen);
+int32_t tc_sha256_update (TCSha256State_t s, const uint8_t *data, size_t datalen);
 
 /*
  *  SHA256 final procedure.
@@ -115,7 +115,6 @@ int32_t sha256_update (Sha256State_t s, const uint8_t *data, size_t datalen);
  *              If your application intends to have sensitive data in this
  *              buffer, remind to erase it after the data has been processed.
  */
-int32_t sha256_final (uint8_t *digest, Sha256State_t s);
-
+int32_t tc_sha256_final (uint8_t *digest, TCSha256State_t s);
 
 #endif

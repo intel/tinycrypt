@@ -39,15 +39,15 @@
 
 static void compress (uint32_t *iv, const uint8_t *data);
 
-int32_t sha256_init (Sha256State_t s) {
+int32_t tc_sha256_init (TCSha256State_t s) {
 
   /* input sanity check: */
-  if (s == (Sha256State_t) 0) {
+  if (s == (TCSha256State_t) 0) {
     return 0;
   }
 
-  /* Setting the initial state values. 
-  These values correspond to the first 32 bits of the fractional parts of 
+  /* Setting the initial state values.
+  These values correspond to the first 32 bits of the fractional parts of
   the square roots of the first 8 primes: 2, 3, 5, 7, 11, 13, 17 and 19. */
   set ((uint8_t *) s, 0x00, sizeof (*s));
   s->iv[0] = 0x6a09e667;
@@ -62,10 +62,10 @@ int32_t sha256_init (Sha256State_t s) {
   return 1;
 }
 
-int32_t sha256_update (Sha256State_t s, const uint8_t* data, size_t datalen) {
+int32_t tc_sha256_update (TCSha256State_t s, const uint8_t* data, size_t datalen) {
 
   /* input sanity check: */
-  if (s == (Sha256State_t) 0 ||
+  if (s == (TCSha256State_t) 0 ||
       s->iv == (uint32_t *) 0 ||
       data == (void *) 0) {
     return 0;
@@ -75,22 +75,22 @@ int32_t sha256_update (Sha256State_t s, const uint8_t* data, size_t datalen) {
 
   while (datalen-- > 0) {
     s->leftover[s->leftover_offset++] = *(data++);
-    if (s->leftover_offset >= SHA256_BLOCK_SIZE) {
+    if (s->leftover_offset >= TC_SHA256_BLOCK_SIZE) {
       compress (s->iv, s->leftover);
       s->leftover_offset = 0;
-      s->bits_hashed += (SHA256_BLOCK_SIZE << 3);
+      s->bits_hashed += (TC_SHA256_BLOCK_SIZE << 3);
     }
   }
 
   return 1;
 }
 
-int32_t sha256_final (uint8_t *digest, Sha256State_t s) {
+int32_t tc_sha256_final (uint8_t *digest, TCSha256State_t s) {
   uint32_t i;
 
   /* input sanity check: */
   if (digest == (uint8_t *) 0 ||
-      s == (Sha256State_t) 0 ||
+      s == (TCSha256State_t) 0 ||
       s->iv == (uint32_t *) 0) {
     return 0;
   }
@@ -122,7 +122,7 @@ int32_t sha256_final (uint8_t *digest, Sha256State_t s) {
   compress (s->iv, s->leftover);
 
   /* copy the iv out to digest */
-  for (i = 0; i < SHA256_STATE_BLOCKS; ++i) {
+  for (i = 0; i < TC_SHA256_STATE_BLOCKS; ++i) {
     uint32_t t = *((uint32_t *) &s->iv[i]);
     *digest++ = (uint8_t)(t >> 24);
     *digest++ = (uint8_t)(t >> 16);

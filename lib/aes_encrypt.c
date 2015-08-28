@@ -66,7 +66,7 @@ static const uint8_t sbox[256] = {
 #define subbyte(a,o) (sbox[((a)>>(o))&0xff]<<(o))
 #define subword(a) (subbyte(a,24)|subbyte(a,16)|subbyte(a,8)|subbyte(a,0))
 
-int32_t aes128_set_encrypt_key (AesKeySched_t s, const uint8_t *k) {
+int32_t tc_aes128_set_encrypt_key (TCAesKeySched_t s, const uint8_t *k) {
   const uint32_t rconst[11] = {
     0x00000000, 0x01000000, 0x02000000, 0x04000000, 0x08000000, 0x10000000,
     0x20000000, 0x40000000, 0x80000000, 0x1b000000, 0x36000000
@@ -74,7 +74,7 @@ int32_t aes128_set_encrypt_key (AesKeySched_t s, const uint8_t *k) {
   uint32_t i;
   uint32_t t;
 
-  if (s == (AesKeySched_t) 0) {
+  if (s == (TCAesKeySched_t) 0) {
     return 0;
   } else if (k == (const uint8_t *) 0) {
     return 0;
@@ -145,8 +145,8 @@ static inline void shift_rows (uint8_t *s) {
   (void) copy (s, sizeof (t), t, sizeof (t));
 }
 
-int32_t aes_encrypt (
-  uint8_t *out, const uint8_t *in, const AesKeySched_t s) {
+int32_t tc_aes_encrypt (
+  uint8_t *out, const uint8_t *in, const TCAesKeySched_t s) {
   uint8_t state[Nk*Nb];
   uint32_t i;
 
@@ -154,7 +154,7 @@ int32_t aes_encrypt (
     return 0;
   } else if (in == (const uint8_t *) 0) {
     return 0;
-  } else if (s == (AesKeySched_t) 0) {
+  } else if (s == (TCAesKeySched_t) 0) {
     return 0;
   }
 

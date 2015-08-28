@@ -42,7 +42,7 @@
  *            good practice to replace the encryption when q == 2^56). CBC mode
  *            provides NO data integrity.
  *
- *            CBC mode assumes that the IV value input into the cbc_mode_encrypt
+ *            CBC mode assumes that the IV value input into the tc_cbc_mode_encrypt
  *            is randomly generated. The TinyCrypt library provides HMAC-PRNG
  *            module, which generates suitable IVs. Other methods for generating
  *            IVs are acceptable, provided that the values of the IVs generated
@@ -56,19 +56,19 @@
  *
  *            TinyCrypt CBC encryption prepends the IV to the ciphertext,
  *            because this affords a more efficient (few buffers) decryption.
- *            Hence cbc_mode_encrypt assumes the ciphertext buffer is always
+ *            Hence tc_cbc_mode_encrypt assumes the ciphertext buffer is always
  *            16 bytes larger than the plaintext buffer.
  *
  *  Requires: AES-128
  *
- *  Usage:    1) call cbc_mode_encrypt to encrypt data.
+ *  Usage:    1) call tc_cbc_mode_encrypt to encrypt data.
  *
- *            2) call cbc_mode_decrypt to decrypt data.
+ *            2) call tc_cbc_mode_decrypt to decrypt data.
  *
  */
 
-#ifndef __CBC_MODE_H__
-#define __CBC_MODE_H__
+#ifndef __TC_CBC_MODE_H__
+#define __TC_CBC_MODE_H__
 
 #include "aes.h"
 
@@ -96,13 +96,13 @@
  *                (outlen % AES_BLOCK_SIZE) != 0 or
  *                outlen != inlen + AES_BLOCK_SIZE.
  */
-int32_t cbc_mode_encrypt (
-  uint8_t *out,                 /* IN/OUT -- buffer to receive the ciphertext */
-  uint32_t outlen,              /* IN -- length of ciphertext buffer in bytes */
-  const uint8_t *in,            /* IN -- plaintext to encrypt */
-  uint32_t inlen,               /* IN -- length of plaintext buffer in bytes */
-  const uint8_t *iv,            /* IN -- the IV for the this encrypt/decrypt */
-  const AesKeySched_t sched);   /* IN --  AES key schedule for this encrypt */
+int32_t tc_cbc_mode_encrypt (
+  uint8_t *out,
+  uint32_t outlen,
+  const uint8_t *in,
+  uint32_t inlen,
+  const uint8_t *iv,
+  const TCAesKeySched_t sched);
 
 /*
  *  CBC decryption procedure.
@@ -129,12 +129,12 @@ int32_t cbc_mode_encrypt (
  *                outlen != inlen + AES_BLOCK_SIZE.
  *
  */
-int32_t cbc_mode_decrypt (
-  uint8_t *out,               /* IN/OUT -- buffer to receive decrypted data */
-  uint32_t outlen,            /* IN -- length of plaintext buffer in bytes */
-  const uint8_t *in,          /* IN -- ciphertext to decrypt, including IV */
-  uint32_t inlen,             /* IN -- length of ciphertext buffer in bytes */
-  const uint8_t *iv,          /* IN -- the IV for the this encrypt/decrypt */
-  const AesKeySched_t sched); /* IN --  AES key schedule for this decrypt */
+int32_t tc_cbc_mode_decrypt (
+  uint8_t *out,
+  uint32_t outlen,
+  const uint8_t *in,
+  uint32_t inlen,
+  const uint8_t *iv,
+  const TCAesKeySched_t sched);
 
 #endif

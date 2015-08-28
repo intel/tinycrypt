@@ -66,46 +66,46 @@ static const uint32_t MAX_OUT = (1 << 19);
 /*
  * Assumes: prng != NULL, e != NULL, len >= 0.
  */
-static void update (HmacPrng_t prng, const uint8_t *e, uint32_t len) {
+static void update (TCHmacPrng_t prng, const uint8_t *e, uint32_t len) {
   const uint8_t separator0 = 0x00;
   const uint8_t separator1 = 0x01;
 
   /* use current state, e and separator 0 to compute a new prng key: */
-  (void) hmac_init (&prng->h);
-  (void) hmac_update (&prng->h, prng->v, sizeof (prng->v));
-  (void) hmac_update (&prng->h, &separator0, sizeof (separator0));
-  (void) hmac_update (&prng->h, e, len);
-  (void) hmac_final (prng->key, sizeof(prng->key), &prng->h);
+  (void) tc_hmac_init (&prng->h);
+  (void) tc_hmac_update (&prng->h, prng->v, sizeof (prng->v));
+  (void) tc_hmac_update (&prng->h, &separator0, sizeof (separator0));
+  (void) tc_hmac_update (&prng->h, e, len);
+  (void) tc_hmac_final (prng->key, sizeof(prng->key), &prng->h);
   /* configure the new prng key into the prng's instance of hmac */
-  (void) hmac_set_key (&prng->h, prng->key, sizeof (prng->key));
+  (void) tc_hmac_set_key (&prng->h, prng->key, sizeof (prng->key));
 
   /* use the new key to compute a new state variable v */
-  (void) hmac_init (&prng->h);
-  (void) hmac_update (&prng->h, prng->v, sizeof (prng->v));
-  (void) hmac_final (prng->v, sizeof(prng->v), &prng->h);
+  (void) tc_hmac_init (&prng->h);
+  (void) tc_hmac_update (&prng->h, prng->v, sizeof (prng->v));
+  (void) tc_hmac_final (prng->v, sizeof(prng->v), &prng->h);
 
   /* use current state, e and separator 1 to compute a new prng key: */
-  (void) hmac_init (&prng->h);
-  (void) hmac_update (&prng->h, prng->v, sizeof (prng->v));
-  (void) hmac_update (&prng->h, &separator1, sizeof (separator1));
-  (void) hmac_update (&prng->h, e, len);
-  (void) hmac_final (prng->key, sizeof(prng->key), &prng->h);
+  (void) tc_hmac_init (&prng->h);
+  (void) tc_hmac_update (&prng->h, prng->v, sizeof (prng->v));
+  (void) tc_hmac_update (&prng->h, &separator1, sizeof (separator1));
+  (void) tc_hmac_update (&prng->h, e, len);
+  (void) tc_hmac_final (prng->key, sizeof(prng->key), &prng->h);
   /* configure the new prng key into the prng's instance of hmac */
-  (void) hmac_set_key (&prng->h, prng->key, sizeof (prng->key));
+  (void) tc_hmac_set_key (&prng->h, prng->key, sizeof (prng->key));
 
   /* use the new key to compute a new state variable v */
-  (void) hmac_init (&prng->h);
-  (void) hmac_update (&prng->h, prng->v, sizeof (prng->v));
-  (void) hmac_final (prng->v, sizeof(prng->v), &prng->h);
+  (void) tc_hmac_init (&prng->h);
+  (void) tc_hmac_update (&prng->h, prng->v, sizeof (prng->v));
+  (void) tc_hmac_final (prng->v, sizeof(prng->v), &prng->h);
 }
 
-int32_t hmac_prng_init (
-  HmacPrng_t prng,                /* IN/OUT -- the PRNG state to initialize */
+int32_t tc_hmac_prng_init (
+  TCHmacPrng_t prng,                /* IN/OUT -- the PRNG state to initialize */
   const uint8_t *personalization, /* IN -- personalization string */
   uint32_t plen) {                /* IN -- personalization length in bytes */
 
   /* input sanity check: */
-  if (prng == (HmacPrng_t) 0 ||
+  if (prng == (TCHmacPrng_t) 0 ||
       personalization == (uint8_t*) 0 ||
       plen > MAX_PLEN) {
     return 0;
@@ -114,26 +114,26 @@ int32_t hmac_prng_init (
   /* put the generator into a known state: */
   set (prng->key, 0x00, sizeof (prng->key));
   set (prng->v, 0x01, sizeof (prng->v));
-  hmac_set_key (&prng->h, prng->key, sizeof (prng->key));
+  tc_hmac_set_key (&prng->h, prng->key, sizeof (prng->key));
   /* update assumes SOME key has been configured into HMAC */
 
   update (prng, personalization, plen);
 
-  /* force a reseed before allowing hmac_prng_generate to succeed: */
+  /* force a reseed before allowing tc_hmac_prng_generate to succeed: */
   prng->countdown = 0;
 
   return 1;
 }
 
-int32_t hmac_prng_reseed (
-  HmacPrng_t prng,
+int32_t tc_hmac_prng_reseed (
+  TCHmacPrng_t prng,
   const uint8_t *seed,
   uint32_t seedlen,
   const uint8_t *additional_input,
   uint32_t additionallen) {
 
   /* input sanity check: */
-  if (prng == (HmacPrng_t) 0 ||
+  if (prng == (TCHmacPrng_t) 0 ||
       seed == (const uint8_t *) 0 ||
       seedlen < MIN_SLEN ||
       seedlen > MAX_SLEN) {
@@ -159,15 +159,15 @@ int32_t hmac_prng_reseed (
   return 1;
 }
 
-int32_t hmac_prng_generate (
+int32_t tc_hmac_prng_generate (
   uint8_t *out,         /* IN/OUT -- buffer to receive output */
   uint32_t outlen,      /* IN -- size of out buffer in bytes */
-  HmacPrng_t prng) {    /* IN/OUT -- the PRNG state */
+  TCHmacPrng_t prng) {    /* IN/OUT -- the PRNG state */
   uint32_t bufferlen;
 
   /* input sanity check: */
   if (out == (uint8_t *) 0 ||
-      prng == (HmacPrng_t) 0 ||
+      prng == (TCHmacPrng_t) 0 ||
       outlen == 0 ||
       outlen > MAX_OUT) {
     return 0;
@@ -179,19 +179,19 @@ int32_t hmac_prng_generate (
 
   while (outlen != 0) {
     /* operate HMAC in OFB mode to create "random" outputs */
-    (void) hmac_init (&prng->h);
-    (void) hmac_update (&prng->h, prng->v, sizeof (prng->v));
-    (void) hmac_final (prng->v, sizeof(prng->v), &prng->h);
+    (void) tc_hmac_init (&prng->h);
+    (void) tc_hmac_update (&prng->h, prng->v, sizeof (prng->v));
+    (void) tc_hmac_final (prng->v, sizeof(prng->v), &prng->h);
 
-    bufferlen = (SHA256_DIGEST_SIZE > outlen) ? outlen : SHA256_DIGEST_SIZE;
+    bufferlen = (TC_SHA256_DIGEST_SIZE > outlen) ? outlen : TC_SHA256_DIGEST_SIZE;
     (void) copy (out, bufferlen, prng->v, bufferlen);
 
     out += bufferlen;
-    outlen = (outlen > SHA256_DIGEST_SIZE) ? (outlen - SHA256_DIGEST_SIZE) : 0;
+    outlen = (outlen > TC_SHA256_DIGEST_SIZE) ? (outlen - TC_SHA256_DIGEST_SIZE) : 0;
   }
 
   /* block future PRNG compromises from revealing past state */
-  update (prng, prng->v, SHA256_DIGEST_SIZE);
+  update (prng, prng->v, TC_SHA256_DIGEST_SIZE);
 
   return 1;
 }
