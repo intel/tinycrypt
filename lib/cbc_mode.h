@@ -1,6 +1,4 @@
 /* cbc_mode.h - TinyCrypt interface to a CBC mode implementation */
-#ifndef __CBC_MODE_H__
-#define __CBC_MODE_H__
 
 /*
  *  Copyright (C) 2015 by Intel Corporation, All Rights Reserved.
@@ -68,6 +66,9 @@
  *            2) call cbc_mode_decrypt to decrypt data.
  *
  */
+
+#ifndef __CBC_MODE_H__
+#define __CBC_MODE_H__
 
 #include "aes.h"
 

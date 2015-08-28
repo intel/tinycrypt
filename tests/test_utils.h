@@ -1,6 +1,4 @@
 /*  test_utils.h - TinyCrypt interface to common functions for tests */
-#ifndef __TEST_UTILS_H__
-#define __TEST_UTILS_H__
 
 /*
  *  Copyright (C) 2015 by Intel Corporation, All Rights Reserved.
@@ -32,6 +30,10 @@
  *
  *  test_utils.h -- Interface to common functions for tests.
  */
+
+#ifndef __TEST_UTILS_H__
+#define __TEST_UTILS_H__
+
 #include <stdint.h>
 #include <stdlib.h>
 

@@ -1,6 +1,4 @@
 /* aes.h - TinyCrypt interface to an AES-128 implementation. */
-#ifndef __AES_H__
-#define __AES_H__
 
 /*
  *  Copyright (C) 2015 by Intel Corporation, All Rights Reserved.
@@ -43,6 +41,9 @@
  *
  *              2) call aes_encrypt/decrypt to process the data.
  */
+
+#ifndef __AES_H__
+#define __AES_H__
 
 #include<stdint.h>
 

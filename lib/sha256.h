@@ -1,6 +1,4 @@
 /* sha256.h - TinyCrypt interface to a SHA-256 implementation. */
-#ifndef __SHA256_H__
-#define __SHA256_H__
 
 /*
  *  Copyright (C) 2015 by Intel Corporation, All Rights Reserved.
@@ -51,6 +49,9 @@
  *              3) call sha256_final to out put the digest from a hashing
  *              operation.
  */
+
+#ifndef __SHA256_H__
+#define __SHA256_H__
 
 #include <stddef.h>
 #include <stdint.h>

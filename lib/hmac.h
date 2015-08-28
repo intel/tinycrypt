@@ -1,6 +1,4 @@
 /* hmac.h - TinyCrypt interface to an HMAC implementation */
-#ifndef __HMAC_H__
-#define __HMAC_H__
 
 /*
  *  Copyright (C) 2015 by Intel Corporation, All Rights Reserved.
@@ -57,6 +55,9 @@
  *
  *              4) call hmac_final to out put the tag.
  */
+
+#ifndef __HMAC_H__
+#define __HMAC_H__
 
 #include "sha256.h"
 

@@ -1,6 +1,4 @@
 /* utils.h - TinyCrypt interface to platform-dependent run-time operations */
-#ifndef __UTILS_H__
-#define __UTILS_H__
 
 /*
  *  Copyright (C) 2015 by Intel Corporation, All Rights Reserved.
@@ -33,6 +31,9 @@
  *  utils.h -- Interface to platform-dependent run-time operations.
  *
  */
+
+#ifndef __UTILS_H__
+#define __UTILS_H__
 
 #include <stdint.h>
 

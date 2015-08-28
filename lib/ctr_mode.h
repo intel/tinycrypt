@@ -1,6 +1,4 @@
 /* ctr_mode.h - TinyCrypt interface to CTR mode*/
-#ifndef __CTR_MODE_H__
-#define __CTR_MODE_H__
 
 /*
  *  Copyright (C) 2015 by Intel Corporation, All Rights Reserved.
@@ -61,6 +59,9 @@
  *  Usage:     1) call ctr_mode to process the data to encrypt/decrypt.
  *
  */
+
+#ifndef __CTR_MODE_H__
+#define __CTR_MODE_H__
 
 #include "aes.h"
 

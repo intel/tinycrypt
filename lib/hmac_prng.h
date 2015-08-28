@@ -1,6 +1,4 @@
 /* hmac_prng.h - TinyCrypt interface to an HMAC-PRNG implementation. */
-#ifndef __HMAC_PRNG_H__
-#define __HMAC_PRNG_H__
 
 /*
  *  Copyright (C) 2015 by Intel Corporation, All Rights Reserved.
@@ -62,6 +60,9 @@
  *
  *              3) call hmac_prng_generate to out put the pseudo-random data.
  */
+
+#ifndef __HMAC_PRNG_H__
+#define __HMAC_PRNG_H__
 
 #include "sha256.h"
 #include "hmac.h"
