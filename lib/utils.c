@@ -1,4 +1,4 @@
-
+/* utils.c - TinyCrypt platform-dependent run-time operations */
 /*
  *  Copyright (C) 2015 by Intel Corporation, All Rights Reserved.
  * 

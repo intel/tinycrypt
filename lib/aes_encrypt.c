@@ -1,4 +1,4 @@
-
+/* aes_encrypt.c - TinyCrypt implementation of AES encryption procedure */
 /*
  *  Copyright (C) 2015 by Intel Corporation, All Rights Reserved.
  * 

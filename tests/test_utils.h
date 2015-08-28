@@ -1,4 +1,4 @@
-
+/*  test_utils.h - TinyCrypt interface to common functions for tests */
 #ifndef __TEST_UTILS_H__
 #define __TEST_UTILS_H__
 

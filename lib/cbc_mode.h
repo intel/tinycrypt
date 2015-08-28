@@ -1,4 +1,4 @@
-
+/* cbc_mode.h - TinyCrypt interface to a CBC mode implementation */
 #ifndef __CBC_MODE_H__
 #define __CBC_MODE_H__
 

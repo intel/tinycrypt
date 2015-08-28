@@ -1,4 +1,4 @@
-
+/* ctr_mode.c - TinyCrypt CTR mode implementation */
 /*
  *  Copyright (C) 2015 by Intel Corporation, All Rights Reserved.
  * 

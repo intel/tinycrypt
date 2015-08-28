@@ -1,4 +1,4 @@
-
+/*  test_hmac.c - TinyCrypt implementation of some HMAC tests */
 /*
  *  Copyright (C) 2015 by Intel Corporation, All Rights Reserved.
  * 

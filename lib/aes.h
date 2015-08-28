@@ -1,4 +1,4 @@
-
+/* aes.h - TinyCrypt interface to an AES-128 implementation. */
 #ifndef __AES_H__
 #define __AES_H__
 

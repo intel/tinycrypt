@@ -1,4 +1,4 @@
-
+/* test_utils.c - TinyCrypt c ommon functions for tests */
 /*
  *  Copyright (C) 2015 by Intel Corporation, All Rights Reserved.
  * 

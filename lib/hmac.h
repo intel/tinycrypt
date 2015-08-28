@@ -1,4 +1,4 @@
-
+/* hmac.h - TinyCrypt interface to an HMAC implementation */
 #ifndef __HMAC_H__
 #define __HMAC_H__
 

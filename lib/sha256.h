@@ -1,4 +1,4 @@
-
+/* sha256.h - TinyCrypt interface to a SHA-256 implementation. */
 #ifndef __SHA256_H__
 #define __SHA256_H__
 

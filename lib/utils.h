@@ -1,4 +1,4 @@
-
+/* utils.h - TinyCrypt interface to platform-dependent run-time operations */
 #ifndef __UTILS_H__
 #define __UTILS_H__
 

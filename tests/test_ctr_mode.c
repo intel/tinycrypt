@@ -1,4 +1,4 @@
-
+/* test_ctr_mode.c - TinyCrypt implementation of some AES-CTR tests */
 /*
  *  Copyright (C) 2015 by Intel Corporation, All Rights Reserved.
  * 

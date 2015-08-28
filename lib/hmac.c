@@ -1,4 +1,4 @@
-
+/* hmac.c - TinyCrypt implementation of the HMAC algorithm */
 /*
  *  Copyright (C) 2015 by Intel Corporation, All Rights Reserved.
  * 

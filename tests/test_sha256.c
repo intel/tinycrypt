@@ -1,4 +1,4 @@
-
+/*  test_sha256.c - TinyCrypt implementation of some SHA-256 tests */
 /*
  *  Copyright (C) 2015 by Intel Corporation, All Rights Reserved.
  * 

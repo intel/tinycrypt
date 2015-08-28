@@ -1,4 +1,4 @@
-
+/*  test_hmac_prng.c - TinyCrypt implementation of some HMAC-PRNG tests */
 /*
  *  Copyright (C) 2015 by Intel Corporation, All Rights Reserved.
  * 

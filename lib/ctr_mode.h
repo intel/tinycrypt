@@ -1,4 +1,4 @@
-
+/* ctr_mode.h - TinyCrypt interface to CTR mode*/
 #ifndef __CTR_MODE_H__
 #define __CTR_MODE_H__
 

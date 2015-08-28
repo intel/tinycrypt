@@ -1,4 +1,4 @@
-
+/* sha256.c - TinyCrypt SHA-256 crypto hash algorithm implementation */
 /*
  *  Copyright (C) 2015 by Intel Corporation, All Rights Reserved.
  * 
