@@ -34,8 +34,8 @@
  *
  */
 
-#include "hmac.h"
-#include "utils.h"
+#include <hmac.h>
+#include <utils.h>
 
 static void rekey (
   uint8_t *key, const uint8_t *new_key, uint32_t key_size) {

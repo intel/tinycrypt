@@ -34,8 +34,8 @@
  *
  */
 
-#include "cbc_mode.h"
-#include "utils.h"
+#include <cbc_mode.h>
+#include <utils.h>
 
 int32_t tc_cbc_mode_encrypt (
     uint8_t *out,

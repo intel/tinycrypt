@@ -34,9 +34,8 @@
  *
  */
 
-#include "sha256.h"
-#include "utils.h"
-#include <stdio.h>
+#include <sha256.h>
+#include <utils.h>
 
 static void compress (uint32_t *iv, const uint8_t *data);
 

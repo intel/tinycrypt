@@ -34,8 +34,8 @@
  *
  */
 
-#include "aes.h"
-#include "utils.h"
+#include <aes.h>
+#include <utils.h>
 
 #define ZERO_BYTE 0x00
 static const uint8_t inv_sbox[256] = {

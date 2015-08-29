@@ -34,8 +34,8 @@
  *
  */
 
-#include "ctr_mode.h"
-#include "utils.h"
+#include <ctr_mode.h>
+#include <utils.h>
 
 int32_t tc_ctr_mode (
     uint8_t *out,
