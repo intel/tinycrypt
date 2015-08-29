@@ -62,7 +62,10 @@ static const uint8_t sbox[256] = {
   0xb0, 0x54, 0xbb, 0x16
 };
 
-#define rotword(a) (((a)>>24)|((a)<<8))
+static inline uint32_t rotword (uint32_t a) {
+  return (((a)>>24)|((a)<<8));
+}
+
 #define subbyte(a,o) (sbox[((a)>>(o))&0xff]<<(o))
 #define subword(a) (subbyte(a,24)|subbyte(a,16)|subbyte(a,8)|subbyte(a,0))
 
