@@ -36,6 +36,7 @@
 
 #include "sha256.h"
 #include "utils.h"
+#include <stdio.h>
 
 static void compress (uint32_t *iv, const uint8_t *data);
 
@@ -162,11 +163,14 @@ static inline uint32_t ROTR (uint32_t a, uint32_t n) {
 #define Ch(a,b,c) (((a) & (b)) ^ ((~(a)) & (c)))
 #define Maj(a,b,c) (((a) & (b)) ^ ((a) & (c)) ^ ((b) & (c)))
 
-#define BigEndian(n,c) (n = (((uint32_t)(*((c)++))) << 24), \
-  n |= ((uint32_t)(*((c)++)) << 16), \
-  n |= ((uint32_t)(*((c)++)) << 8), \
-  n |= ((uint32_t)(*((c)++))), \
-  n)
+static inline uint32_t BigEndian (uint32_t c) {
+  uint32_t n = 0;
+  n |= ((c & 0x000000FF) << 24);
+  n |= ((c & 0x0000FF00) << 8);
+  n |= ((c & 0x00FF0000) >> 8);
+  n |= ((c & 0xFF000000) >> 24);
+  return n;
+}
 
 static void compress (uint32_t *iv, const uint8_t *data) {
   uint32_t a, b, c, d, e, f, g, h;
@@ -180,7 +184,8 @@ static void compress (uint32_t *iv, const uint8_t *data) {
   e = iv[4]; f = iv[5]; g = iv[6]; h = iv[7];
 
   for (i = 0; i < 16; ++i) {
-    BigEndian(n,data);
+    n = BigEndian(*(const uint32_t *)data);
+    data += sizeof(uint32_t);
     t1 = work_space[i] = n;
     t1 += h + Sigma1(e) + Ch(e,f,g) + k256[i];
     t2 = Sigma0(a) + Maj(a,b,c);
