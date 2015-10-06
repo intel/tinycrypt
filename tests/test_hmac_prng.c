@@ -27,72 +27,77 @@
  *  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  *  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  test_hmac_prng.c -- Implementation of some HMAC-PRNG tests.
  */
 
+/*
+  DESCRIPTION
+  This module tests the following PRNG routines:
+
+  Scenarios tested include:
+  - HMAC-PRNG init
+  - HMAC-PRNG reseed
+  - HMAC-PRNG generate)
+*/
+
+#include <test_utils.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
-#include "hmac_prng.h"
+#include <hmac_prng.h>
 
-static void fatal (const char *s) {
-  (void) fprintf (stderr, "%s\n", s);
-  exit (-1);
-}
+/*
+ * Main task to test AES
+ */
 
-void show (const char *label, const uint8_t *s, size_t len) {
-  uint32_t i;
-  printf ("%s = ", label);
-  for (i = 0; i < (uint32_t) len; ++i) {
-    printf ("%02x", s[i]);
-  }
-  printf ("\n");
-}
+int main(void)
+{
+        uint8_t seed[128];
+        struct tc_hmac_prng_struct h;
+        uint32_t size = (1 << 15);
+        uint8_t random[size];
+        uint32_t i;
+        uint32_t result = TC_PASS;
 
-void printBinaryFile(const uint8_t *s, uint32_t slen) {
-	FILE *write_ptr;
-	write_ptr = fopen("pseudo-random-data.bin","wb");
-	fwrite(s, slen, 1, write_ptr);
-}
+        TC_START("Performing HMAC-PRNG tests:");
+        TC_PRINT("HMAC-PRNG test#1 (init, reseed, generate):\n");
 
-int32_t main (void) {
+        /* Fake seed (replace by a a truly random seed): */
+        for (i = 0; i < (uint32_t) sizeof(seed); ++i) {
+                seed[i] = i;
+        }
 
-  printf ("Performing HMAC-PRNG tests...\n");
-  printf ("\tPerforming HMAC-PRNG test#1 (init, reseed, generate)...");
+        /* Fake personalization and additional_input (replace by appropriate values): */
+        uint8_t *personalization = (uint8_t *) "HOSTNAME"; /* e.g.: hostname+timestamp */
+        uint8_t *additional_input = (uint8_t *) "additional input";
 
-  uint8_t seed[128];
-   struct tc_hmac_prng_struct h;
-  uint32_t size = (1 << 19);
-  uint8_t random[size];
-  uint32_t i;
+        TC_PRINT("HMAC-PRNG test#1 (init):\n");
+        if (tc_hmac_prng_init(&h, personalization, sizeof(personalization)) == 0) {
+                TC_ERROR("HMAC-PRNG initialization failed.\n");
+                result = TC_FAIL;
+                goto exitTest;
+        }
+        TC_END_RESULT(result);
 
-  // Fake seed (replace by a a truly random seed):
-  for (i = 0; i < (uint32_t) sizeof (seed); ++i) {
-    seed[i] = i;
-  }
-  //  Fake personalization and additional_input (replace by appropriate values):
-  uint8_t *personalization = (uint8_t *) "HOSTNAME";//e.g.: hostname+timestamp
-  uint8_t *additional_input = (uint8_t *) "additional input";
+        TC_PRINT("HMAC-PRNG test#1 (reseed):\n");
+        if (tc_hmac_prng_reseed(&h, seed, sizeof(seed), additional_input,
+                                sizeof(additional_input)) == 0) {
+                TC_ERROR("HMAC-PRNG reseed failed.\n");
+                result = TC_FAIL;
+                goto exitTest;
+        }
 
-  if (tc_hmac_prng_init (&h, personalization, sizeof (personalization)) == 0) {
-    fatal ("HMAC-PRNG initialization failed.");
-  }
+        TC_END_RESULT(result);
 
-  if (tc_hmac_prng_reseed (&h, seed, sizeof (seed), additional_input,
-      sizeof (additional_input)) == 0) {
-    fatal ("HMAC-PRNG reseed failed.");
-  }
+        TC_PRINT("HMAC-PRNG test#1 (generate):\n");
+        if (tc_hmac_prng_generate(random, size, &h) < 1) {
+                TC_ERROR("HMAC-PRNG generate failed.\n");
+                result = TC_FAIL;
+                goto exitTest;
+        }
+        TC_END_RESULT(result);
 
-  if (tc_hmac_prng_generate (random, size, &h) < 1) {
-    fatal ("HMAC-PRNG generate failed.");
-  }
-  //printBinaryFile(random, size);
-  //show ("Pseudo-random data", random, size);
+        TC_PRINT("All HMAC tests succeeded!\n");
 
-  printf("Success!\n");
-  printf ("All HMAC tests succeeded!\n\n");
-
-  return 0;
+ exitTest:
+        TC_END_RESULT(result);
+        TC_END_REPORT(result);
 }
