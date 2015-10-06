@@ -87,7 +87,7 @@ void test_1_2 (void) {
 
   printf ("\tPerforming CTR test #2 (decryption SP 800-38a tests)...");
   (void) memcpy (ctr, out, sizeof (ctr));
-   if (tc_ctr_mode (decrypted, sizeof (decrypted), &out[TC_AES_BLOCK_SIZE], sizeof (decrypted), ctr,
+  if (tc_ctr_mode (decrypted, sizeof (decrypted), &out[TC_AES_BLOCK_SIZE], sizeof (decrypted), ctr,
 		&sched) == 0) {
     fprintf (stderr, "CTR test #2 (decryption SP 800-38a tests) failed.\n");
     exit (-1);
