@@ -27,8 +27,11 @@
  *  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  *  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  hmac_prng.h -- Interface to an HMAC-PRNG implementation.
+ */
+
+/**
+ * @file
+ * @brief Interface to an HMAC-PRNG implementation.
  *
  *  Overview:   A pseudo-random number generator (PRNG) generates a sequence
  *                      of numbers that have a distribution close to the one expected
@@ -68,10 +71,10 @@
 #include <hmac.h>
 
 struct tc_hmac_prng_struct {
-  struct tc_hmac_state_struct h;       /* the HMAC instance for this PRNG */
-  uint8_t key[TC_SHA256_DIGEST_SIZE];  /* the PRNG key */
-  uint8_t v[TC_SHA256_DIGEST_SIZE];    /* PRNG state */
-  uint32_t countdown;     /* calls to tc_hmac_prng_generate left before re-seed */
+        struct tc_hmac_state_struct h;       /* the HMAC instance for this PRNG */
+        uint8_t key[TC_SHA256_DIGEST_SIZE];  /* the PRNG key */
+        uint8_t v[TC_SHA256_DIGEST_SIZE];    /* PRNG state */
+        uint32_t countdown;     /* calls to tc_hmac_prng_generate left before re-seed */
 };
 
 typedef struct tc_hmac_prng_struct *TCHmacPrng_t;
@@ -80,7 +83,7 @@ typedef struct tc_hmac_prng_struct *TCHmacPrng_t;
  *  @brief HMAC-PRNG initialization procedure
  *  Initializes prng with personalization, disables tc_hmac_prng_generate
  *  @return returns TC_SUCCESS (1)
- *  @exception returns TC_FAIL (0) if:
+ *          returns TC_FAIL (0) if:
  *                prng == NULL,
  *                personalization == NULL,
  *                plen > MAX_PLEN
@@ -98,16 +101,13 @@ typedef struct tc_hmac_prng_struct *TCHmacPrng_t;
  *  @param personalization IN -- personalization string
  *  @param plen IN -- personalization length in bytes
  */
-int32_t tc_hmac_prng_init (
-    TCHmacPrng_t prng,
-    const uint8_t *personalization,
-    uint32_t plen);
+int32_t tc_hmac_prng_init(TCHmacPrng_t prng, const uint8_t *personalization, uint32_t plen);
 
 /**
  *  @brief HMAC-PRNG reseed procedure
  *  Mixes seed into prng, enables tc_hmac_prng_generate
  *  @return returns  TC_SUCCESS (1)
- *  @exception returns TC_FAIL (0) if:
+ *  returns TC_FAIL (0) if:
  *          prng == NULL,
  *          seed == NULL,
  *          seedlen < MIN_SLEN,
@@ -123,18 +123,14 @@ int32_t tc_hmac_prng_init (
  *  @param additional_input IN -- additional input to the prng
  *  @param additionallen IN -- additional input length in bytes
  */
-int32_t tc_hmac_prng_reseed (
-    TCHmacPrng_t prng,
-    const uint8_t *seed,
-    uint32_t seedlen,
-    const uint8_t *additional_input,
-    uint32_t additionallen);
+int32_t tc_hmac_prng_reseed(TCHmacPrng_t prng, const uint8_t *seed, uint32_t seedlen,
+                            const uint8_t *additional_input, uint32_t additionallen);
 
 /**
  *  @brief HMAC-PRNG generate procedure
  *  Generates outlen pseudo-random bytes into out buffer, updates prng
  *  @return returns TC_SUCCESS (1)
- *  @exception returns TC_RESEED_REQ (-1) if a reseed is needed
+ *          returns TC_RESEED_REQ (-1) if a reseed is needed
  *             returns TC_FAIL (0) if:
  *                out == NULL,
  *                prng == NULL,
@@ -145,9 +141,6 @@ int32_t tc_hmac_prng_reseed (
  *  @param outlen IN -- size of out buffer in bytes
  *  @param prng IN/OUT -- the PRNG state
  */
-int32_t tc_hmac_prng_generate (
-    uint8_t *out,
-    uint32_t outlen,
-    TCHmacPrng_t prng);
+int32_t tc_hmac_prng_generate(uint8_t *out, uint32_t outlen, TCHmacPrng_t prng);
 
 #endif

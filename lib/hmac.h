@@ -27,8 +27,11 @@
  *  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  *  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  hmac.h -- Interface to an HMAC implementation.
+ */
+
+/**
+ * @file
+ * @brief Interface to an HMAC implementation.
  *
  *  Overview:   HMAC is a message authentication code based on hash functions.
  *              TinyCrypt hard codes SHA-256 as the hash function. A message
@@ -62,8 +65,8 @@
 #include <sha256.h>
 
 struct tc_hmac_state_struct {
-  struct tc_sha256_state_struct hash_state; /* the internal state required by h */
-  uint8_t key[2*TC_SHA256_BLOCK_SIZE];      /* HMAC key schedule */
+        struct tc_sha256_state_struct hash_state; /* the internal state required by h */
+        uint8_t key[2*TC_SHA256_BLOCK_SIZE];      /* HMAC key schedule */
 };
 typedef struct tc_hmac_state_struct *TCHmacState_t;
 
@@ -71,7 +74,7 @@ typedef struct tc_hmac_state_struct *TCHmacState_t;
  *  @brief HMAC set key procedure
  *  Configures ctx to use key
  *  @return returns TC_SUCCESS (1)
- *  @exception returns TC_FAIL (0) if
+ *          returns TC_FAIL (0) if
  *                ctx == NULL or
  *                key == NULL or
  *                key_size == 0
@@ -79,41 +82,34 @@ typedef struct tc_hmac_state_struct *TCHmacState_t;
  * @param key IN -- the HMAC key to configure
  * @param key_size IN -- the HMAC key size
  */
-int32_t tc_hmac_set_key (
-  TCHmacState_t ctx,
-  const uint8_t *key,
-  uint32_t key_size);
+int32_t tc_hmac_set_key(TCHmacState_t ctx, const uint8_t *key, uint32_t key_size);
 
 /**
  * @brief HMAC init procedure
  * Initializes ctx to begin the next HMAC operation
  * @return returns TC_SUCCESS (1)
- * @exception returns TC_FAIL (0) if: ctx == NULL or key == NULL
+ *         returns TC_FAIL (0) if: ctx == NULL or key == NULL
  * @param ctx IN/OUT -- struct tc_hmac_state_struct buffer to init
  */
-int32_t tc_hmac_init (
-  TCHmacState_t ctx);
+int32_t tc_hmac_init(TCHmacState_t ctx);
 
 /**
  *  @brief HMAC update procedure
  *  Mixes data_length bytes addressed by data into state
  *  @return returns TC_SUCCCESS (1)
- *  @exception returns TC_FAIL (0) if: ctx == NULL or key == NULL
+ *          returns TC_FAIL (0) if: ctx == NULL or key == NULL
  *  @note Assumes state has been initialized by tc_hmac_init
  *  @param ctx IN/OUT -- state of HMAC computation so far
  *  @param data IN -- data to incorporate into state
  *  @param data_length IN -- size of data in bytes
  */
-int32_t tc_hmac_update (
-  TCHmacState_t ctx,
-  const void *data,
-  uint32_t data_length);
+int32_t tc_hmac_update(TCHmacState_t ctx, const void *data, uint32_t data_length);
 
 /**
  *  @brief HMAC final procedure
  *  Writes the HMAC tag into the tag buffer
  *  @return returns TC_SUCCESS (1)
- *  @exception returns TC_FAIL (0) if:
+ *          returns TC_FAIL (0) if:
  *                tag == NULL or
  *                ctx == NULL or
  *                key == NULL or
@@ -124,9 +120,6 @@ int32_t tc_hmac_update (
  *  @param taglen IN -- size of tag in bytes
  *  @param ctx IN -- the HMAC state for computing tag
  */
-int32_t tc_hmac_final (
-  uint8_t *tag,
-  uint32_t taglen,
-  TCHmacState_t ctx);
+int32_t tc_hmac_final(uint8_t *tag, uint32_t taglen, TCHmacState_t ctx);
 
 #endif

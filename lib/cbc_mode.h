@@ -27,8 +27,11 @@
  *  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  *  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  cbc_mode.h -- Interface to a CBC mode implementation.
+ */
+
+/**
+ * @file
+ * @brief Interface to a CBC mode implementation.
  *
  *  Overview: CBC (for "cipher block chaining") mode is a NIST approved mode of
  *            operation defined in SP 800-38a. It can be used with any block
@@ -77,7 +80,7 @@
  *  CBC encrypts inlen bytes of the in buffer into the out buffer
  *  using the encryption key schedule provided, prepends iv to out
  *  @return returns TC_SUCCESS (1)
- *  @exception Returns TC_FAIL (0) if:
+ *          returns TC_FAIL (0) if:
  *                out == NULL or
  *                in == NULL or
  *                ctr == NULL or
@@ -99,20 +102,15 @@
  *  @param iv IN -- the IV for the this encrypt/decrypt
  *  @param sched IN --  AES key schedule for this encrypt
  */
-int32_t tc_cbc_mode_encrypt (
-  uint8_t *out,
-  uint32_t outlen,
-  const uint8_t *in,
-  uint32_t inlen,
-  const uint8_t *iv,
-  const TCAesKeySched_t sched);
+int32_t tc_cbc_mode_encrypt(uint8_t *out, uint32_t outlen, const uint8_t *in,
+                            uint32_t inlen, const uint8_t *iv, const TCAesKeySched_t sched);
 
 /**
  * @brief CBC decryption procedure
  * CBC decrypts inlen bytes of the in buffer into the out buffer
  * using the encryption key schedule provided by a
  * @return returns TC_SUCCESS (1)
- * @exception returns TC_FAIL (0) if:
+ *         returns TC_FAIL (0) if:
  *                out == NULL or
  *                in == NULL or
  *                sched == NULL or
@@ -136,12 +134,7 @@ int32_t tc_cbc_mode_encrypt (
  * @param sched IN --  AES key schedule for this decrypt
  *
  */
-int32_t tc_cbc_mode_decrypt (
-  uint8_t *out,
-  uint32_t outlen,
-  const uint8_t *in,
-  uint32_t inlen,
-  const uint8_t *iv,
-  const TCAesKeySched_t sched);
+int32_t tc_cbc_mode_decrypt(uint8_t *out, uint32_t outlen, const uint8_t *in,
+                            uint32_t inlen, const uint8_t *iv, const TCAesKeySched_t sched);
 
 #endif

@@ -27,9 +27,6 @@
  *  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  *  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  utils.c -- Platform-dependent run-time operations.
- *
  */
 
 #include <utils.h>
@@ -39,24 +36,25 @@
 #define MASK_MOST_SIG_BIT 0x80
 #define MASK_TWENTY_SEVEN 0x1b
 
-uint32_t  copy (uint8_t *to,
-    uint32_t to_len,
-    const uint8_t *from,
-    uint32_t from_len) {
-
-  if (from_len <= to_len) {
-    (void) memcpy (to, from, from_len);
-    return from_len;
-  } else {
-    return TC_FAIL;
-  }
+uint32_t _copy(uint8_t *to, uint32_t to_len, const uint8_t *from, uint32_t from_len)
+{
+        if (from_len <= to_len) {
+                (void)memcpy(to, from, from_len);
+                return from_len;
+        } else {
+                return TC_FAIL;
+        }
 }
 
-void set (uint8_t *to, uint8_t val, uint32_t len) {
-  (void) memset (to, val, len);
+void _set(uint8_t *to, uint8_t val, uint32_t len)
+{
+        (void)memset(to, val, len);
 }
 
-/*Doubles the value of a byte for values up to 127. Original 'return ((a<<1) ^ ((a>>7) * 0x1b))' re-written to avoid extra multiplicaiton which the compiler won't be able to optimize */
-uint8_t double_byte (uint8_t a) {
-  return (a & MASK_MOST_SIG_BIT) ? ((a << 1) ^ MASK_TWENTY_SEVEN) : (a << 1);
+/* Doubles the value of a byte for values up to 127. Original 'return
+ * ((a<<1) ^ ((a>>7) * 0x1b))' re-written to avoid extra multiplicaiton which
+ * the compiler won't be able to optimize */
+uint8_t _double_byte(uint8_t a)
+{
+        return (a & MASK_MOST_SIG_BIT) ? ((a << 1) ^ MASK_TWENTY_SEVEN) : (a << 1);
 }

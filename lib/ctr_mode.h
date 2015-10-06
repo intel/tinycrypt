@@ -27,8 +27,11 @@
  *  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  *  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  ctr_mode.h -- Interface to CTR mode.
+ */
+
+/**
+ * @file
+ * @brief Interface to CTR mode.
  *
  *  Overview:  CTR (pronounced "counter") mode is a NIST approved mode of
  *             operation defined in SP 800-38a. It can be used with any
@@ -46,7 +49,7 @@
  *             enciphered using a same key: q < 2^(counter size).
  *
  *             TinyCrypt uses a counter of 32 bits. This means that after 2^32
- *             block encryptions, the counter will be reused (thus loosing CBC
+ *             block encryptions, the counter will be reused (thus losing CBC
  *             security). 2^32 block encryptions should be enough for most of
  *             applications targeting constrained devices. Applications intended
  *             to encrypt a larger number of blocks must replace the key after
@@ -69,7 +72,7 @@
  *  @brief CTR mode encryption/decryption procedure.
  *  CTR mode encrypts (or decrypts) inlen bytes from in buffer into out buffer
  *  @return returns TC_SUCCESS (1)
- *  @exception returns TC_FAIL (0) if:
+ *          returns TC_FAIL (0) if:
  *                out == NULL or
  *                in == NULL or
  *                ctr == NULL or
@@ -89,12 +92,7 @@
  * @param ctr IN/OUT -- the current counter value
  * @param sched IN -- an initialized AES key schedule
  */
-int32_t tc_ctr_mode (
-  uint8_t *out,
-  uint32_t outlen,
-  const uint8_t *in,
-  uint32_t inlen,
-  uint8_t *ctr,
-  const TCAesKeySched_t sched);
+int32_t tc_ctr_mode(uint8_t *out, uint32_t outlen, const uint8_t *in,
+                    uint32_t inlen, uint8_t *ctr, const TCAesKeySched_t sched);
 
 #endif

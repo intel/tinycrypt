@@ -27,8 +27,11 @@
  *  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  *  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  utils.h -- Interface to platform-dependent run-time operations.
+ */
+
+/**
+ * @file
+ * @brief Interface to platform-dependent run-time operations.
  *
  */
 
@@ -41,27 +44,23 @@
 #define TC_FAIL 0
 #define TC_RESEED_REQ -1
 
-/*
- * Copy the the buffer 'from' to the buffer 'to'.
+/**
+ * @brief Copy the the buffer 'from' to the buffer 'to'.
  *
- * Exceptions: returns TC_FAIL (0) if:
- *             from_len > to_len.
+ * @return returns TC_FAIL (0) if:
+ *         from_len > to_len.
  */
-uint32_t copy (
-    uint8_t *to,
-    uint32_t to_len,
-    const uint8_t *from,
-    uint32_t from_len);
+uint32_t _copy(uint8_t *to, uint32_t to_len, const uint8_t *from, uint32_t from_len);
 
-/*
- * Set the value 'val' into the buffer 'to', 'len' times.
+/**
+ * @brief Set the value 'val' into the buffer 'to', 'len' times.
  */
-void set (uint8_t *to, uint8_t val, uint32_t len);
+void _set(uint8_t *to, uint8_t val, uint32_t len);
 
-/*
- * This is an AES specific doubling function, which utilizes the
+/**
+ * @brief This is an AES specific doubling function, which utilizes the
  * finite field used by AES.
  */
-uint8_t double_byte (uint8_t a);
+uint8_t _double_byte(uint8_t a);
 
 #endif

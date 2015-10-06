@@ -27,8 +27,11 @@
  *  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  *  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  sha256.h -- Interface to a SHA-256 implementation.
+ */
+
+/**
+ * @file
+ * @brief Interface to a SHA-256 implementation.
  *
  *  Overview:   SHA-256 is a NIST approved cryptographic hashing algorithm
  *              specified in FIPS 180. A hash algorithm maps data of arbitrary
@@ -61,10 +64,10 @@
 #define TC_SHA256_STATE_BLOCKS (TC_SHA256_DIGEST_SIZE/4)
 
 struct tc_sha256_state_struct {
-  uint32_t iv[TC_SHA256_STATE_BLOCKS];
-  uint64_t bits_hashed;
-  uint8_t leftover[TC_SHA256_BLOCK_SIZE];
-  size_t leftover_offset;
+        uint32_t iv[TC_SHA256_STATE_BLOCKS];
+        uint64_t bits_hashed;
+        uint8_t leftover[TC_SHA256_BLOCK_SIZE];
+        size_t leftover_offset;
 };
 
 typedef struct tc_sha256_state_struct *TCSha256State_t;
@@ -73,16 +76,16 @@ typedef struct tc_sha256_state_struct *TCSha256State_t;
  *  @brief SHA256 initialization procedure
  *  Initializes s
  *  @return returns TC_SUCCESS (1)
- *  @exception returns TC_FAIL (0) if s == NULL
+ *          returns TC_FAIL (0) if s == NULL
  *  @param s Sha256 state struct
  */
-int32_t tc_sha256_init (TCSha256State_t s);
+int32_t tc_sha256_init(TCSha256State_t s);
 
 /**
  *  @brief SHA256 update procedure
  *  Hashes data_length bytes addressed by data into state s
  *  @return returns TC_SUCCESS (1)
- *  @exception returns TC_FAIl (0) if:
+ *          returns TC_FAIl (0) if:
  *                s == NULL,
  *                s->iv == NULL,
  *                data == NULL
@@ -94,13 +97,13 @@ int32_t tc_sha256_init (TCSha256State_t s);
  *  @param data message to hash
  *  @param datalen length of message to hash
  */
-int32_t tc_sha256_update (TCSha256State_t s, const uint8_t *data, size_t datalen);
+int32_t tc_sha256_update(TCSha256State_t s, const uint8_t *data, size_t datalen);
 
 /**
  *  @brief SHA256 final procedure
  *  Inserts the completed hash computation into digest
  *  @return returns TC_SUCCESS (1)
- *  @exception returns TC_FAIL (0) if:
+ *          returns TC_FAIL (0) if:
  *                s == NULL,
  *                s->iv == NULL,
  *                digest == NULL
@@ -112,6 +115,6 @@ int32_t tc_sha256_update (TCSha256State_t s, const uint8_t *data, size_t datalen
  *  @param digest unigned eight bit integer
  *  @param Sha256 state struct
  */
-int32_t tc_sha256_final (uint8_t *digest, TCSha256State_t s);
+int32_t tc_sha256_final(uint8_t *digest, TCSha256State_t s);
 
 #endif

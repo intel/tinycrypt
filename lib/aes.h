@@ -27,8 +27,11 @@
  *  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  *  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  aes.h -- Interface to an AES-128 implementation.
+ */
+
+/**
+ * @file
+ * @brief -- Interface to an AES-128 implementation.
  *
  *  Overview:   AES-128 is a NIST approved block cipher specified in
  *              FIPS 197. Block ciphers are deterministic algorithms that
@@ -47,14 +50,14 @@
 
 #include<stdint.h>
 
-#define Nb (4)  // number of columns (32-bit words) comprising the state
-#define Nk (4)  // number of 32-bit words comprising the key
-#define Nr (10) // number of rounds
+#define Nb (4)  /* number of columns (32-bit words) comprising the state */
+#define Nk (4)  /* number of 32-bit words comprising the key */
+#define Nr (10) /* number of rounds */
 #define TC_AES_BLOCK_SIZE (Nb*Nk)
 #define TC_AES_KEY_SIZE (Nb*Nk)
 
 struct tc_aes_key_sched_struct {
-  uint32_t words[Nb*(Nr+1)];
+        uint32_t words[Nb*(Nr+1)];
 };
 typedef struct tc_aes_key_sched_struct *TCAesKeySched_t;
 
@@ -62,16 +65,14 @@ typedef struct tc_aes_key_sched_struct *TCAesKeySched_t;
  *  @brief Set AES-128 encryption key
  *  Uses key k to initialize s
  *  @return  returns TC_SUCCESS (1)
- *  @exception returns TC_FAIL (0) if: s == NULL or k == NULL
+ *           returns TC_FAIL (0) if: s == NULL or k == NULL
  *  @note       This implementation skips the additional steps required for keys
  *              larger than 128 bits, and must not be used for AES-192 or
  *              AES-256 key schedule -- see FIPS 197 for details
  *  @param      s IN/OUT -- inited struct tc_aes_key_sched_struct
  *  @param      k IN -- points to the AES key
  */
-int32_t tc_aes128_set_encrypt_key (
-  TCAesKeySched_t s,
-  const uint8_t *k);
+int32_t tc_aes128_set_encrypt_key(TCAesKeySched_t s, const uint8_t *k);
 
 /**
  *  @brief AES-128 Encryption procedure
@@ -80,21 +81,18 @@ int32_t tc_aes128_set_encrypt_key (
  *  @note Assumes s was initialized by aes_set_encrypt_key;
  *              out and in point to 16 byte buffers
  *  @return  returns TC_SUCCESS (1)
- *  @exception returns TC_FAIL (0) if: out == NULL or in == NULL or s == NULL
+ *           returns TC_FAIL (0) if: out == NULL or in == NULL or s == NULL
  *  @param out IN/OUT -- buffer to receive ciphertext block
  *  @param in IN -- a plaintext block to encrypt
  *  @param s IN -- initialized AES key schedule
  */
-int32_t tc_aes_encrypt (
-  uint8_t *out,
-  const uint8_t *in,
-  const TCAesKeySched_t s);
+int32_t tc_aes_encrypt(uint8_t *out, const uint8_t *in, const TCAesKeySched_t s);
 
 /**
  *  @brief Set the AES-128 decryption key
  *  Uses key k to initialize s
  *  @return returns TC_SUCCESS (1)
- *  @exeption returns TC_FAIL (0) if: s == NULL or k == NULL
+ *          returns TC_FAIL (0) if: s == NULL or k == NULL
  *  @note       This is the implementation of the straightforward inverse cipher
  *              using the cipher documented in FIPS-197 figure 12, not the
  *              equivalent inverse cipher presented in Figure 15
@@ -104,24 +102,19 @@ int32_t tc_aes_encrypt (
  *  @param s  IN/OUT -- inited struct tc_aes_key_sched_struct
  *  @param k  IN -- points to the AES key
  */
-int32_t tc_aes128_set_decrypt_key (
-  TCAesKeySched_t s,
-  const uint8_t *k);
+int32_t tc_aes128_set_decrypt_key(TCAesKeySched_t s, const uint8_t *k);
 
 /**
  *  @brief AES-128 Encryption procedure
  *  Decrypts in buffer into out buffer under key schedule s
  *  @return returns TC_SUCCESS (1)
- *  @exception Returns TC_FAIL (0) if: out is NULL or in is NULL or s is NULL
+ *          returns TC_FAIL (0) if: out is NULL or in is NULL or s is NULL
  *  @note   Assumes s was initialized by aes_set_encrypt_key
  *          out and in point to 16 byte buffers
  *  @param out IN/OUT -- buffer to receive ciphertext block
  *  @param in IN -- a plaintext block to encrypt
  *  @param s IN -- initialized AES key schedule
  */
-int32_t tc_aes_decrypt (
-  uint8_t *out,
-  const uint8_t *in,
-  const TCAesKeySched_t s);
+int32_t tc_aes_decrypt(uint8_t *out, const uint8_t *in, const TCAesKeySched_t s);
 
 #endif
