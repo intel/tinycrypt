@@ -16,18 +16,6 @@ all:	test_aes \
 	test_hmac_prng \
 	test_sha256 
 
-clean:
-	/bin/rm -f *.o *~
-	/bin/rm -f test_aes
-	/bin/rm -f test_cbc_mode
-	/bin/rm -f test_ctr_mode 
-	/bin/rm -f test_hmac
-	/bin/rm -f test_hmac_prng
-	/bin/rm -f test_sha256
-
-
-
-
 
 # Dependencies
 test_aes:		test_aes.o ../lib/aes_encrypt.o \

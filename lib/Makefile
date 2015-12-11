@@ -20,8 +20,6 @@ OBJS =	utils.o \
 
 all:	$(OBJS)
 
-clean:
-	/bin/rm -f *.exe *.o *.gch core *dump *~
 
 # Dependencies
 aes_decrypt.o:		aes_decrypt.c aes.h utils.o 
