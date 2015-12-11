@@ -1,6 +1,6 @@
 .. _crypto:
 
-TinyCrypt Cryptographic Library v1.0
+TinyCrypt Cryptographic Library 
 ####################################
 Copyright (C) 2015 by Intel Corporation, All Rights Reserved.
 
