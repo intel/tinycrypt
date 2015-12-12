@@ -16,6 +16,15 @@ all:	test_aes \
 	test_hmac_prng \
 	test_sha256 
 
+clean:
+	$(RM) *.o *~
+	$(RM) test_aes
+	$(RM) test_cbc_mode
+	$(RM) test_ctr_mode
+	$(RM) test_hmac
+	$(RM) test_hmac_prng
+	$(RM) test_sha256
+	$(RM) ../lib/*.o *~
 
 # Dependencies
 test_aes:		test_aes.o ../lib/aes_encrypt.o \

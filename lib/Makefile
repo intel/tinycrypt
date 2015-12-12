@@ -21,14 +21,7 @@ OBJS =	utils.o \
 all:	$(OBJS)
 
 clean:
-       $(RM) *.o *~
-       $(RM) test_aes
-       $(RM) test_cbc_mode
-       $(RM) test_ctr_mode
-       $(RM) test_hmac
-       $(RM) test_hmac_prng
-       $(RM) test_sha256
-
+	$(RM) *.o *.gch core *dump *~
 
 # Dependencies
 aes_decrypt.o:		aes_decrypt.c aes.h utils.o 
