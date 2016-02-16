@@ -41,15 +41,17 @@ The TinyCrypt Library provides an implementation for constrained devices of a
 minimal set of standard cryptography primitives. 
 
 Please, ***SEE THE DOCUMENTATION*** folder for more information on the supported 
-cryptographic primitives and the limitations of TinyCrypt library.
+cryptographic primitives and the limitations of TinyCrypt library. For usage,
+security and technicalities, please see the corresponding header file of each 
+cryptographic primitive. 
 
 ================================================================================
 
 Organization:
 
-/lib: Cryptographic primitives source code.
+/lib: C source code of the cryptographic primitives.
 /tests: Test vectors of the cryptographic primitives.
-/documentation: Documentation of TinyCrypt. 
+/doc: Documentation of TinyCrypt. 
 
 ================================================================================
 

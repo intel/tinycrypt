@@ -6,15 +6,12 @@
 #
 ################################################################################
 
-CFLAGS = -Os -std=c99 -Wall -Wextra -I../lib -v -I../tests/include
+CC=gcc 
+CFLAGS = -Os -std=c99 -Wall -Wextra -I../include -I../lib
+VPATH = ../include ../lib
 
-ifdef ComSpec
-    RM=del /F /Q
-else
-    RM=rm -f
-endif
-
-export RM
+export CC
 export CFLAGS
+export VPATH
 
 ################################################################################

@@ -6,7 +6,7 @@
 #	  		See lib/Makefile and tests/Makefile for further configuration.
 #
 ################################################################################
-include Makefile.conf
+include config.mk
 
 all:
 	$(MAKE) -C lib
