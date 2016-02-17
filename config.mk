@@ -7,8 +7,8 @@
 ################################################################################
 
 CC=gcc 
-CFLAGS = -Os -std=c99 -Wall -Wextra -I../include -I../lib
-VPATH = ../include ../lib
+CFLAGS = -Os -std=c99 -Wall -Wextra -I../lib/include/ -I../lib/source/ -I../tests/include/
+VPATH = ../lib/include/tinycrypt/ ../lib/source/
 
 export CC
 export CFLAGS

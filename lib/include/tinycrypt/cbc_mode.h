@@ -19,14 +19,15 @@
  *
  *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  *  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
- *  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- *  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- *  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- *  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- *  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ *  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ *  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ *  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ *  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ *  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ *  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ *  POSSIBILITY OF SUCH DAMAGE.
  */
 
 /**
@@ -45,12 +46,12 @@
  *            good practice to replace the encryption when q == 2^56). CBC mode
  *            provides NO data integrity.
  *
- *            CBC mode assumes that the IV value input into the tc_cbc_mode_encrypt
- *            is randomly generated. The TinyCrypt library provides HMAC-PRNG
- *            module, which generates suitable IVs. Other methods for generating
- *            IVs are acceptable, provided that the values of the IVs generated
- *            appear random to any adversary, including someone with complete
- *            knowledge of the system design.
+ *            CBC mode assumes that the IV value input into the
+ *            tc_cbc_mode_encrypt is randomly generated. The TinyCrypt library
+ *            provides HMAC-PRNG module, which generates suitable IVs. Other
+ *            methods for generating IVs are acceptable, provided that the
+ *            values of the IVs generated appear random to any adversary,
+ *            including someone with complete knowledge of the system design.
  *
  *            The randomness property on which CBC mode's security depends is
  *            the unpredictability of the IV. Since it is unpredictable, this
@@ -73,7 +74,11 @@
 #ifndef __TC_CBC_MODE_H__
 #define __TC_CBC_MODE_H__
 
-#include <aes.h>
+#include <tinycrypt/aes.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /**
  *  @brief CBC encryption procedure
@@ -103,12 +108,13 @@
  *  @param sched IN --  AES key schedule for this encrypt
  */
 int32_t tc_cbc_mode_encrypt(uint8_t *out, uint32_t outlen, const uint8_t *in,
-                            uint32_t inlen, const uint8_t *iv, const TCAesKeySched_t sched);
+			    uint32_t inlen, const uint8_t *iv,
+			    const TCAesKeySched_t sched);
 
 /**
  * @brief CBC decryption procedure
  * CBC decrypts inlen bytes of the in buffer into the out buffer
- * using the encryption key schedule provided by a
+ * using the provided encryption key schedule
  * @return returns TC_SUCCESS (1)
  *         returns TC_FAIL (0) if:
  *                out == NULL or
@@ -135,6 +141,11 @@ int32_t tc_cbc_mode_encrypt(uint8_t *out, uint32_t outlen, const uint8_t *in,
  *
  */
 int32_t tc_cbc_mode_decrypt(uint8_t *out, uint32_t outlen, const uint8_t *in,
-                            uint32_t inlen, const uint8_t *iv, const TCAesKeySched_t sched);
+			    uint32_t inlen, const uint8_t *iv,
+			    const TCAesKeySched_t sched);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

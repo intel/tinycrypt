@@ -19,14 +19,15 @@
  *
  *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  *  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
- *  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- *  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- *  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- *  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- *  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ *  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ *  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ *  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ *  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ *  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ *  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ *  POSSIBILITY OF SUCH DAMAGE.
  */
 
 /**
@@ -62,11 +63,17 @@
 #ifndef __TC_HMAC_H__
 #define __TC_HMAC_H__
 
-#include <sha256.h>
+#include <tinycrypt/sha256.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 struct tc_hmac_state_struct {
-        struct tc_sha256_state_struct hash_state; /* the internal state required by h */
-        uint8_t key[2*TC_SHA256_BLOCK_SIZE];      /* HMAC key schedule */
+	/* the internal state required by h */
+	struct tc_sha256_state_struct hash_state;
+	/* HMAC key schedule */
+	uint8_t key[2*TC_SHA256_BLOCK_SIZE];
 };
 typedef struct tc_hmac_state_struct *TCHmacState_t;
 
@@ -82,7 +89,9 @@ typedef struct tc_hmac_state_struct *TCHmacState_t;
  * @param key IN -- the HMAC key to configure
  * @param key_size IN -- the HMAC key size
  */
-int32_t tc_hmac_set_key(TCHmacState_t ctx, const uint8_t *key, uint32_t key_size);
+int32_t tc_hmac_set_key(TCHmacState_t ctx,
+			const uint8_t *key,
+			uint32_t key_size);
 
 /**
  * @brief HMAC init procedure
@@ -103,7 +112,9 @@ int32_t tc_hmac_init(TCHmacState_t ctx);
  *  @param data IN -- data to incorporate into state
  *  @param data_length IN -- size of data in bytes
  */
-int32_t tc_hmac_update(TCHmacState_t ctx, const void *data, uint32_t data_length);
+int32_t tc_hmac_update(TCHmacState_t ctx,
+		       const void *data,
+		       uint32_t data_length);
 
 /**
  *  @brief HMAC final procedure
@@ -118,8 +129,12 @@ int32_t tc_hmac_update(TCHmacState_t ctx, const void *data, uint32_t data_length
  *  state has been initialized by tc_hmac_init
  *  @param tag IN/OUT -- buffer to receive computed HMAC tag
  *  @param taglen IN -- size of tag in bytes
- *  @param ctx IN -- the HMAC state for computing tag
+ *  @param ctx IN/OUT -- the HMAC state for computing tag
  */
 int32_t tc_hmac_final(uint8_t *tag, uint32_t taglen, TCHmacState_t ctx);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

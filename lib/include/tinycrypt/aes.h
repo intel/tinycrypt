@@ -19,14 +19,15 @@
  *
  *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  *  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
- *  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- *  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- *  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- *  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- *  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ *  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ *  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ *  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ *  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ *  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ *  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ *  POSSIBILITY OF SUCH DAMAGE.
  */
 
 /**
@@ -48,7 +49,11 @@
 #ifndef __TC_AES_H__
 #define __TC_AES_H__
 
-#include<stdint.h>
+#include <stdint.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define Nb (4)  /* number of columns (32-bit words) comprising the state */
 #define Nk (4)  /* number of 32-bit words comprising the key */
@@ -57,7 +62,7 @@
 #define TC_AES_KEY_SIZE (Nb*Nk)
 
 struct tc_aes_key_sched_struct {
-        uint32_t words[Nb*(Nr+1)];
+	uint32_t words[Nb*(Nr+1)];
 };
 typedef struct tc_aes_key_sched_struct *TCAesKeySched_t;
 
@@ -69,7 +74,7 @@ typedef struct tc_aes_key_sched_struct *TCAesKeySched_t;
  *  @note       This implementation skips the additional steps required for keys
  *              larger than 128 bits, and must not be used for AES-192 or
  *              AES-256 key schedule -- see FIPS 197 for details
- *  @param      s IN/OUT -- inited struct tc_aes_key_sched_struct
+ *  @param      s IN/OUT -- initialized struct tc_aes_key_sched_struct
  *  @param      k IN -- points to the AES key
  */
 int32_t tc_aes128_set_encrypt_key(TCAesKeySched_t s, const uint8_t *k);
@@ -86,7 +91,9 @@ int32_t tc_aes128_set_encrypt_key(TCAesKeySched_t s, const uint8_t *k);
  *  @param in IN -- a plaintext block to encrypt
  *  @param s IN -- initialized AES key schedule
  */
-int32_t tc_aes_encrypt(uint8_t *out, const uint8_t *in, const TCAesKeySched_t s);
+int32_t tc_aes_encrypt(uint8_t *out,
+		       const uint8_t *in,
+		       const TCAesKeySched_t s);
 
 /**
  *  @brief Set the AES-128 decryption key
@@ -99,7 +106,7 @@ int32_t tc_aes_encrypt(uint8_t *out, const uint8_t *in, const TCAesKeySched_t s)
  *  @warning    This routine skips the additional steps required for keys larger
  *              than 128, and must not be used for AES-192 or AES-256 key
  *              schedule -- see FIPS 197 for details
- *  @param s  IN/OUT -- inited struct tc_aes_key_sched_struct
+ *  @param s  IN/OUT -- initialized struct tc_aes_key_sched_struct
  *  @param k  IN -- points to the AES key
  */
 int32_t tc_aes128_set_decrypt_key(TCAesKeySched_t s, const uint8_t *k);
@@ -115,6 +122,12 @@ int32_t tc_aes128_set_decrypt_key(TCAesKeySched_t s, const uint8_t *k);
  *  @param in IN -- a plaintext block to encrypt
  *  @param s IN -- initialized AES key schedule
  */
-int32_t tc_aes_decrypt(uint8_t *out, const uint8_t *in, const TCAesKeySched_t s);
+int32_t tc_aes_decrypt(uint8_t *out,
+		       const uint8_t *in,
+		       const TCAesKeySched_t s);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
