@@ -1,20 +1,20 @@
 .. _crypto:
 
-TinyCrypt Cryptographic Library 
-####################################
+TinyCrypt Cryptographic Library
+###############################
 Copyright (C) 2015 by Intel Corporation, All Rights Reserved.
 
 Overview
 ********
-The TinyCrypt Library provides an implementation targeting constrained devices
-of a minimal set of standard cryptography primitives, as listed below. TinyCrypt
-implementations differ in many aspects from the standard specifications in
-in the hope to better serve applications targeting constrained devices (see the
-Important Remarks section for some important differences). Certain cryptographic
-primitives depend on other primitives, as mentioned in the list below.
+The TinyCrypt Library provides an implementation for targeting constrained devices
+with a minimal set of standard cryptography primitives, as listed below. To better
+serve applications targeting constrained devices, TinyCrypt implementations differ
+from the standard specifications (see the Important Remarks section for some
+important differences). Certain cryptographic primitives depend on other
+primitives, as mentioned in the list below.
 
-Besides the Important Remarks section below, valuable information on the usage,
-security and technicalities of each cryptographic primitive can be found in the
+Aside from the Important Remarks section below, valuable information on the usage,
+security and technicalities of each cryptographic primitive are found in the
 corresponding header file.
 
 * SHA-256:
@@ -76,81 +76,74 @@ corresponding header file.
   * Type of primitive: Digital signature.
   * Standard Specification: RFC 6090.
   * Requires: ECC auxiliary functions (ecc.h/c).
- 
-===============================================================================
+
 Design Goals
 ************
 
 * Minimize the code size of each cryptographic primitive. This means minimize
  the size of a platform-independent implementation, as presented in TinyCrypt.
  Note that various applications may require further features, optimizations with
- respect to other metrics and countermeasures for particular threats. These 
- pecularities would increase the code size and thus are not considered here.
+ respect to other metrics and countermeasures for particular threats. These
+ peculiarities would increase the code size and thus are not considered here.
 
-* Minimize the dependencies among the cryptographic primitives. This means 
+* Minimize the dependencies among the cryptographic primitives. This means
  that it is unnecessary to build and allocate object code for more primitives
  than the ones strictly required by the intended application. In other words,
  one can select and compile only the primitives required by the application.
 
 
 Important Remarks
-***********
+*****************
 
-The cryptographic implementations in TinyCrypt library have some limitations. 
-Some of these limitations are inherent to the cryptographic primitives 
-themselves, but others are specific to TinyCrypt in order to meet its design 
-goals (in special, minimal code size) and to better serve applications targeting 
-constrained devices in general. Below, some of these limitations are discussed.
+The cryptographic implementations in TinyCrypt library have some limitations.
+Some of these limitations are inherent to the cryptographic primitives
+themselves, while others are specific to TinyCrypt. Some of these limitations
+are discussed in-depth below.
 
 General Remarks
-===================
+***************
 
-* TinyCrypt does **not** intend to be fully side-channel resistant. There is a huge
-  variety of side-channel attacks, many of them only relevant to certain
-  platforms. In this sense, instead of penalizing all library users with
-  side-channel countermeasures (i.e., increasing the overall code size),
+* TinyCrypt does **not** intend to be fully side-channel resistant. Due to the
+  variety of side-channel attacks, many of them making certain platforms
+  vulnerable. In this sense, instead of penalizing all library users with
+  side-channel countermeasures such as increasing the overall code size,
   TinyCrypt only implements certain generic timing-attack countermeasures.
 
 Specific Remarks
-====================
+****************
 
 * SHA-256:
 
-  * The number of bits_hashed in the state is not checked for overflow. Note 
+  * The number of bits_hashed in the state is not checked for overflow. Note
     however that this will only be a problem if you intend to hash more than
     2^64 bits, which is an extremely large window.
 
 * HMAC:
 
-  * The HMAC state stays in memory after processing. If your application
-    intends to have sensitive data in this buffer, remind to erase it after
-    the data is processed.
-
   * The HMAC verification process is assumed to be performed by the application.
-    This process boils down to compare the computed tag with some given tag.
-    Note that conventional memory comparison methods (such as memcmp function)
-    might be vulnerable to timing attacks, thus be sure to use a constant-time
-    memory comparison function for this purpose (such as compare_constant_time
+    This compares the computed tag with some given tag.
+    Note that conventional memory-comparison methods (such as memcmp function)
+    might be vulnerable to timing attacks; thus be sure to use a constant-time
+    memory comparison function (such as compare_constant_time
     function provided in lib/utils.c).
 
 * HMAC-PRNG:
 
-  * Before using HMAC-PRNG, you *MUST* find an entropy source to produce a seed. 
-    PRNGs only stretch the seed into a seemingly random output of arbitrary 
-    length. The security of the output is exactly equal to the 
+  * Before using HMAC-PRNG, you *must* find an entropy source to produce a seed.
+    PRNGs only stretch the seed into a seemingly random output of arbitrary
+    length. The security of the output is exactly equal to the
     unpredictability of the seed.
-    
-  * NIST SP 800-90A requires three items as seed material in the initialization 
-    step: entropy seed, personalization and a nonce (which is optional). To 
-    achieve small code size, TinyCrypts only requires the personalization 
-    (which is always available to the user) and indirectly requires the 
-    entropy seed by requiring a mandatory call to the re-seed function).
+
+  * NIST SP 800-90A requires three items as seed material in the initialization
+    step: entropy seed, personalization and a nonce (which is not implemented).
+    TinyCrypt requires the personalization byte array and automatically creates
+    the entropy seed using a mandatory call to the re-seed function.
 
 * AES-128:
 
   * The current implementation does not support other key-lengths (such as 256
-    bits). Note that if you need AES-256, it doesn't sound as though your 
-    application is running in a constrained environment. AES-256 requires keys 
+    bits). Note that if you need AES-256, it doesn't sound as though your
+    application is running in a constrained environment. AES-256 requires keys
     twice the size as for AES-128, and the key schedule is 40% larger.
 
 * CTR mode:
@@ -188,7 +181,7 @@ Specific Remarks
     invocations is defined as 2^(8q) bytes.
 
     To achieve minimal code size, TinyCrypt CCM implementation fixes q = 2,
-    which is a quite reasonable choice for constrained applications. The 
+    which is a quite reasonable choice for constrained applications. The
     implications of this choice are:
 
     The nonce size is: 13 bytes.
@@ -213,13 +206,13 @@ Specific Remarks
 
         * Non-empty associated data and empty payload (it degenerates to an
           authentication-only mode on the associated data).
-           
+
    * RFC-3610, which also specifies CCM, presents a few relevant security
      suggestions, such as: it is recommended for most applications to use a
      mac size greater than 8. Besides, it is emphasized that the usage of the
      same nonce for two different messages which are encrypted with the same
      key obviously destroys the security properties of CCM mode.
-  
+
 * ECC-DH and ECC-DSA:
 
   * TinyCrypt ECC implementation is based on nano-ecc (see
@@ -257,10 +250,10 @@ of cryptography usages:
  * Create an authenticated, replay-protected session (HMAC-SHA256 + HMAC-PRNG);
 
  * Authenticated encryption (AES-128 + AES-CCM);
- 
-   * Key-exchange (EC-DH);
- 
-   * Digital signature (EC-DSA);
+
+ * Key-exchange (EC-DH);
+
+ * Digital signature (EC-DSA);
 
 Test Vectors
 ************
@@ -306,8 +299,10 @@ References
 
 .. _NIST SP 800-38B (AES-CMAC):
    http://csrc.nist.gov/publications/nistpubs/800-38B/SP_800-38B.pdf
-    
-- `NIST SP 800-38C (AES-CCM)`_
+
+* `NIST SP 800-38C (AES-CCM)`_
+
+.. _NIST SP 800-38C (AES-CCM):
     http://csrc.nist.gov/publications/nistpubs/800-38C/SP800-38C_updated-July20_2007.pdf
 
 * `NIST Statistical Test Suite`_
