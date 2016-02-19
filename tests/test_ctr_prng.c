@@ -46,7 +46,7 @@ int main(void)
 
 	uint8_t * entropy = hexStringToBytes("ce50f33da5d4c1d3d4004eb35244b7f2cd7f2e5076fbf6780a7ff634b249a5fc");
 
-	int32_t ret = tc_ctr_prng_init(&ctx, entropy, sizeof entropy, 0, 0);
+	int32_t ret = tc_ctr_prng_init(&ctx, entropy, 32, 0, 0);
 	
 	TC_START("Performing CTR-PRNG tests:");
 
