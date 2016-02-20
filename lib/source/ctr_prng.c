@@ -279,7 +279,7 @@ int32_t tc_ctr_prng_generate(TCCtrPrng_t * const ctx,
 			}
       
 			/* 10.2.1.5.1 step 6 */
-			tc_ctr_prng_update(ctx, 0);
+			tc_ctr_prng_update(ctx, additional_input_buf);
 
 			/* 10.2.1.5.1 step 7 */
 			ctx->reseedCount++;
