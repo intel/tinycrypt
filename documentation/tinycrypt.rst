@@ -31,7 +31,7 @@ corresponding header file.
 
 * HMAC-PRNG:
 
-  * Type of primitive: Pseudo-random number generator.
+  * Type of primitive: Pseudo-random number generator (256-bit strength).
   * Standard Specification: NIST SP 800-90A.
   * Requires: SHA-256 and HMAC-SHA256.
 
@@ -65,6 +65,12 @@ corresponding header file.
   * Standard Specification: NIST SP 800-38C.
   * Requires: AES-128.
 
+* CTR-PRNG:
+
+  * Type of primitive: Pseudo-random number generator (128-bit strength).
+  * Standard Specification: NIST SP 800-90A.
+  * Requires: AES-128.
+  
 * ECC-DH:
 
   * Type of primitive: Key exchange.
@@ -151,6 +157,13 @@ Specific Remarks
   * The AES-CTR mode limits the size of a data message they encrypt to 2^32
     blocks. If you need to encrypt larger data sets, your application would
     need to replace the key after 2^32 block encryptions.
+    
+* CTR-PRNG:
+
+  * Before using CTR-PRNG, you *must* find an entropy source to produce a seed.
+    PRNGs only stretch the seed into a seemingly random output of arbitrary
+    length. The security of the output is exactly equal to the
+    unpredictability of the seed.
 
 * CBC mode:
 
@@ -243,7 +256,7 @@ of cryptography usages:
 
  * Construct random mappings (HMAC-SHA256);
 
- * Construct nonces and challenges (HMAC-PRNG);
+ * Construct nonces and challenges (HMAC-PRNG, CTR-PRNG);
 
  * Authenticate using a shared secret (HMAC-SHA256);
 
