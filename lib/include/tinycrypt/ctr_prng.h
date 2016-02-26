@@ -1,4 +1,4 @@
-/* ctr_prng.h - TinyCrypt interface to an CTR-PRNG implementation */
+/* ctr_prng.h - TinyCrypt interface to a CTR-PRNG implementation */
 
 /*
  * Copyright (c) 2016, Chris Morrison
@@ -29,7 +29,7 @@
 
 /**
  * @file
- * @brief Interface to an CTR-PRNG implementation.
+ * @brief Interface to a CTR-PRNG implementation.
  *
  *  Overview:   A pseudo-random number generator (PRNG) generates a sequence
  *              of numbers that have a distribution close to the one expected
