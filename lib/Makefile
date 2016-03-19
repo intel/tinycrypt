@@ -14,6 +14,7 @@ OBJS =	utils.o \
 	aes_encrypt.o \
 	cbc_mode.o \
 	ctr_mode.o \
+	ctr_prng.o \
 	ccm_mode.o \
 	cmac_mode.o \
 	hmac.o \
@@ -33,6 +34,7 @@ aes_decrypt.o:		aes_decrypt.c aes.h utils.o
 aes_encrypt.o:		aes_encrypt.c aes.h utils.o
 cbc_mode.o:		cbc_mode.c cbc_mode.h utils.o
 ctr_mode.o:	        ctr_mode.c ctr_mode.h utils.o
+ctr_prng.o:		ctr_prng.c ctr_prng.h
 ccm_mode.o:	        ccm_mode.c ccm_mode.h utils.o
 cmac_mode.o:	        ccm_mode.c ccm_mode.h utils.o
 hmac.o:		        hmac.c hmac.h utils.o
