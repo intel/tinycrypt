@@ -61,6 +61,8 @@
 
 #include <tinycrypt/aes.h>
 
+#define TC_CTR_PRNG_RESEED_REQ -1
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -81,8 +83,8 @@ typedef struct
 /**
  *  @brief CTR-PRNG initialization procedure
  *  Initializes prng context with entropy and personalization string (if any)
- *  @return returns TC_SUCCESS (1)
- *          returns TC_FAIL (0) if:
+ *  @return returns TC_CRYPTO_SUCCESS (1)
+ *          returns TC_CRYPTO_FAIL (0) if:
  *                ctx == NULL,
  *                entropy == NULL,
  *                entropyLen < (TC_AES_KEY_SIZE + TC_AES_BLOCK_SIZE)
@@ -106,8 +108,8 @@ int32_t tc_ctr_prng_init(TCCtrPrng_t * const ctx,
 /**
  *  @brief CTR-PRNG reseed procedure
  *  Mixes entropy and additional_input into the prng context
- *  @return returns  TC_SUCCESS (1)
- *  returns TC_FAIL (0) if:
+ *  @return returns  TC_CRYPTO_SUCCESS (1)
+ *  returns TC_CRYPTO_FAIL (0) if:
  *          ctx == NULL,
  *          entropy == NULL,
  *          entropylen < (TC_AES_KEY_SIZE + TC_AES_BLOCK_SIZE)
@@ -131,9 +133,9 @@ int32_t tc_ctr_prng_reseed(TCCtrPrng_t * const ctx,
 /**
  *  @brief CTR-PRNG generate procedure
  *  Generates outlen pseudo-random bytes into out buffer, updates prng
- *  @return returns TC_SUCCESS (1)
- *          returns TC_RESEED_REQ (-1) if a reseed is needed
- *             returns TC_FAIL (0) if:
+ *  @return returns TC_CRYPTO_SUCCESS (1)
+ *          returns TC_CTR_PRNG_RESEED_REQ (-1) if a reseed is needed
+ *             returns TC_CRYPTO_FAIL (0) if:
  *                ctx == NULL,
  *                out == NULL,
  *                outlen >= 2^16

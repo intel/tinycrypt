@@ -29,6 +29,7 @@
 
 #include <tinycrypt/ctr_prng.h>
 #include <tinycrypt/utils.h>
+#include <tinycrypt/constants.h>
 #include <string.h>
 
 /*
@@ -127,7 +128,7 @@ int32_t tc_ctr_prng_init(TCCtrPrng_t * const ctx,
 			uint8_t const * const personalization,
 			uint32_t pLen)
 {
-	int32_t result = TC_FAIL;	
+	int32_t result = TC_CRYPTO_FAIL;	
 	uint32_t i;
 	uint8_t personalization_buf[TC_AES_KEY_SIZE + TC_AES_BLOCK_SIZE] = {0U};
 	uint8_t seed_material[TC_AES_KEY_SIZE + TC_AES_BLOCK_SIZE];
@@ -167,7 +168,7 @@ int32_t tc_ctr_prng_init(TCCtrPrng_t * const ctx,
 		/* 10.2.1.3.1 step 7 */
 		ctx->reseedCount = 1U;
 
-		result = TC_SUCCESS;
+		result = TC_CRYPTO_SUCCESS;
 	}
 	return result;
 }
@@ -179,7 +180,7 @@ int32_t tc_ctr_prng_reseed(TCCtrPrng_t * const ctx,
 			uint32_t additionallen)
 {
 	uint32_t i;
-	int32_t result = TC_FAIL;
+	int32_t result = TC_CRYPTO_FAIL;
 	uint8_t additional_input_buf[TC_AES_KEY_SIZE + TC_AES_BLOCK_SIZE] = {0U};
 	uint8_t seed_material[TC_AES_KEY_SIZE + TC_AES_BLOCK_SIZE];
 
@@ -212,7 +213,7 @@ int32_t tc_ctr_prng_reseed(TCCtrPrng_t * const ctx,
 		/* 10.2.1.4.1 step 5 */
 		ctx->reseedCount = 1U;
 
-		result = TC_SUCCESS;
+		result = TC_CRYPTO_SUCCESS;
 	}
 	return result;
 }
@@ -229,14 +230,14 @@ int32_t tc_ctr_prng_generate(TCCtrPrng_t * const ctx,
 	/* 2^19 bits - see section 10.2.1 */ 
 	static const uint32_t MAX_BYTES_PER_REQ = 65536U; 
 
-	int32_t result = TC_FAIL;
+	int32_t result = TC_CRYPTO_FAIL;
 
 	if ((0 != ctx) && (0 != out) && (outlen < MAX_BYTES_PER_REQ))
 	{
 		/* 10.2.1.5.1 step 1 */
 		if (ctx->reseedCount > MAX_REQS_BEFORE_RESEED)
 		{
-			result = TC_RESEED_REQ;
+			result = TC_CTR_PRNG_RESEED_REQ;
 		}
 		else
 		{
@@ -285,7 +286,7 @@ int32_t tc_ctr_prng_generate(TCCtrPrng_t * const ctx,
 			ctx->reseedCount++;
 
 			/* 10.2.1.5.1 step 8 */
-			result = TC_SUCCESS;
+			result = TC_CRYPTO_SUCCESS;
 		}
 	}
 

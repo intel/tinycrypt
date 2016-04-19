@@ -1,4 +1,4 @@
-/* test_aes.c - TinyCrypt AES-128 tests (including NIST tests) */
+/* test_aes.c - TinyCrypt  implementation of some AES-128 tests (including NIST tests) */
 
 /*
  *  Copyright (C) 2015 by Intel Corporation, All Rights Reserved.
@@ -19,14 +19,15 @@
  *
  *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  *  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
- *  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- *  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- *  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- *  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- *  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ *  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ *  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ *  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ *  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ *  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ *  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ *  POSSIBILITY OF SUCH DAMAGE.
  */
 
 /*
@@ -40,15 +41,17 @@
   - AES128 NIST variable-key and fixed-text
 */
 
-#include <test_utils.h>
 #include <tinycrypt/aes.h>
+#include <tinycrypt/constants.h>
+#include <test_utils.h>
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 #include <stdint.h>
 #include <stddef.h>
 
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
 
 #define NUM_OF_NIST_KEYS 16
 #define NUM_OF_FIXED_KEYS 128
@@ -81,7 +84,8 @@ uint32_t test_1(void)
         struct tc_aes_key_sched_struct s;
 
         if (tc_aes128_set_encrypt_key(&s, nist_key) == 0) {
-                TC_ERROR("AES128 test %s (NIST key schedule test) failed.\n", __func__);
+                TC_ERROR("AES128 test %s (NIST key schedule test) failed.\n",
+			 __func__);
                 result = TC_FAIL;
                 goto exitTest1;
         }
@@ -120,12 +124,14 @@ int32_t test_2(void)
 
         (void)tc_aes128_set_encrypt_key(&s, nist_key);
         if (tc_aes_encrypt(ciphertext, nist_input, &s) == 0) {
-                TC_ERROR("AES128 %s (NIST encryption test) failed.\n", __func__);
+                TC_ERROR("AES128 %s (NIST encryption test) failed.\n",
+			 __func__);
                 result = TC_FAIL;
                 goto exitTest2;
         }
 
-        result = check_result(2, expected, sizeof(expected), ciphertext, sizeof(ciphertext));
+        result = check_result(2, expected, sizeof(expected),
+			      ciphertext, sizeof(ciphertext));
 
  exitTest2:
 
@@ -133,20 +139,23 @@ int32_t test_2(void)
         return result;
 }
 
-uint32_t var_text_test(uint32_t r, const uint8_t *in, const uint8_t *out, TCAesKeySched_t s)
+uint32_t var_text_test(uint32_t r, const uint8_t *in, const uint8_t *out,
+		       TCAesKeySched_t s)
 {
         uint8_t ciphertext[NUM_OF_NIST_KEYS];
         uint8_t decrypted[NUM_OF_NIST_KEYS];
         uint32_t result = TC_PASS;
 
         (void)tc_aes_encrypt(ciphertext, in, s);
-        result = check_result(r, out, NUM_OF_NIST_KEYS, ciphertext, sizeof(ciphertext));
+        result = check_result(r, out, NUM_OF_NIST_KEYS,
+			      ciphertext, sizeof(ciphertext));
         if (result != TC_FAIL){
                 if (tc_aes_decrypt(decrypted, ciphertext, s) == 0) {
                         TC_ERROR("aes_decrypt failed\n");
                         result = TC_FAIL;
                 } else {
-                        result = check_result(r, in, NUM_OF_NIST_KEYS, decrypted, sizeof(decrypted));
+                        result = check_result(r, in, NUM_OF_NIST_KEYS,
+					      decrypted, sizeof(decrypted));
                 }
         }
         return result;
@@ -1095,7 +1104,8 @@ uint32_t var_key_test(uint32_t r, const uint8_t *in, const uint8_t *out)
         (void)tc_aes128_set_encrypt_key(&s, in);
 
         (void)tc_aes_encrypt(ciphertext, plaintext, &s);
-        result = check_result(r, out, NUM_OF_NIST_KEYS, ciphertext, sizeof(ciphertext));
+        result = check_result(r, out, NUM_OF_NIST_KEYS,
+			      ciphertext, sizeof(ciphertext));
         return result;
 }
 

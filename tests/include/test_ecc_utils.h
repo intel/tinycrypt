@@ -1,4 +1,4 @@
-/* utils.c - TinyCrypt platform-dependent run-time operations */
+/*  test_ecc_utils.h - TinyCrypt interface to common functions for ECC tests */
 
 /*
  *  Copyright (C) 2015 by Intel Corporation, All Rights Reserved.
@@ -28,51 +28,55 @@
  *  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *  POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  test_ecc_utils.h -- Interface to common functions for ECC tests.
  */
 
-#include <tinycrypt/utils.h>
+#ifndef __TEST_ECC_UTILS_H__
+#define __TEST_ECC_UTILS_H__
+
+#include <stdlib.h>
+#include <stdbool.h>
 #include <tinycrypt/constants.h>
 
-#include <string.h>
+EccPoint keygen_vectors(char **d_vec,
+    char **qx_vec,
+    char **qy_vec,
+    int tests,
+    bool verbose);
 
-#define MASK_MOST_SIG_BIT 0x80
-#define MASK_TWENTY_SEVEN 0x1b
+void getRandomBytes(void *p_dest, unsigned p_size);
 
-uint32_t _copy(uint8_t *to, uint32_t to_len,
-	       const uint8_t *from, uint32_t from_len)
-{
-	if (from_len <= to_len) {
-		(void)memcpy(to, from, from_len);
-		return from_len;
-	} else {
-		return TC_CRYPTO_FAIL;
-	}
-}
+void string2host(uint32_t *native, const uint8_t *bytes, size_t len);
 
-void _set(void *to, uint8_t val, uint32_t len)
-{
-	(void)memset(to, val, len);
-}
+int hex2int (char hex);
 
-/*
- * Doubles the value of a byte for values up to 127. Original 'return
- * ((a<<1) ^ ((a>>7) * 0x1b))' re-written to avoid extra multiplication which
- * the compiler won't be able to optimize
- */
-uint8_t _double_byte(uint8_t a)
-{
-	return (a & MASK_MOST_SIG_BIT) ?
-		((a << 1) ^ MASK_TWENTY_SEVEN) : (a << 1);
-}
+int hex2bin(
+    uint8_t *buf,
+    const size_t buflen,
+    const char *hex,
+    const size_t hexlen);
 
-int32_t _compare(const uint8_t *a, const uint8_t *b, size_t size)
-{
-	const uint8_t *tempa = a;
-	const uint8_t *tempb = b;
-	uint8_t result = 0;
+void string2scalar(uint32_t * scalar, uint32_t num_word32, char *str);
 
-	for (uint32_t i = 0; i < size; i++) {
-		result |= tempa[i] ^ tempb[i];
-	}
-	return result;
-}
+void vli_print(uint32_t *p_vli, unsigned int p_size);
+
+void print_ecc_scalar(
+    const char *label,
+    const uint32_t * p_vli,
+    uint32_t num_word32);
+
+void check_code(const int num,
+    const char *name,
+    const int expected,
+    const int computed,
+    const int verbose);
+
+void check_ecc_result(const int num, const char *name,
+    const uint32_t *expected,
+    const uint32_t *computed,
+    const uint32_t num_word32,
+    const bool verbose);
+
+#endif
+
