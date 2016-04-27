@@ -11,16 +11,16 @@ include ../config.mk
 TEST_LIB_FILE:=test_ecc_utils.c
 TEST_SOURCE:=$(filter-out $(TEST_LIB_FILE), $(wildcard test_*.c))
 
-TEST_OBJECTS:=$(TEST_SOURCE.c=.o)
-TEST_DEPS:=$(TEST_SOURCE.c=.d)
+TEST_OBJECTS:=$(TEST_SOURCE:.c=.o)
+TEST_DEPS:=$(TEST_SOURCE:.c=.d)
 TEST_BINARY:=$(TEST_SOURCE:.c=$(DOTEXE))
 
 # Edit the 'all' content to add/remove tests needed from TinyCrypt library:
 all: $(TEST_BINARY)
 
 clean:
-	-$(RM) *.o *~
 	-$(RM) $(TEST_BINARY) $(TEST_OBJECTS) $(TEST_DEPS)
+	-$(RM) *~ *.o *.d
 
 # Dependencies
 test_aes$(DOTEXE): test_aes.o  aes_encrypt.o aes_decrypt.o utils.o
