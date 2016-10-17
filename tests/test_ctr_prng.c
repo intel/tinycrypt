@@ -324,6 +324,7 @@ static int32_t test_reseed(void)
 	uint8_t output[32];
 	TCCtrPrng_t ctx;
 	int32_t ret;
+	uint32_t i;
 
 	(void)tc_ctr_prng_init(&ctx, entropy, sizeof entropy, 0, 0U);
 
@@ -360,6 +361,59 @@ static int32_t test_reseed(void)
 	{
 		result = TC_FAIL;
 		goto exitTest;
+	}
+
+	/* confirm entropy and additional_input are being used correctly */
+	/* first, entropy only */
+	memset(&ctx, 0x0, sizeof ctx);
+	for (i = 0U; i < sizeof entropy; i++)
+	{
+		entropy[i] = i;
+	}
+	ret = tc_ctr_prng_reseed(&ctx, entropy, sizeof entropy, 0, 0U);
+	if (1 != ret)
+	{
+		result = TC_FAIL;
+		goto exitTest;
+	}
+	{
+		uint8_t expectedV[] =
+			{0x7EU, 0xE3U, 0xA0U, 0xCBU, 0x6DU, 0x5CU, 0x4BU, 0xC2U,
+			 0x4BU, 0x7EU, 0x3CU, 0x48U, 0x88U, 0xC3U, 0x69U, 0x70U};
+		for (i = 0U; i < sizeof expectedV; i++)
+		{
+			if (ctx.V[i] != expectedV[i])
+			{
+				result = TC_FAIL;
+				goto exitTest;
+			}
+		}
+	}
+
+	/* now, entropy and additional_input */
+	memset(&ctx, 0x0, sizeof ctx);
+	for (i = 0U; i < sizeof additional_input; i++)
+	{
+		additional_input[i] = i * 2U;
+	}
+	ret = tc_ctr_prng_reseed(&ctx, entropy, sizeof entropy, additional_input, sizeof additional_input);
+	if (1 != ret)
+	{
+		result = TC_FAIL;
+		goto exitTest;
+	}
+	{
+		uint8_t expectedV[] =
+			{0x5EU, 0xC1U, 0x84U, 0xEDU, 0x45U, 0x76U, 0x67U, 0xECU,
+			 0x7BU, 0x4CU, 0x08U, 0x7EU, 0xB0U, 0xF9U, 0x55U, 0x4EU};
+		for (i = 0U; i < sizeof expectedV; i++)
+		{
+			if (ctx.V[i] != expectedV[i])
+			{
+				result = TC_FAIL;
+				goto exitTest;
+			}
+		}
 	}
 
 	exitTest:
