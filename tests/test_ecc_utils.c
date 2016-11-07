@@ -114,7 +114,7 @@ void string2scalar(uint32_t * scalar, uint32_t num_word32, char *str) {
 
   if (0 > (padding = 2*num_bytes - strlen(str))) {
     printf(
-        "Error: 2*num_bytes(%d) < strlen(hex) (%zu)\n",
+        "Error: 2*num_bytes(%u) < strlen(hex) (%zu)\n",
         2*num_bytes,
         strlen(str));
     exit(-1);
