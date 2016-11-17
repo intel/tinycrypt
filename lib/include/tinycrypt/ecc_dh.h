@@ -83,22 +83,20 @@ extern "C" {
  * @return returns TC_CRYPTO_SUCCESS (1) if the key pair was generated successfully
  *         returns TC_CRYPTO_FAIL (0) if:
  *                the private key is 0
-
+ *
  * @param p_publicKey OUT -- the point representing the public key.
  * @param p_privateKey OUT -- the private key.
  * @param p_random IN -- The random number to use to generate the key pair.
  *
  * @note You must use a new non-predictable random number to generate each
  * new key pair.
- * @note p_random must have NUM_ECC_DIGITS*2 bits of entropy to eliminate
- * bias in keys.
  *
  * @note side-channel countermeasure: algorithm strengthened against timing
  * attack.
  */
 int32_t ecc_make_key(EccPoint *p_publicKey,
 		     uint32_t p_privateKey[NUM_ECC_DIGITS],
-		     uint32_t p_random[NUM_ECC_DIGITS * 2]);
+		     uint32_t p_random[NUM_ECC_DIGITS]);
 
 /**
  * @brief Determine whether or not a given point is on the chosen elliptic curve
