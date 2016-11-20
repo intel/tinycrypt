@@ -51,10 +51,16 @@
 
 #include <stdint.h>
 #include <stddef.h>
-
+#include <misc/printk.h>
 
 #define NUM_OF_NIST_KEYS 16
 #define NUM_OF_FIXED_KEYS 128
+
+
+struct kat_table {
+	uint8_t in[NUM_OF_NIST_KEYS];
+	uint8_t out[NUM_OF_NIST_KEYS];
+};
 
 /*
  * NIST test key schedule.
@@ -92,7 +98,7 @@ uint32_t test_1(void)
 
         result = check_result(1, expected.words,
                      sizeof(expected.words),
-                     s.words, sizeof(s.words));
+                     s.words, sizeof(s.words), 1);
 
  exitTest1:
         TC_END_RESULT(result);
@@ -131,7 +137,7 @@ int32_t test_2(void)
         }
 
         result = check_result(2, expected, sizeof(expected),
-			      ciphertext, sizeof(ciphertext));
+			      ciphertext, sizeof(ciphertext), 1);
 
  exitTest2:
 
@@ -148,14 +154,14 @@ uint32_t var_text_test(uint32_t r, const uint8_t *in, const uint8_t *out,
 
         (void)tc_aes_encrypt(ciphertext, in, s);
         result = check_result(r, out, NUM_OF_NIST_KEYS,
-			      ciphertext, sizeof(ciphertext));
+			      ciphertext, sizeof(ciphertext), 0);
         if (result != TC_FAIL){
                 if (tc_aes_decrypt(decrypted, ciphertext, s) == 0) {
                         TC_ERROR("aes_decrypt failed\n");
                         result = TC_FAIL;
                 } else {
                         result = check_result(r, in, NUM_OF_NIST_KEYS,
-					      decrypted, sizeof(decrypted));
+					      decrypted, sizeof(decrypted), 0);
                 }
         }
         return result;
@@ -173,10 +179,7 @@ uint32_t test_3(void)
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
         };
-        const struct {
-                uint8_t in[NUM_OF_NIST_KEYS];
-                uint8_t out[NUM_OF_NIST_KEYS];
-        } kat_tbl[NUM_OF_FIXED_KEYS] = {
+	const struct kat_table kat_tbl[NUM_OF_FIXED_KEYS] = {
                 {{
                                 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
@@ -1105,7 +1108,7 @@ uint32_t var_key_test(uint32_t r, const uint8_t *in, const uint8_t *out)
 
         (void)tc_aes_encrypt(ciphertext, plaintext, &s);
         result = check_result(r, out, NUM_OF_NIST_KEYS,
-			      ciphertext, sizeof(ciphertext));
+			      ciphertext, sizeof(ciphertext), 0);
         return result;
 }
 
@@ -1117,10 +1120,7 @@ uint32_t test_4(void)
         uint32_t result = TC_PASS;
 
         TC_PRINT("AES128 test #4 (NIST variable-key and fixed-text):\n");
-        const struct {
-                uint8_t key[NUM_OF_NIST_KEYS];
-                uint8_t out[NUM_OF_NIST_KEYS];
-        } kat_tbl[NUM_OF_FIXED_KEYS] = {
+	const struct kat_table kat_tbl[NUM_OF_FIXED_KEYS] = {
                 {{
                                 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
@@ -2021,7 +2021,7 @@ uint32_t test_4(void)
         uint32_t i;
 
         for (i = 0; i < NUM_OF_FIXED_KEYS; ++i) {
-                result = var_key_test(i, kat_tbl[i].key, kat_tbl[i].out);
+		result = var_key_test(i, kat_tbl[i].in, kat_tbl[i].out);
                 if (result == TC_FAIL){
                         break;
                 }
@@ -2036,7 +2036,7 @@ uint32_t test_4(void)
  * Main task to test AES
  */
 
-int main(void)
+void main(void)
 {
         uint32_t result = TC_PASS;
 
