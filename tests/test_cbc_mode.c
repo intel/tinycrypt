@@ -127,7 +127,7 @@ int test_1_and_2(void)
 	}
 
 	result = check_result(1, ciphertext, sizeof(encrypted),
-			      encrypted, sizeof(encrypted), 1);
+			      encrypted, sizeof(encrypted));
 	TC_END_RESULT(result);
 
 	TC_PRINT("CBC test #2 (decryption SP 800-38a tests):\n");
@@ -145,7 +145,7 @@ int test_1_and_2(void)
 	}
 
 	result = check_result(2, plaintext, sizeof(decrypted),
-			      decrypted, sizeof(decrypted), 1);
+			      decrypted, sizeof(decrypted));
 
 exitTest1:
 	TC_END_RESULT(result);
