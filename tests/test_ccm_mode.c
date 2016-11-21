@@ -331,7 +331,7 @@ void test_vector_8 (void) {
         0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07
     };
 
-    uint8_t *data = NULL;
+    uint8_t data[] = {};
 
   struct tc_ccm_mode_struct c;
   struct tc_aes_key_sched_struct sched;
@@ -346,7 +346,7 @@ void test_vector_8 (void) {
     exit (-1);
   }
 
-  if (tc_ccm_generation_encryption (ciphertext, hdr, sizeof(hdr), data, 0, &c) == 0) {
+  if (tc_ccm_generation_encryption (ciphertext, hdr, sizeof(hdr), data, sizeof(data), &c) == 0) {
     fprintf (stderr, "ccm_encrypt failed\n");
     exit (-1);
   }
