@@ -53,7 +53,6 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include <misc/printk.h>
 
 #define NUM_OF_NIST_KEYS 16
 #define NUM_OF_FIXED_KEYS 128
@@ -67,9 +66,9 @@ struct kat_table {
 /*
  * NIST test key schedule.
  */
-uint32_t test_1(void)
+int test_1(void)
 {
-	uint32_t result = TC_PASS;
+	int result = TC_PASS;
 	const uint8_t nist_key[NUM_OF_NIST_KEYS] = {
 		0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6,
 		0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c
@@ -100,7 +99,7 @@ uint32_t test_1(void)
 
 	result = check_result(1, expected.words,
 		     sizeof(expected.words),
-		     s.words, sizeof(s.words), 1);
+		     s.words, sizeof(s.words));
 
  exitTest1:
 	TC_END_RESULT(result);
@@ -110,7 +109,7 @@ uint32_t test_1(void)
 /*
  * NIST test vectors for encryption.
  */
-int32_t test_2(void)
+int test_2(void)
 {
 	int result = TC_PASS;
 	const uint8_t nist_key[NUM_OF_NIST_KEYS] = {
@@ -139,42 +138,43 @@ int32_t test_2(void)
 	}
 
 	result = check_result(2, expected, sizeof(expected),
-			      ciphertext, sizeof(ciphertext), 1);
+			      ciphertext, sizeof(ciphertext));
 
  exitTest2:
-
 	TC_END_RESULT(result);
+
 	return result;
 }
 
-uint32_t var_text_test(uint32_t r, const uint8_t *in, const uint8_t *out,
-		       TCAesKeySched_t s)
+int var_text_test(uint32_t r, const uint8_t *in, const uint8_t *out,
+		  TCAesKeySched_t s)
 {
 	uint8_t ciphertext[NUM_OF_NIST_KEYS];
 	uint8_t decrypted[NUM_OF_NIST_KEYS];
-	uint32_t result = TC_PASS;
+	int result = TC_PASS;
 
 	(void)tc_aes_encrypt(ciphertext, in, s);
 	result = check_result(r, out, NUM_OF_NIST_KEYS,
-			      ciphertext, sizeof(ciphertext), 0);
+			      ciphertext, sizeof(ciphertext));
 	if (result != TC_FAIL) {
 		if (tc_aes_decrypt(decrypted, ciphertext, s) == 0) {
 			TC_ERROR("aes_decrypt failed\n");
 			result = TC_FAIL;
 		} else {
 			result = check_result(r, in, NUM_OF_NIST_KEYS,
-					      decrypted, sizeof(decrypted), 0);
+					      decrypted, sizeof(decrypted));
 		}
 	}
+
 	return result;
 }
 
 /*
  * All NIST tests with fixed key and variable text.
  */
-uint32_t test_3(void)
+int test_3(void)
 {
-	uint32_t result = TC_PASS;
+	int result = TC_PASS;
 	const uint8_t key[NUM_OF_NIST_KEYS] = {
 		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
@@ -1092,12 +1092,13 @@ uint32_t test_3(void)
 	}
 
 	TC_END_RESULT(result);
+
 	return result;
 }
 
-uint32_t var_key_test(uint32_t r, const uint8_t *in, const uint8_t *out)
+int var_key_test(uint32_t r, const uint8_t *in, const uint8_t *out)
 {
-	uint32_t result = TC_PASS;
+	int result = TC_PASS;
 
 	const uint8_t plaintext[NUM_OF_NIST_KEYS] = {
 		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -1110,16 +1111,17 @@ uint32_t var_key_test(uint32_t r, const uint8_t *in, const uint8_t *out)
 
 	(void)tc_aes_encrypt(ciphertext, plaintext, &s);
 	result = check_result(r, out, NUM_OF_NIST_KEYS,
-			      ciphertext, sizeof(ciphertext), 0);
+			      ciphertext, sizeof(ciphertext));
+
 	return result;
 }
 
 /*
  * All NIST tests with variable key and fixed text.
  */
-uint32_t test_4(void)
+int test_4(void)
 {
-	uint32_t result = TC_PASS;
+	int result = TC_PASS;
 	const struct kat_table kat_tbl[NUM_OF_FIXED_KEYS] = {
 		{{
 				0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -2031,16 +2033,16 @@ uint32_t test_4(void)
 	}
 
 	TC_END_RESULT(result);
+
 	return result;
 }
 
 /*
  * Main task to test AES
  */
-
-void main(void)
+int main(void)
 {
-	uint32_t result = TC_PASS;
+	int result = TC_PASS;
 
 	TC_START("Performing AES128 tests:");
 
@@ -2072,4 +2074,6 @@ void main(void)
  exitTest:
 	TC_END_RESULT(result);
 	TC_END_REPORT(result);
+
+	return result;
 }
