@@ -36,47 +36,33 @@
 #define __TEST_ECC_UTILS_H__
 
 #include <stdlib.h>
-#include <stdbool.h>
 #include <tinycrypt/constants.h>
 
-EccPoint keygen_vectors(char **d_vec,
-    char **qx_vec,
-    char **qy_vec,
-    int tests,
-    bool verbose);
+#ifndef ARG_UNUSED
+#define ARG_UNUSED(x) (void)(x)
+#endif
 
-void getRandomBytes(void *p_dest, unsigned p_size);
+int keygen_vectors(EccPoint *, char **d_vec, char **qx_vec, char **qy_vec,
+		   int tests, int verbose);
 
-void string2host(uint32_t *native, const uint8_t *bytes, size_t len);
+int random_start(const char *fn);
+int random_end(void);
+int random_bytes(uint32_t *out, size_t len);
 
-int hex2int (char hex);
+int hex_to_num(char hex);
 
-int hex2bin(
-    uint8_t *buf,
-    const size_t buflen,
-    const char *hex,
-    const size_t hexlen);
+int hex_to_num_str(uint8_t *buf, const size_t buflen, const char *hex,
+		   const size_t hexlen);
 
-void string2scalar(uint32_t * scalar, uint32_t num_word32, char *str);
+int str_to_scalar(uint32_t *scalar, uint32_t num_word32, char *str);
 
 void vli_print(uint32_t *p_vli, unsigned int p_size);
 
-void print_ecc_scalar(
-    const char *label,
-    const uint32_t * p_vli,
-    uint32_t num_word32);
+int check_code(const int num, const char *name, const int expected,
+	       const int computed, const int verbose);
 
-void check_code(const int num,
-    const char *name,
-    const int expected,
-    const int computed,
-    const int verbose);
-
-void check_ecc_result(const int num, const char *name,
-    const uint32_t *expected,
-    const uint32_t *computed,
-    const uint32_t num_word32,
-    const bool verbose);
+int check_ecc_result(const int num, const char *name, const uint32_t *expected,
+		     const uint32_t *computed, const uint32_t num_word32,
+		     int verbose);
 
 #endif
-
