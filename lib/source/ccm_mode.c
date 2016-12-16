@@ -195,11 +195,9 @@ int32_t tc_ccm_generation_encryption(uint8_t *out, const uint8_t *associated_dat
 int32_t tc_ccm_decryption_verification(uint8_t *out, const uint8_t *associated_data,
 				       uint32_t alen, const uint8_t *payload,
 				       uint32_t plen, TCCcmMode_t c)
-{
-
+{ 
 	/* input sanity check: */
-	if ((plen <= alen) ||
-	    (out == (uint8_t *) 0) ||
+       if ((out == (uint8_t *) 0) ||
 	    (c == (TCCcmMode_t) 0) ||
 	    ((plen > 0) && (payload == (uint8_t *) 0)) ||
 	    ((alen > 0) && (associated_data == (uint8_t *) 0)) ||
