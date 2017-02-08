@@ -39,16 +39,14 @@
 #ifndef __TC_CONSTANTS_H__
 #define __TC_CONSTANTS_H__
 
+#include <stdbool.h>
+ 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #ifndef NULL
 #define NULL ((void *)0)
-#endif
-
-#ifndef bool
-enum {false, true} bool;
 #endif
 
 #define TC_CRYPTO_SUCCESS 1
