@@ -51,13 +51,13 @@ Organization:
 
 /lib: C source code of the cryptographic primitives.
 /tests: Test vectors of the cryptographic primitives.
-/doc: Documentation of TinyCrypt. 
+/documentation: Documentation of TinyCrypt. 
 
 ================================================================================
 
 Building:
 
-1) In Makefile.conf set: 
+1) In config.mk set: 
     - CFLAGS for compiler flags.
     - CC for compiler.
 2) In lib/Makefile select the primitives required by your project.
