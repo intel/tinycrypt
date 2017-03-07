@@ -32,199 +32,264 @@
  *  test_ecc_utils.c -- Implementation of some common functions for ECC tests.
  *
  */
+
 #include <tinycrypt/ecc.h>
 #include <tinycrypt/ecc_dh.h>
 #include <test_ecc_utils.h>
+#include <test_utils.h>
 #include <tinycrypt/constants.h>
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
+
+#if defined(__linux__)
 #include <unistd.h>
+#include <fcntl.h>
 
-extern int randfd;
+static int random_fd;
 
-void getRandomBytes(void *p_dest, unsigned p_size) {
-  if(read(randfd, p_dest, p_size) != (int)p_size) {
-    printf("Failed to get random bytes.\n");
-  }
+int random_start(const char *fn)
+{
+	random_fd = open(fn, O_RDONLY);
+
+	if (random_fd < 0) {
+		return -EIO;
+	}
+
+	return 0;
 }
 
-int hex2int (char hex) {
-  uint8_t dec;
+int random_end(void)
+{
+	close(random_fd);
 
-  if ('0' <= hex && hex <= '9') dec = hex - '0';
-  else if ('a' <= hex && hex <= 'f') dec = hex - 'a' + 10;
-  else if ('A' <= hex && hex <= 'F') dec = hex - 'A' + 10;
-  else return -1;
+	return 0;
+}
 
-  return dec;
+int random_bytes(uint32_t *out, size_t len)
+{
+	ssize_t rc;
+
+	rc = read(random_fd, out, len);
+	if (rc != (ssize_t)len) {
+		return -EIO;
+	}
+
+	return 0;
+}
+#else
+#if defined(__ZEPHYR__)
+#include <zephyr.h>
+#include <drivers/rand32.h>
+
+int random_start(const char *fn)
+{
+	ARG_UNUSED(fn);
+
+	sys_rand32_init();
+
+	return 0;
+}
+
+int random_end(void)
+{
+	return 0;
+}
+
+int random_bytes(uint32_t *out, size_t len)
+{
+	size_t i;
+
+	for (i = 0; i < len; i++) {
+		out[i] = sys_rand32_get();
+	}
+
+	return i == len ? 0 : -EINVAL;
+}
+#else
+#error Please add your OS or reuse the Linux tag if possible
+#endif
+#endif
+
+int hex_to_num(char hex)
+{
+	uint8_t dec;
+
+	if ('0' <= hex && hex <= '9') {
+		dec = hex - '0';
+	} else if ('a' <= hex && hex <= 'f') {
+		dec = hex - 'a' + 10;
+	} else if ('A' <= hex && hex <= 'F') {
+		dec = hex - 'A' + 10;
+	} else {
+		return -1;
+	}
+
+	return dec;
 }
 
 /*
  * Convert hex string to byte string
  * Return number of bytes written to buf, or 0 on error
  */
-int hex2bin(
-    uint8_t *buf,
-    const size_t buflen,
-    const char *hex,
-    const size_t hexlen) {
+int hex_to_num_str(uint8_t *buf, const size_t buflen, const char *hex,
+		   const size_t hexlen)
+{
+	int dec;
 
-  int dec;
+	if (buflen < hexlen / 2 + hexlen % 2) {
+		return 0;
+	}
 
-  if (buflen < hexlen/2 + hexlen%2)
-    return false;
+	/* if hexlen is uneven, insert leading zero nibble */
+	if (hexlen % 2) {
+		dec = hex_to_num(hex[0]);
+		if (dec == -1) {
+			return 0;
+		}
+		buf[0] = dec;
+		buf++;
+		hex++;
+	}
 
-  // if hexlen is uneven, insert leading zero nibble
-  if (hexlen%2) {
-    dec = hex2int(hex[0]);
-    if (dec == -1)
-      return false;
-    buf[0] = dec;
-    buf++;
-    hex++;
-  }
+	/* regular hex conversion */
+	for (size_t i = 0; i < hexlen / 2; i++) {
+		dec = hex_to_num(hex[2 * i]);
+		if (dec == -1) {
+			return 0;
+		}
+		buf[i] = dec << 4;
 
-  // regular hex conversion
-  for (size_t i = 0; i<hexlen/2; i++) {
-    dec = hex2int(hex[2*i]);
-    if (dec == -1)
-      return false;
-    buf[i] = dec << 4;
-
-    dec = hex2int(hex[2*i+1]);
-    if (dec == -1)
-      return false;
-    buf[i] += dec;
-  }
-  return hexlen/2 + hexlen%2;
+		dec = hex_to_num(hex[2 * i + 1]);
+		if (dec == -1) {
+			return 0;
+		}
+		buf[i] += dec;
+	}
+	return hexlen / 2 + hexlen % 2;
 }
 
 /*
  * Convert hex string to zero-padded nanoECC scalar
  */
-void string2scalar(uint32_t * scalar, uint32_t num_word32, char *str) {
+int str_to_scalar(uint32_t *scalar, uint32_t num_word32, char *str)
+{
+	uint32_t num_bytes = 4 * num_word32;
+	uint8_t tmp[num_bytes];
+	size_t hexlen = strlen(str);
+	int padding;
+	int rc;
 
-  uint32_t num_bytes = 4*num_word32;
-  uint8_t tmp[num_bytes];
-  size_t hexlen = strlen(str);
+	padding = 2 * num_bytes - strlen(str);
+	if (padding < 0) {
+		TC_PRINT("Error: 2*num_bytes(%d) < strlen(hex) (%zu)\n",
+			 2 * num_bytes, strlen(str));
+		return TC_FAIL;
+	}
 
-  int padding;
+	memset(tmp, 0, padding / 2);
 
-  if (0 > (padding = 2*num_bytes - strlen(str))) {
-    printf(
-        "Error: 2*num_bytes(%u) < strlen(hex) (%zu)\n",
-        2*num_bytes,
-        strlen(str));
-    exit(-1);
-  }
+	rc = hex_to_num_str(tmp + padding / 2, num_bytes, str, hexlen);
+	if (rc == 0) {
+		return TC_FAIL;
+	}
 
-  memset(tmp, 0, padding/2);
+	ecc_bytes2native(scalar, tmp);
 
-  if (false == hex2bin(tmp+padding/2, num_bytes, str, hexlen))
-    exit(-1);
-  ecc_bytes2native(scalar, tmp);
-
+	return TC_PASS;
 }
 
-void vli_print(uint32_t *p_vli, unsigned int p_size) {
-    while(p_size) {
-        printf("%08X ", (unsigned)p_vli[p_size - 1]);
-        --p_size;
-    }
+void vli_print(uint32_t *p_vli, unsigned int p_size)
+{
+	while (p_size) {
+		TC_PRINT("%08X ", (unsigned int)p_vli[p_size - 1]);
+		--p_size;
+	}
 }
 
-void print_ecc_scalar(
-    const char *label,
-    const uint32_t * p_vli,
-    uint32_t num_word32) {
-  uint32_t i;
+int check_code(const int num, const char *name, const int expected,
+	       const int computed, const int verbose)
+{
+	if (expected != computed) {
+		TC_PRINT("\nVector #%02d check %s - FAILURE:\n", num, name);
+		TC_PRINT("\nExpected: %d, computed: %d\n\n", expected,
+			 computed);
+		return TC_FAIL;
+	}
 
-  if (label)
-    printf("%s = { ", label);
+	if (verbose) {
+		TC_PRINT("Vector #%02d check %s - success (%d=%d)\n", num, name,
+			 expected, computed);
+	}
 
-  for(i=0; i<num_word32-1; ++i)
-    printf("0x%08lX, ", (unsigned long)p_vli[i]);
-  printf("0x%08lX", (unsigned long)p_vli[i]);
-
-  if (label)
-    printf(" };\n");
+	return TC_PASS;
 }
 
-void check_code(const int num,
-    const char *name,
-    const int expected,
-    const int computed,
-    const int verbose) {
+int check_ecc_result(const int num, const char *name, const uint32_t *expected,
+		     const uint32_t *computed, const uint32_t num_word32,
+		     int verbose)
+{
+	uint32_t num_bytes = 4 * num_word32;
 
-  if (expected != computed) {
-    printf("\n  Vector #%02d check %s - FAILURE:\n", num, name);
-    printf("\n  Expected: %d, computed: %d\n\n", expected, computed);
-    exit(-1);
-  }
+	if (memcmp(computed, expected, num_bytes)) {
+		TC_PRINT("\n  Vector #%02d check %s - FAILURE\n", num, name);
+		return TC_FAIL;
+	}
+	if (verbose) {
+		TC_PRINT("  Vector #%02d check %s - success\n", num, name);
+	}
 
-  if (verbose)
-    printf("  Vector #%02d check %s - success (%d=%d)\n",
-        num,
-        name,
-        expected,
-        computed);
-
-}
-
-void check_ecc_result(const int num, const char *name,
-    const uint32_t *expected,
-    const uint32_t *computed,
-    const uint32_t num_word32,
-    const bool verbose) {
-
-  uint32_t num_bytes = 4*num_word32;
-  if (memcmp(computed, expected, num_bytes)) {
-    printf("\n  Vector #%02d check %s - FAILURE:\n\n", num, name);
-    print_ecc_scalar("Expected", expected, num_word32);
-    print_ecc_scalar("Computed", computed, num_word32);
-    printf("\n");
-    exit(-1);
-  }
-  if (verbose)
-    printf("  Vector #%02d check %s - success\n", num, name);
+	return TC_PASS;
 }
 
 /* Test ecc_make_keys, and also as keygen part of other tests */
-EccPoint keygen_vectors(char **d_vec,
-    char **qx_vec,
-    char **qy_vec,
-    int tests,
-    bool verbose) {
+int keygen_vectors(EccPoint *pub, char **d_vec, char **qx_vec, char **qy_vec,
+		   int tests, int verbose)
+{
+	uint32_t seed[2 * NUM_ECC_DIGITS];
+	uint32_t prv[NUM_ECC_DIGITS];
 
-  EccPoint pub;
-  uint32_t seed[2*NUM_ECC_DIGITS];
-  uint32_t prv[NUM_ECC_DIGITS];
+	/* expected outputs (converted input vectors) */
+	EccPoint exp_pub;
+	uint32_t exp_prv[NUM_ECC_DIGITS];
 
-  /* expected outputs (converted input vectors) */
-  EccPoint exp_pub;
-  uint32_t exp_prv[NUM_ECC_DIGITS];
+	int rc;
 
-  for (int i=0; i<tests; i++) {
+	for (int i = 0; i < tests; i++) {
 
-    string2scalar(exp_prv, NUM_ECC_DIGITS, d_vec[i]);
-    string2scalar(exp_pub.x, NUM_ECC_DIGITS, qx_vec[i]);
-    string2scalar(exp_pub.y, NUM_ECC_DIGITS, qy_vec[i]);
+		str_to_scalar(exp_prv, NUM_ECC_DIGITS, d_vec[i]);
+		str_to_scalar(exp_pub.x, NUM_ECC_DIGITS, qx_vec[i]);
+		str_to_scalar(exp_pub.y, NUM_ECC_DIGITS, qy_vec[i]);
 
-    /*
-     * Feed prvkey vector as padded random seed into ecc_make_key.
-     * Internal mod-reduction will be zero-op and generate correct prv/pub
-     */
-    memset(seed, 0, 2*NUM_ECC_BYTES);
-    string2scalar(seed, NUM_ECC_DIGITS, d_vec[i]);
-    ecc_make_key(&pub, prv, seed);
+		/*
+		 * Feed prvkey vector as padded random seed into ecc_make_key.
+		 * Internal mod-reduction will be zero-op and generate correct
+		 * prv/pub
+		 */
+		memset(seed, 0, 2 * NUM_ECC_BYTES);
+		str_to_scalar(seed, NUM_ECC_DIGITS, d_vec[i]);
+		ecc_make_key(pub, prv, seed);
 
-    // validate correctness of vector conversion and make_key()
-    check_ecc_result(i, "prv  ", exp_prv, prv,  NUM_ECC_DIGITS, verbose);
-    check_ecc_result(i, "pub.x", exp_pub.x, pub.x,  NUM_ECC_DIGITS, verbose);
-    check_ecc_result(i, "pub.y", exp_pub.y, pub.y,  NUM_ECC_DIGITS, verbose);
+		/* validate correctness of vector conversion and make_key() */
+		rc = check_ecc_result(i, "prv  ", exp_prv, prv,
+				      NUM_ECC_DIGITS, verbose);
+		if (rc != TC_PASS) {
+			goto exit_test;
+		}
+		rc = check_ecc_result(i, "pub.x", exp_pub.x, pub->x,
+				      NUM_ECC_DIGITS, verbose);
+		if (rc != TC_PASS) {
+			goto exit_test;
+		}
+		rc = check_ecc_result(i, "pub.y", exp_pub.y, pub->y,
+				      NUM_ECC_DIGITS, verbose);
+		if (rc != TC_PASS) {
+			goto exit_test;
+		}
+	}
 
-  }
-  return pub;
+	rc = TC_PASS;
+exit_test:
+	return rc;
 }
