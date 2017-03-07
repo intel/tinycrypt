@@ -54,13 +54,12 @@
 #include <stdint.h>
 #include <stddef.h>
 
-#define NUM_OF_NIST_KEYS 16
 #define NUM_OF_FIXED_KEYS 128
 
 
 struct kat_table {
-	uint8_t in[NUM_OF_NIST_KEYS];
-	uint8_t out[NUM_OF_NIST_KEYS];
+	uint8_t in[TC_AES_BLOCK_SIZE];
+	uint8_t out[TC_AES_BLOCK_SIZE];
 };
 
 /*
@@ -69,7 +68,7 @@ struct kat_table {
 int test_1(void)
 {
 	int result = TC_PASS;
-	const uint8_t nist_key[NUM_OF_NIST_KEYS] = {
+	const uint8_t nist_key[TC_AES_KEY_SIZE] = {
 		0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6,
 		0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c
 	};
@@ -112,20 +111,20 @@ int test_1(void)
 int test_2(void)
 {
 	int result = TC_PASS;
-	const uint8_t nist_key[NUM_OF_NIST_KEYS] = {
+	const uint8_t nist_key[TC_AES_KEY_SIZE] = {
 		0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6,
 		0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c
 	};
-	const uint8_t nist_input[NUM_OF_NIST_KEYS] = {
+	const uint8_t nist_input[TC_AES_BLOCK_SIZE] = {
 		0x32, 0x43, 0xf6, 0xa8, 0x88, 0x5a, 0x30, 0x8d,
 		0x31, 0x31, 0x98, 0xa2, 0xe0, 0x37, 0x07, 0x34
 	};
-	const uint8_t expected[NUM_OF_NIST_KEYS] = {
+	const uint8_t expected[TC_AES_BLOCK_SIZE] = {
 		0x39, 0x25, 0x84, 0x1d, 0x02, 0xdc, 0x09, 0xfb,
 		0xdc, 0x11, 0x85, 0x97, 0x19, 0x6a, 0x0b, 0x32
 	};
 	struct tc_aes_key_sched_struct s;
-	uint8_t ciphertext[NUM_OF_NIST_KEYS];
+	uint8_t ciphertext[TC_AES_BLOCK_SIZE];
 
 	TC_PRINT("AES128 %s (NIST encryption test):\n", __func__);
 
@@ -149,19 +148,19 @@ int test_2(void)
 int var_text_test(uint32_t r, const uint8_t *in, const uint8_t *out,
 		  TCAesKeySched_t s)
 {
-	uint8_t ciphertext[NUM_OF_NIST_KEYS];
-	uint8_t decrypted[NUM_OF_NIST_KEYS];
+	uint8_t ciphertext[TC_AES_BLOCK_SIZE];
+	uint8_t decrypted[TC_AES_BLOCK_SIZE];
 	int result = TC_PASS;
 
 	(void)tc_aes_encrypt(ciphertext, in, s);
-	result = check_result(r, out, NUM_OF_NIST_KEYS,
+	result = check_result(r, out, TC_AES_BLOCK_SIZE,
 			      ciphertext, sizeof(ciphertext));
 	if (result != TC_FAIL) {
 		if (tc_aes_decrypt(decrypted, ciphertext, s) == 0) {
 			TC_ERROR("aes_decrypt failed\n");
 			result = TC_FAIL;
 		} else {
-			result = check_result(r, in, NUM_OF_NIST_KEYS,
+			result = check_result(r, in, TC_AES_BLOCK_SIZE,
 					      decrypted, sizeof(decrypted));
 		}
 	}
@@ -1100,17 +1099,17 @@ int var_key_test(uint32_t r, const uint8_t *in, const uint8_t *out)
 {
 	int result = TC_PASS;
 
-	const uint8_t plaintext[NUM_OF_NIST_KEYS] = {
+	const uint8_t plaintext[TC_AES_BLOCK_SIZE] = {
 		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 	};
-	uint8_t ciphertext[NUM_OF_NIST_KEYS];
+	uint8_t ciphertext[TC_AES_BLOCK_SIZE];
 	struct tc_aes_key_sched_struct s;
 
 	(void)tc_aes128_set_encrypt_key(&s, in);
 
 	(void)tc_aes_encrypt(ciphertext, plaintext, &s);
-	result = check_result(r, out, NUM_OF_NIST_KEYS,
+	result = check_result(r, out, TC_AES_BLOCK_SIZE,
 			      ciphertext, sizeof(ciphertext));
 
 	return result;
