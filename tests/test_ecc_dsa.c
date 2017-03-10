@@ -555,7 +555,7 @@ void montecarlo_signverify(uint32_t num, bool verbose) {
   uint32_t l_private[NUM_ECC_DIGITS];
 
   uint32_t l_hash[NUM_ECC_DIGITS];
-  uint32_t l_random[NUM_ECC_DIGITS];
+  uint32_t l_random[2 * NUM_ECC_DIGITS];
 
   uint32_t r[NUM_ECC_DIGITS];
   uint32_t s[NUM_ECC_DIGITS];

@@ -199,7 +199,7 @@ EccPoint keygen_vectors(char **d_vec,
     bool verbose) {
 
   EccPoint pub;
-  uint32_t seed[2*NUM_ECC_DIGITS];
+  uint32_t seed[NUM_ECC_DIGITS * 2];
   uint32_t prv[NUM_ECC_DIGITS];
 
   /* expected outputs (converted input vectors) */
@@ -216,7 +216,7 @@ EccPoint keygen_vectors(char **d_vec,
      * Feed prvkey vector as padded random seed into ecc_make_key.
      * Internal mod-reduction will be zero-op and generate correct prv/pub
      */
-    memset(seed, 0, 2*NUM_ECC_BYTES);
+    memset(seed, 0, NUM_ECC_BYTES * 2);
     string2scalar(seed, NUM_ECC_DIGITS, d_vec[i]);
     ecc_make_key(&pub, prv, seed);
 

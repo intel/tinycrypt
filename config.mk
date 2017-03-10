@@ -9,6 +9,7 @@
 CC:=gcc
 CFLAGS:=-Os -std=c99 -Wall -Wextra -D_ISOC99_SOURCE -MMD -I../lib/include/ -I../lib/source/ -I../tests/include/
 vpath %.c ../lib/source/
+ENABLE_TESTS=true
 
 # override MinGW built-in recipe
 %.o: %.c
@@ -16,6 +17,13 @@ vpath %.c ../lib/source/
 
 ifeq ($(OS),Windows_NT)
 DOTEXE:=.exe
+endif
+
+# DO NOT EDIT THIS:
+ifeq ($(ENABLE_TESTS), true)
+CFLAGS += -DENABLE_TESTS
+else
+CFLAGS += -DDISABLE_TESTS
 endif
 
 ################################################################################

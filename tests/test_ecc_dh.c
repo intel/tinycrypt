@@ -347,6 +347,8 @@ int randfd;
 void montecarlo_ecdh(uint32_t num, bool verbose) {
 
   EccPoint l_Q1, l_Q2; /* public keys */
+  uint32_t l_random1[2 * NUM_ECC_DIGITS];
+  uint32_t l_random2[2 * NUM_ECC_DIGITS];
   uint32_t l_secret1[NUM_ECC_DIGITS];
   uint32_t l_secret2[NUM_ECC_DIGITS];
 
@@ -367,11 +369,11 @@ void montecarlo_ecdh(uint32_t num, bool verbose) {
       fflush(stdout);
       printf(".");
     }
-    getRandomBytes((char *)l_secret1, NUM_ECC_DIGITS * sizeof(uint32_t));
-    getRandomBytes((char *)l_secret2, NUM_ECC_DIGITS * sizeof(uint32_t));
+    getRandomBytes((char *)l_random1, 2 * NUM_ECC_DIGITS * sizeof(uint32_t));
+    getRandomBytes((char *)l_random2, 2 * NUM_ECC_DIGITS * sizeof(uint32_t));
 
-    ecc_make_key(&l_Q1, l_secret1, l_secret1);
-    ecc_make_key(&l_Q2, l_secret2, l_secret2);
+    ecc_make_key(&l_Q1, l_secret1, l_random1);
+    ecc_make_key(&l_Q2, l_secret2, l_random2);
 
     if(!ecdh_shared_secret(l_shared1, &l_Q1, l_secret2)) {
       printf("shared_secret() failed (1)\n");

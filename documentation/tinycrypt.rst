@@ -132,6 +132,10 @@ Specific Remarks
     memory comparison function (such as compare_constant_time
     function provided in lib/utils.c).
 
+  * The tc_hmac_final function, responsible for computing the message tag,
+    cleans the state context before exiting. Thus, applications do not need to
+    clean the TCHmacState_t ctx after calling tc_hmac_final.
+
 * HMAC-PRNG:
 
   * Before using HMAC-PRNG, you *must* find an entropy source to produce a seed.

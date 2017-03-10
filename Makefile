@@ -10,7 +10,9 @@ include config.mk
 
 all:
 	$(MAKE) -C lib
+ifeq ($(ENABLE_TESTS),true)
 	$(MAKE) -C tests
+endif
 
 clean:
 	$(MAKE) -C lib clean
