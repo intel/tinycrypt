@@ -39,6 +39,8 @@
 #ifndef __TC_CONSTANTS_H__
 #define __TC_CONSTANTS_H__
 
+#include <stdbool.h>
+ 
 #ifdef __cplusplus
 extern "C" {
 #endif
