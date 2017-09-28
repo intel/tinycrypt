@@ -18,6 +18,12 @@ TEST_BINARY:=$(TEST_SOURCE:.c=$(DOTEXE))
 # Edit the 'all' content to add/remove tests needed from TinyCrypt library:
 all: $(TEST_BINARY)
 
+.PHONY: run_tests
+run_tests: all
+	for TEST_BIN in $(TEST_BINARY); do \
+		./$$TEST_BIN || exit $$?; \
+	done
+
 clean:
 	-$(RM) $(TEST_BINARY) $(TEST_OBJECTS) $(TEST_DEPS)
 	-$(RM) *~ *.o *.d
