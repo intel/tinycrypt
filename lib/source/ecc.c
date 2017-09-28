@@ -59,19 +59,19 @@
 /* IMPORTANT: Make sure a cryptographically-secure PRNG is set and the platform
  * has access to enough entropy in order to feed the PRNG regularly. */
 #if default_RNG_defined
-static uECC_RNG_Function g_rng_function = &default_CSPRNG;
+uECC_RNG_Function uECC_rng_function = default_CSPRNG;
 #else
-static uECC_RNG_Function g_rng_function = 0;
+uECC_RNG_Function uECC_rng_function = 0;
 #endif
 
 void uECC_set_rng(uECC_RNG_Function rng_function)
 {
-	g_rng_function = rng_function;
+	uECC_rng_function = rng_function;
 }
 
 uECC_RNG_Function uECC_get_rng(void)
 {
-	return g_rng_function;
+	return uECC_rng_function;
 }
 
 int uECC_curve_private_key_size(uECC_Curve curve)
@@ -841,12 +841,12 @@ int uECC_generate_random_int(uECC_word_t *random, const uECC_word_t *top,
 	uECC_word_t tries;
 	bitcount_t num_bits = uECC_vli_numBits(top, num_words);
 
-	if (!g_rng_function) {
+	if (!uECC_rng_function) {
 		return 0;
 	}
 
 	for (tries = 0; tries < uECC_RNG_MAX_TRIES; ++tries) {
-		if (!g_rng_function((uint8_t *)random, num_words * uECC_WORD_SIZE)) {
+		if (!uECC_rng_function((uint8_t *)random, num_words * uECC_WORD_SIZE)) {
       			return 0;
     		}
 		random[num_words - 1] &=
