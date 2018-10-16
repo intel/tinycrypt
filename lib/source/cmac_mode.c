@@ -175,7 +175,20 @@ int tc_cmac_update(TCCmacState_t s, const uint8_t *data, size_t data_length)
 
 	s->countdown--;
 
+	restartUpdate:
 	if (s->leftover_offset > 0) {
+
+		if(s->leftover_offset == TC_AES_BLOCK_SIZE) {
+			/*the left over data is a full block; encrypt and restart the update */
+			for (i = 0; i < TC_AES_BLOCK_SIZE; ++i) {
+				s->iv[i] ^= s->leftover[i];
+			}
+			tc_aes_encrypt(s->iv, s->iv, s->sched);
+			s->leftover_offset = 0;
+
+			goto restartUpdate;
+		}
+
 		/* last data added to s didn't end on a TC_AES_BLOCK_SIZE byte boundary */
 		size_t remaining_space = TC_AES_BLOCK_SIZE - s->leftover_offset;
 
@@ -185,34 +198,43 @@ int tc_cmac_update(TCCmacState_t s, const uint8_t *data, size_t data_length)
 			s->leftover_offset += data_length;
 			return TC_CRYPTO_SUCCESS;
 		}
-		/* leftover block is now full; encrypt it first */
+		/* leftover block is now full */
 		_copy(&s->leftover[s->leftover_offset],
 		      remaining_space,
 		      data,
 		      remaining_space);
 		data_length -= remaining_space;
 		data += remaining_space;
-		s->leftover_offset = 0;
 
-		for (i = 0; i < TC_AES_BLOCK_SIZE; ++i) {
-			s->iv[i] ^= s->leftover[i];
-		}
-		tc_aes_encrypt(s->iv, s->iv, s->sched);
+		/* encrypted or copied below */
+		s->leftover_offset = TC_AES_BLOCK_SIZE;
 	}
 
 	/* CBC encrypt each (except the last) of the data blocks */
-	while (data_length > TC_AES_BLOCK_SIZE) {
-		for (i = 0; i < TC_AES_BLOCK_SIZE; ++i) {
-			s->iv[i] ^= data[i];
+	while (data_length + s->leftover_offset > TC_AES_BLOCK_SIZE) {
+
+		if(s->leftover_offset > 0) {
+			for (i = 0; i < TC_AES_BLOCK_SIZE; ++i) {
+				s->iv[i] ^= s->leftover[i];
+			}
+			s->leftover_offset = 0;
 		}
+		else {
+			for (i = 0; i < TC_AES_BLOCK_SIZE; ++i) {
+				s->iv[i] ^= data[i];
+			}
+		}
+
 		tc_aes_encrypt(s->iv, s->iv, s->sched);
 		data += TC_AES_BLOCK_SIZE;
 		data_length  -= TC_AES_BLOCK_SIZE;
 	}
 
 	if (data_length > 0) {
-		/* save leftover data for next time */
-		_copy(s->leftover, data_length, data, data_length);
+		/* save leftover data for next time, unless this last block is already leftover */
+		if(s->leftover_offset != TC_AES_BLOCK_SIZE) {
+			_copy(s->leftover, data_length, data, data_length);
+		}
 		s->leftover_offset = data_length;
 	}
 
