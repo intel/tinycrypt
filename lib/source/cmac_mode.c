@@ -223,11 +223,11 @@ int tc_cmac_update(TCCmacState_t s, const uint8_t *data, size_t data_length)
 			for (i = 0; i < TC_AES_BLOCK_SIZE; ++i) {
 				s->iv[i] ^= data[i];
 			}
+			data += TC_AES_BLOCK_SIZE;
+			data_length -= TC_AES_BLOCK_SIZE;
 		}
 
 		tc_aes_encrypt(s->iv, s->iv, s->sched);
-		data += TC_AES_BLOCK_SIZE;
-		data_length  -= TC_AES_BLOCK_SIZE;
 	}
 
 	if (data_length > 0) {
