@@ -58,6 +58,7 @@
 #define HEADER_LEN 8
 #define M_LEN8 8
 #define M_LEN10 10
+#define M_MAX_LEN 16
 #define DATA_BUF_LEN23 23
 #define DATA_BUF_LEN24 24
 #define DATA_BUF_LEN25 25
@@ -75,7 +76,7 @@ int do_test(const uint8_t *key, uint8_t *nonce,
 {
 
 	int result = TC_PASS;
-
+	uint8_t tag[M_MAX_LEN];
 	uint8_t ciphertext[TC_CCM_MAX_CT_SIZE];
 	uint8_t decrypted[TC_CCM_MAX_PT_SIZE];
 	struct tc_ccm_mode_struct c;
@@ -92,7 +93,7 @@ int do_test(const uint8_t *key, uint8_t *nonce,
 	}
 
 	result = tc_ccm_generation_encryption(ciphertext, TC_CCM_MAX_CT_SIZE, hdr,
-					      hlen, data, dlen, &c);
+					      hlen, data, dlen, &c, tag);
 	if (result == 0) {
 		TC_ERROR("ccm_encrypt failed in %s.\n", __func__);
 
@@ -100,6 +101,7 @@ int do_test(const uint8_t *key, uint8_t *nonce,
 		goto exitTest1;
 	}
 
+	memcpy(ciphertext+dlen, tag, mlen);
 
 	if (memcmp(expected, ciphertext, elen) != 0) {
 		TC_ERROR("ccm_encrypt produced wrong ciphertext in %s.\n",
@@ -112,7 +114,7 @@ int do_test(const uint8_t *key, uint8_t *nonce,
 	}
 
 	result = tc_ccm_decryption_verification(decrypted, TC_CCM_MAX_PT_SIZE, hdr,
-						hlen, ciphertext, dlen+mlen, &c);
+						hlen, ciphertext, dlen, &c, tag);
 	if (result == 0) {
 		TC_ERROR("ccm_decrypt failed in %s.\n", __func__);
 		show_str("\t\tExpected", data, dlen);
@@ -379,6 +381,7 @@ int test_vector_7(void)
 	};
 	struct tc_ccm_mode_struct c;
 	struct tc_aes_key_sched_struct sched;
+	uint8_t tag[M_MAX_LEN];
 	uint8_t decrypted[TC_CCM_MAX_PT_SIZE];
 	uint8_t ciphertext[TC_CCM_MAX_CT_SIZE];
 	uint16_t mlen = M_LEN10;
@@ -395,7 +398,7 @@ int test_vector_7(void)
 	}
 
 	result = tc_ccm_generation_encryption(ciphertext, TC_CCM_MAX_CT_SIZE, hdr,
-					      0, data, sizeof(data), &c);
+					      0, data, sizeof(data), &c, tag);
 	if (result == 0) {
 		TC_ERROR("ccm_encryption failed in %s.\n", __func__);
 
@@ -403,8 +406,10 @@ int test_vector_7(void)
 		goto exitTest1;
 	}
 
+	memcpy(ciphertext+sizeof(data), tag, mlen);
+
 	result = tc_ccm_decryption_verification (decrypted, TC_CCM_MAX_PT_SIZE, hdr,
-						0, ciphertext, sizeof(data)+mlen, &c);
+						0, ciphertext, sizeof(data), &c, tag);
 	if (result == 0) {
 		TC_ERROR("ccm_decrypt failed in %s.\n", __func__);
 		show_str("\t\tExpected", data, sizeof(data));
@@ -442,7 +447,7 @@ int test_vector_8(void)
 
 	struct tc_ccm_mode_struct c;
 	struct tc_aes_key_sched_struct sched;
-
+	uint8_t tag[M_MAX_LEN];
 	uint8_t decrypted[TC_CCM_MAX_PT_SIZE];
 	uint8_t ciphertext[TC_CCM_MAX_CT_SIZE];
 
@@ -459,7 +464,7 @@ int test_vector_8(void)
 	}
 
 	result = tc_ccm_generation_encryption(ciphertext, TC_CCM_MAX_CT_SIZE, hdr,
-					      sizeof(hdr), data, 0, &c);
+						    sizeof(hdr), data, 0, &c, tag);
 	if (result == 0) {
 		TC_ERROR("ccm_encrypt failed in %s.\n", __func__);
 
@@ -467,8 +472,10 @@ int test_vector_8(void)
 		goto exitTest1;
 	}
 
+	memcpy(ciphertext, tag, mlen);
+
 	result = tc_ccm_decryption_verification(decrypted, TC_CCM_MAX_PT_SIZE, hdr,
-						sizeof(hdr), ciphertext, mlen, &c);
+						sizeof(hdr), ciphertext, 0, &c, tag);
 	if (result == 0) {
 		TC_ERROR("ccm_decrypt failed in %s.\n", __func__);
 		show_str("\t\tExpected", data, sizeof(data));
