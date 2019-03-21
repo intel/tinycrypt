@@ -59,11 +59,7 @@
 #include <tinycrypt/ecc_dh.h>
 #include <string.h>
 
-#if default_RNG_defined
-static uECC_RNG_Function g_rng_function = &default_CSPRNG;
-#else
-static uECC_RNG_Function g_rng_function = 0;
-#endif
+extern uECC_RNG_Function uECC_rng_function;
 
 int uECC_make_key_with_d(uint8_t *public_key, uint8_t *private_key,
 			 unsigned int *d, uECC_Curve curve)
@@ -173,7 +169,7 @@ int uECC_shared_secret(const uint8_t *public_key, const uint8_t *private_key,
 
 	/* If an RNG function was specified, try to get a random initial Z value to
 	 * improve protection against side-channel attacks. */
-	if (g_rng_function) {
+	if (uECC_rng_function) {
 		if (!uECC_generate_random_int(p2[carry], curve->p, num_words)) {
 			r = 0;
 			goto clear_and_out;
