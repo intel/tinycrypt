@@ -132,7 +132,7 @@ int test_1_and_2(void)
 	(void)tc_aes128_set_decrypt_key(&a, key);
 
 	p = &encrypted[TC_AES_BLOCK_SIZE];
-	length = ((unsigned int) sizeof(encrypted));
+	length = ((unsigned int) sizeof(decrypted));
 
 	if (tc_cbc_mode_decrypt(decrypted, length, p, length, encrypted, &a) == 0) {
 		TC_ERROR("CBC test #2 (decryption SP 800-38a tests) failed in. "
