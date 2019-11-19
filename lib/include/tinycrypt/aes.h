@@ -62,7 +62,7 @@ extern "C" {
 #define TC_AES_KEY_SIZE (Nb*Nk)
 
 typedef struct tc_aes_key_sched_struct {
-	unsigned int words[Nb*(Nr+1)];
+	uint32_t words[Nb*(Nr+1)];
 } *TCAesKeySched_t;
 
 /**
