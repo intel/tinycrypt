@@ -179,13 +179,13 @@ int tc_cmac_update(TCCmacState_t s, const uint8_t *data, size_t data_length)
 		/* last data added to s didn't end on a TC_AES_BLOCK_SIZE byte boundary */
 		size_t remaining_space = TC_AES_BLOCK_SIZE - s->leftover_offset;
 
-		if (data_length < remaining_space) {
+		if (data_length <= remaining_space) {
 			/* still not enough data to encrypt this time either */
 			_copy(&s->leftover[s->leftover_offset], data_length, data, data_length);
 			s->leftover_offset += data_length;
 			return TC_CRYPTO_SUCCESS;
 		}
-		/* leftover block is now full; encrypt it first */
+		/* leftover block is now full and there is addidional data; encrypt block first */
 		_copy(&s->leftover[s->leftover_offset],
 		      remaining_space,
 		      data,

@@ -247,6 +247,47 @@ static int verify_cmac_512_bit_msg(TCCmacState_t s)
 	return result;
 }
 
+static int verify_cmac_chunked_512_bit_msg(TCCmacState_t s)
+{
+	int result = TC_PASS;
+
+	TC_PRINT("Performing CMAC test #6 (SP 800-38B test vector #4)\n");
+
+	const size_t chunkOffset = 60;
+
+	const uint8_t msg[64] = {
+		0x6b, 0xc1, 0xbe, 0xe2, 0x2e, 0x40, 0x9f, 0x96,
+		0xe9, 0x3d, 0x7e, 0x11, 0x73, 0x93, 0x17, 0x2a,
+		0xae, 0x2d, 0x8a, 0x57, 0x1e, 0x03, 0xac, 0x9c,
+		0x9e, 0xb7, 0x6f, 0xac, 0x45, 0xaf, 0x8e, 0x51,
+		0x30, 0xc8, 0x1c, 0x46, 0xa3, 0x5c, 0xe4, 0x11,
+		0xe5, 0xfb, 0xc1, 0x19, 0x1a, 0x0a, 0x52, 0xef,
+		0xf6, 0x9f, 0x24, 0x45, 0xdf, 0x4f, 0x9b, 0x17,
+		0xad, 0x2b, 0x41, 0x7b, 0xe6, 0x6c, 0x37, 0x10
+	};
+	const uint8_t tag[BUF_LEN] = {
+		0x51, 0xf0, 0xbe, 0xbf, 0x7e, 0x3b, 0x9d, 0x92,
+		0xfc, 0x49, 0x74, 0x17, 0x79, 0x36, 0x3c, 0xfe
+	};
+	uint8_t Tag[BUF_LEN];
+
+	(void)tc_cmac_init(s);
+	(void)tc_cmac_update(s, msg, chunkOffset);
+	(void)tc_cmac_update(s, &msg[chunkOffset], sizeof(msg) - chunkOffset);
+	(void)tc_cmac_final(Tag, s);
+
+	if (memcmp(Tag, tag, BUF_LEN) != 0) {
+		TC_ERROR("%s: aes_cmac failed with chunked 512 bit msg\n", __func__);
+		show("aes_cmac failed with 512 bit msg =", msg, sizeof(msg));
+		show("expected Tag =", tag, sizeof(tag));
+		show("computed Tag =", Tag, sizeof(Tag));
+		return TC_FAIL;
+	}
+
+	TC_END_RESULT(result);
+	return result;
+}
+
 /*
  * Main task to test CMAC
  * effects:    returns 1 if all tests pass
@@ -301,6 +342,13 @@ int main(void)
 	if (result == TC_FAIL) {
 		/* terminate test */
 		TC_ERROR("CMAC test #5  (512 bit msg)failed.\n");
+		goto exitTest;
+	}
+	(void) tc_cmac_setup(&state, key, &sched);
+	result = verify_cmac_chunked_512_bit_msg(&state);
+	if (result == TC_FAIL) {
+		/* terminate test */
+		TC_ERROR("CMAC test #6  (chunked 512 bit msg)failed.\n");
 		goto exitTest;
 	}
 
