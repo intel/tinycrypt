@@ -322,6 +322,15 @@ unsigned int test_11(void)
         return result;
 }
 
+#ifdef BUFFER_MAX
+#undef BUFFER_MAX
+#endif
+#ifdef __TRUSTINSOFT_ANALYZER__
+#define BUFFER_MAX 42
+#else
+#define BUFFER_MAX 1000
+#endif
+
 unsigned int test_12(void)
 {
         unsigned int result = TC_PASS;
@@ -332,7 +341,7 @@ unsigned int test_12(void)
 		0x9f, 0x54, 0x1e, 0xa6, 0x60, 0xa5, 0x0f, 0x94, 0xff, 0x0b, 0xee, 0xdf,
 		0xb0, 0xb6, 0x92, 0xb9, 0x24, 0xcc, 0x80, 0x25
         };
-        uint8_t m[1000];
+        uint8_t m[BUFFER_MAX];
         uint8_t digest[32];
         struct tc_sha256_state_struct s;
         unsigned int i;
@@ -340,7 +349,8 @@ unsigned int test_12(void)
         (void)memset(m, 0x00, sizeof(m));
 
         (void)tc_sha256_init(&s);
-        for (i = 0; i < 1000; ++i) {
+
+        for (i = 0; i < BUFFER_MAX; ++i) {
                 tc_sha256_update(&s, m, sizeof(m));
         }
         (void)tc_sha256_final(digest, &s);
@@ -360,7 +370,7 @@ unsigned int test_13(void)
 		0x27, 0x74, 0x47, 0xcd, 0x09, 0x79, 0x53, 0x6b, 0xad, 0xcc, 0x51, 0x2a,
 		0xd2, 0x4c, 0x67, 0xe9, 0xb2, 0xd4, 0xf3, 0xdd
         };
-        uint8_t m[32768];
+        uint8_t m[BUFFER_MAX];
         uint8_t digest[32];
         struct tc_sha256_state_struct s;
         unsigned int i;
@@ -368,7 +378,7 @@ unsigned int test_13(void)
         (void)memset(m, 0x5a, sizeof(m));
 
         (void)tc_sha256_init(&s);
-        for (i = 0; i < 16384; ++i) {
+        for (i = 0; i < BUFFER_MAX; ++i) {
                 tc_sha256_update(&s, m, sizeof(m));
         }
         (void)tc_sha256_final(digest, &s);
@@ -388,7 +398,7 @@ unsigned int test_14(void)
 		0x64, 0x35, 0x70, 0x90, 0x34, 0x2b, 0xc6, 0x6b, 0x15, 0xa1, 0x48, 0x31,
 		0x7d, 0x27, 0x6e, 0x31, 0xcb, 0xc2, 0x0b, 0x53
         };
-        uint8_t m[32768];
+        uint8_t m[BUFFER_MAX];
         uint8_t digest[32];
         struct tc_sha256_state_struct s;
         unsigned int i;
