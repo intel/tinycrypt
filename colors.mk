@@ -1,0 +1,11 @@
+FONT_BOLD := `tput bold`
+FONT_BLACK := `tput setaf 0`
+FONT_RED := `tput setaf 1`
+FONT_GREEN := `tput setaf 2`
+FONT_YELLOW := `tput setaf 3`
+FONT_BLUE := `tput setaf 4`
+FONT_MAGENTA := `tput setaf 5`
+FONT_CYAN := `tput setaf 6`
+FONT_WHITE := `tput setaf 7`
+FONT_RESET := `tput sgr0`
+FONT_UNDERLINE := `tput sgr 0 1`

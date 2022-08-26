@@ -14,3 +14,6 @@ tests/test_ecc_dsa
 tests/test_hmac
 tests/test_hmac_prng
 tests/test_sha256
+compile_commands.json
+*.log
+*/*.log

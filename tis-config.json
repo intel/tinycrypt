@@ -1,0 +1,9 @@
+{
+    "val-print": false,
+    "machdep": "gcc_x86_64",
+    "compilation_database":
+    [
+        "compile_commands.json"
+    ],
+    "slevel": 100
+}
