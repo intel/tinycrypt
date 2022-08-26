@@ -17,3 +17,4 @@ tests/test_sha256
 compile_commands.json
 *.log
 */*.log
+.vscode/c_cpp_properties.json
