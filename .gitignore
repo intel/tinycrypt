@@ -3,3 +3,14 @@
 *.d
 *.exe
 *.a
+tests/test_aes
+tests/test_cbc_mode
+tests/test_ccm_mode
+tests/test_cmac_mode
+tests/test_ctr_mode
+tests/test_ctr_prng
+tests/test_ecc_dh
+tests/test_ecc_dsa
+tests/test_hmac
+tests/test_hmac_prng
+tests/test_sha256
