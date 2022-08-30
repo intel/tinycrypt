@@ -31,7 +31,7 @@ tis_preamble:
 tis: tis_preamble $(TEST_LOG)
 	# Consolidate all logs in one, then extract and count warnings
 	cat $(TEST_LOG) >$(TARGET)
-	@grep ":\[kernel\] warning" $(TARGET) | grep -v -E "no side-effect" | sort | uniq -c | tee $(ISSUES_FILE)
+	@grep ":\[kernel\] warning" $(TARGET) | grep -v -E "no side-effect|Calling undeclared function" | sort | uniq -c | tee $(ISSUES_FILE)
 	@echo "========================================="
 	@echo "     " `wc -l < $(ISSUES_FILE)` UNDEFINED BEHAVIOR ISSUES
 	@echo "========================================="
