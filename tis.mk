@@ -19,7 +19,7 @@ clean:
 	@echo "" | tee $<.tis.log
 	@echo "Date:" `date`  | tee -a $<.tis.log
 	@echo "Running $(FONT_BOLD)tis-analyzer$(FONT_RESET) in batch mode"
-	@echo "$(FONT_RED)tis-analyzer -tis-config-load tis-config.json -slevel 100 -val -I./lib/include -Itests/include -D_TRUST_tests/test_aes.c lib/source/aes_decrypt.c lib/source/aes_encrypt.c$(FONT_RESET)" | tee -a $<.tis.log
+	@echo "$(FONT_GREEN)tis-analyzer -tis-config-load tis-config.json -slevel 100 -val -I./lib/include -Itests/include -D_TRUST_tests/test_aes.c lib/source/aes_decrypt.c lib/source/aes_encrypt.c$(FONT_RESET)" | tee -a $<.tis.log
 	@tis-analyzer -tis-config-load tis-config.json -slevel 100 -val -I./lib/include -I./tests/include $<  $(TIS_REPORT)  $(PROD_SRC) | tee -a $<.tis.log
 
 tis_preamble:
