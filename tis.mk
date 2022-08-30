@@ -12,7 +12,7 @@ include inc.mk
 .PHONY: tis_preamble tis clean
 
 clean:
-	rm -f $(TARGET) $(TEST_LOG)
+	rm -f $(TARGET) $(ISSUES_FILE) $(TEST_LOG)
 
 %.c.tis.log: %.c
 	@echo "" | tee $<.tis.log
@@ -28,10 +28,13 @@ tis_preamble:
 	@echo "Running $(FONT_BOLD)tis-analyzer$(FONT_RESET) in cmd line mode on all tests"
 
 tis: tis_preamble $(TEST_LOG)
+	# Consolidate all logs in one, then extract and count warnings
 	cat $(TEST_LOG) >$(TARGET)
 	@grep ":\[kernel\] warning" $(TARGET) | grep -v "no side-effect" | tee $(ISSUES_FILE)
 	@echo "========================================="
 	@echo "     " `wc -l < $(ISSUES_FILE)` UNDEFINED BEHAVIOR ISSUES
 	@echo "========================================="
-	@$(shell '[ -s "$(ISSUES_FILE)" ]')
-	@exit $(.SHELLSTATUS)
+
+	# Test if issues file contains warning, and exit with failure code if so
+	@! grep -q warning $(ISSUES_FILE)
+
