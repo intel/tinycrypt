@@ -2,6 +2,7 @@
 TEST_SRC = $(wildcard tests/test_*.c)
 PROD_SRC = $(wildcard lib/source/*.c)
 TEST_LOG = $(TEST_SRC:.c=.c.tis.log)
+TIS_REPORT =
 
 TARGET = tis.log
 ISSUES_FILE = tis-issues.log
@@ -9,7 +10,7 @@ ISSUES_FILE = tis-issues.log
 include colors.mk
 include inc.mk
 
-.PHONY: tis_preamble tis clean
+.PHONY: tis_preamble tis_report_preamble tis clean
 
 clean:
 	rm -f $(TARGET) $(ISSUES_FILE) $(TEST_LOG)
@@ -19,7 +20,7 @@ clean:
 	@echo "Date:" `date`  | tee -a $<.tis.log
 	@echo "Running $(FONT_BOLD)tis-analyzer$(FONT_RESET) in batch mode"
 	@echo "$(FONT_RED)tis-analyzer -tis-config-load tis-config.json -slevel 100 -val -I./lib/include -Itests/include -D_TRUST_tests/test_aes.c lib/source/aes_decrypt.c lib/source/aes_encrypt.c$(FONT_RESET)" | tee -a $<.tis.log
-	@tis-analyzer -tis-config-load tis-config.json -slevel 100 -val -I./lib/include -I./tests/include $< $(PROD_SRC) | tee -a $<.tis.log
+	@tis-analyzer -tis-config-load tis-config.json -slevel 100 -val -I./lib/include -I./tests/include $<  $(TIS_REPORT)  $(PROD_SRC) | tee -a $<.tis.log
 
 tis_preamble:
 	@clear
@@ -37,4 +38,10 @@ tis: tis_preamble $(TEST_LOG)
 
 	# Test if issues file contains warning, and exit with failure code if so
 	@! grep -q warning $(ISSUES_FILE)
+
+tis_report_preamble:
+	TIS_REPORT = "-tis-report"
+
+tis_report: tis_preamble $(TEST_LOG)
+
 
