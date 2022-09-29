@@ -18,3 +18,5 @@ compile_commands.json
 *.log
 */*.log
 .vscode/c_cpp_properties.json
+_results/
+tis_report.html
