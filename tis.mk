@@ -14,7 +14,7 @@ include inc.mk
 .PHONY: tis_preamble tis_report_preamble tis clean
 
 clean:
-	rm -rf $(TARGET) $(ISSUES_FILE) $(TEST_LOG) $(LOGS) $(RESULTS) tis_report.html
+	rm -rf $(TARGET) $(ISSUES_FILE) $(TEST_LOG) $(LOGS) $(RESULTS) tis_report.html tis_misra_report
 
 %.c.tis.log: %.c
 	$(eval SHORT := $(shell echo $< | sed 's/.*\/test_//'))
