@@ -14,7 +14,7 @@ include inc.mk
 .PHONY: tis_preamble tis_report_preamble tis clean
 
 clean:
-	rm -rf $(TARGET) $(ISSUES_FILE) $(LOGS) $(RESULTS)
+	rm -rf $(TARGET) $(ISSUES_FILE) $(TEST_LOG) $(LOGS) $(RESULTS) tis_report.html
 
 %.c.tis.log: %.c
 	$(eval SHORT := $(shell echo $< | sed 's/.*\/test_//'))
@@ -22,7 +22,7 @@ clean:
 	@echo "Date:" `date`  | tee -a $(LOGS)/$(SHORT).tis.log
 	@echo "Running $(FONT_BOLD)tis-analyzer$(FONT_RESET) in batch mode"
 	@echo "$(FONT_GREEN)tis-analyzer -tis-config-load tis-config.json -slevel 100 -val -I./lib/include -I./tests/include $< $(PROD_SRC) -tis-report -info-json-results _results/$(SHORT).results.json -info-csv-all _results/$(SHORT).res$(FONT_RESET)" | tee -a $(LOGS)/$(SHORT).tis.log
-	@tis-analyzer -slevel 100 -val -I./lib/include -I./tests/include $< $(PROD_SRC) -tis-report -info-json-results _results/$(SHORT).results.json -info-csv-all _results/$(SHORT).res | tee -a $(LOGS)/$(SHORT).tis.log
+	@tis-analyzer -slevel 100 -val -I./lib/include -I./tests/include $< $(PROD_SRC) -tis-report -tis-config-select-by-name $< | tee -a $(LOGS)/$(SHORT).tis.log
 	@cat $(LOGS)/$(SHORT).tis.log >> $(TARGET)
 
 tis_preamble:
@@ -45,7 +45,7 @@ tis: tis_preamble $(TEST_LOG)
 tis_report_preamble:
 	TIS_REPORT = "-tis-report"
 
-tis_report: tis_preamble $(TEST_LOG)
+report: tis_preamble $(TEST_LOG)
 	@echo "$(FONT_CYAN)Generating HTML analysis report$(FONT_RESET)"
 	@echo "$(FONT_GREEN)tis_report _results/$(FONT_RESET)"
 	@tis-report _results/
