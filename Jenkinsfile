@@ -13,11 +13,15 @@ pipeline {
       steps {
         script {
           echo "Run all TrustInSoft tests"
-          // You may replace -n 1 by -n <i> if you want to run several tests in parallel
+          // You may replace -n 1 by -n <i> if you want to run several tests in parallel 
           // To run more than 1 test in parallel you need:
-          // - The equivament number of TrustInSoft licenses
+          // - The equivalent number of TrustInSoft licenses
           // - To have installed the parallel tool on the Jenkins agent
           //   (sudo apt-get install parallel)
+
+          // In the below cases the number of TISA parallel runs is controlled by a Jenkins
+          // environment Variable (TIS_PARALLEL_RUNS) to be set in
+          // Jenkins > Manage Jenkins > Configure System and Environment Variables
           sh "trustinsoft/run_all.sh -n ${env.TIS_PARALLEL_RUNS}"
         }
       }
