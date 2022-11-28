@@ -17,11 +17,11 @@ endif
 clean:
 	$(MAKE) -C lib clean
 	$(MAKE) -C tests clean
-	$(MAKE) -f tis.mk clean
+	$(MAKE) -C trustinsoft clean
 	$(RM) *~
 
 report:
-	$(MAKE) -f tis.mk report
+	$(MAKE) -C trustinsoft report
 
 tis:
-	$(MAKE) -f tis.mk tis
+	$(MAKE) -C trustinsoft tis
