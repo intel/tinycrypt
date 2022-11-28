@@ -20,3 +20,5 @@ compile_commands.json
 .vscode/c_cpp_properties.json
 _results/
 tis_report.html
+tis_misra_report/**
+**/*.gcno
