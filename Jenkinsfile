@@ -1,8 +1,5 @@
 pipeline {
   agent any
-    environment {
-      TIS_PARALLEL_RUNS
-    }
   stages {
     stage('Code Checkout') {
       steps {
