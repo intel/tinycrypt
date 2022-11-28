@@ -29,6 +29,12 @@ pipeline {
           echo "Produce TISA report"
           sh "tis-report _results"
         }
+        always {
+          // Artifacts of tis-report
+          archiveArtifacts artifacts: 'tis_report.html', fingerprint: true
+          archiveArtifacts artifacts: '_results/**.json', fingerprint: true
+          archiveArtifacts artifacts: '_results/**.csv', fingerprint: true
+        }
       }
     }
     stage('Produce MISRA report') {
@@ -37,6 +43,10 @@ pipeline {
           echo "Run tis-misra"
           // For that particular project, source files are in the "lib" directory
           sh "tis-misra lib"
+        }
+        always {
+          // Artifacts of tis-misra
+          archiveArtifacts artifacts: 'tis_misra_report/**', fingerprint: true
         }
       }
     }
