@@ -2,6 +2,25 @@
     "val-print": false,
     "machdep": "gcc_x86_64",
     "slevel": 100,
+    "val": true,
+    "cpp-extra-args": "-I../lib/include -I../tests/include",
+    "files": [
+        "../lib/source/ecc.c",
+        "../lib/source/hmac_prng.c",
+        "../lib/source/aes_encrypt.c",
+        "../lib/source/ctr_prng.c",
+        "../lib/source/sha256.c",
+        "../lib/source/ecc_dsa.c",
+        "../lib/source/ecc_platform_specific.c",
+        "../lib/source/hmac.c",
+        "../lib/source/ccm_mode.c",
+        "../lib/source/ecc_dh.c",
+        "../lib/source/cbc_mode.c",
+        "../lib/source/aes_decrypt.c",
+        "../lib/source/ctr_mode.c",
+        "../lib/source/utils.c",
+        "../lib/source/cmac_mode.c"
+    ],
     "whole-program-graph": true,
     "mcdc": true
 }
