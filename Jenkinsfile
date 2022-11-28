@@ -44,12 +44,19 @@ pipeline {
           // For that particular project, source files are in the "lib" directory
           sh "tis-misra lib"
         }
-        always {
-          // Artifacts of tis-misra
-          archiveArtifacts artifacts: 'tis_misra_report/**', onlyIfSuccessful: false
-        }
       }
     }
+    stage('Publish artifacts') {
+      steps {
+        // Artifacts of tis-report
+        archiveArtifacts artifacts: 'tis_report.html', onlyIfSuccessful: false
+        archiveArtifacts artifacts: '_results/**.json', onlyIfSuccessful: false
+        archiveArtifacts artifacts: '_results/**.csv', onlyIfSuccessful: false
+        // Artifacts of tis-misra
+        archiveArtifacts artifacts: 'tis_misra_report/**', onlyIfSuccessful: false
+      }
+    }
+    /*
     stage('Optional: Fail build if some UB were found') {
       steps {
         script {
@@ -61,15 +68,16 @@ pipeline {
         }
       }
     }
+    */
   }
   post {
       always {
           // Artifacts of tis-report
-          archiveArtifacts artifacts: 'tis_report.html', fingerprint: true
-          archiveArtifacts artifacts: '_results/**.json', fingerprint: true
-          archiveArtifacts artifacts: '_results/**.csv', fingerprint: true
+          archiveArtifacts artifacts: 'tis_report.html', onlyIfSuccessful: false
+          archiveArtifacts artifacts: '_results/**.json', onlyIfSuccessful: false
+          archiveArtifacts artifacts: '_results/**.csv', onlyIfSuccessful: false
           // Artifacts of tis-misra
-          archiveArtifacts artifacts: 'tis_misra_report/**', fingerprint: true
+          archiveArtifacts artifacts: 'tis_misra_report/**', onlyIfSuccessful: false
       }
   }
 }
