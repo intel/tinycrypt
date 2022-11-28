@@ -13,7 +13,7 @@ pipeline {
           // You may replace -n 1 by -n <i> if you want to run several tests in parallel 
           // To run more than 1 test in parallel you need:
           // - The equivalent number of TrustInSoft licenses
-          // - To have installed the parallel tool on the Jenkins agent
+          // - To have installed the "parallel" tool on the Jenkins agent
           //   (sudo apt-get install parallel)
 
           // In the below cases the number of TISA parallel runs is controlled by a Jenkins
@@ -57,7 +57,7 @@ pipeline {
           echo "Parse JSON report for Undefined Behaviors"
           // The below shell will return a non zero value if some UB were found
           // causing the shell to fail, and the Jenkins job to fail too (if you configure it so)
-          // The below shell requires jg to be installed on the Jenkins agent: sudo apt install -y jq
+          // The below shell requires "jq" to be installed on the Jenkins agent: sudo apt install -y jq
           sh '! cat _results/*_results.json|jq "{status: .alarms.status}"|grep -H \'"status": "NOT OK"\''
         }
       }
