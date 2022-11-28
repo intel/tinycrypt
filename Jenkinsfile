@@ -29,12 +29,6 @@ pipeline {
           echo "Produce TISA report"
           sh "tis-report _results"
         }
-        always {
-          // Artifacts of tis-report
-          archiveArtifacts artifacts: 'tis_report.html', onlyIfSuccessful: false
-          archiveArtifacts artifacts: '_results/**.json', onlyIfSuccessful: false
-          archiveArtifacts artifacts: '_results/**.csv', onlyIfSuccessful: false
-        }
       }
     }
     stage('Produce MISRA report') {
@@ -69,15 +63,5 @@ pipeline {
       }
     }
     */
-  }
-  post {
-      always {
-          // Artifacts of tis-report
-          archiveArtifacts artifacts: 'tis_report.html', onlyIfSuccessful: false
-          archiveArtifacts artifacts: '_results/**.json', onlyIfSuccessful: false
-          archiveArtifacts artifacts: '_results/**.csv', onlyIfSuccessful: false
-          // Artifacts of tis-misra
-          archiveArtifacts artifacts: 'tis_misra_report/**', onlyIfSuccessful: false
-      }
   }
 }
