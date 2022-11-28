@@ -19,7 +19,7 @@ pipeline {
           // - The equivament number of TrustInSoft licenses
           // - To have installed the parallel tool on the Jenkins agent
           //   (sudo apt-get install parallel)
-          sh "trunstinsoft/run_all.sh -n 1"
+          sh "trustinsoft/run_all.sh -n 1"
         }
       }
     }
