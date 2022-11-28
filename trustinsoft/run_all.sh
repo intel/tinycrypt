@@ -68,4 +68,12 @@ echo "Main config file = $CONFIG"
 echo "Total nbr of analyses to run = $nbr_analyses"
 echo "Nbr of analyses to run in parallel = $nbr_parallel_analyses"
 mkdir -p "$LOGS"
-parallel -j $nbr_parallel_analyses run_analysis ::: $(seq 1 $nbr_analyses)
+if [ $nbr_parallel_analyses -le 1 ]; then
+   echo "No parallel analysis, disabling usable of parallel"
+   for i in $(seq 1 $nbr_analyses)
+   do
+      run_analysis $i
+   done
+else
+   parallel -j $nbr_parallel_analyses run_analysis ::: $(seq 1 $nbr_analyses)
+fi
