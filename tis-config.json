@@ -1,9 +1,42 @@
-{
-    "val-print": false,
-    "machdep": "gcc_x86_64",
-    "compilation_database":
-    [
-        "compile_commands.json"
-    ],
-    "slevel": 100
-}
+[
+    {
+        "include": "tis-common.json",
+        "name": "aes.c"
+    },
+    {
+        "include": "tis-common.json",
+        "name": "cbc_mode.c"
+    },
+    {
+        "include": "tis-common.json",
+        "name": "ccm_mode.c"
+    },
+    {
+        "include": "tis-common.json",
+        "name": "cmac_mode.c"
+    },
+    {
+        "include": "tis-common.json",
+        "name": "ctr_mode.c"
+    },
+    {
+        "include": "tis-common.json",
+        "name": "ctr_prng.c"
+    },
+    {
+        "include": "tis-common.json",
+        "name": "ecc_dh.c"
+    },
+    {
+        "include": "tis-common.json",
+        "name": "hmac.c"
+    },
+    {
+        "include": "tis-common.json",
+        "name": "hmac_prgn.c"
+    },
+    {
+        "include": "tis-common.json",
+        "name": "sha256.c"
+    }
+]

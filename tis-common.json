@@ -1,0 +1,7 @@
+{
+    "val-print": false,
+    "machdep": "gcc_x86_64",
+    "slevel": 100,
+    "whole-program-graph": true,
+    "mcdc": true
+}
