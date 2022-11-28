@@ -1,9 +1,8 @@
 pipeline {
   agent any
-//  environment {
-//      STORE_URL  = credentials('STORE_URL')
-//      STORE_TOKEN     = credentials('STORE_TOKEN')
-//  }
+    environment {
+      TIS_PARALLEL_RUNS
+    }
   stages {
     stage('Code Checkout') {
       steps {
@@ -19,7 +18,7 @@ pipeline {
           // - The equivament number of TrustInSoft licenses
           // - To have installed the parallel tool on the Jenkins agent
           //   (sudo apt-get install parallel)
-          sh "trustinsoft/run_all.sh -n 5"
+          sh "trustinsoft/run_all.sh -n ${env.TIS_PARALLEL_RUNS}"
         }
       }
     }
