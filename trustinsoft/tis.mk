@@ -14,6 +14,7 @@ include inc.mk
 .PHONY: tis_preamble tis_report_preamble tis clean
 
 clean:
+	@cd ..
 	rm -rf $(TARGET) $(ISSUES_FILE) $(TEST_LOG) $(LOGS) $(RESULTS) tis_report.html tis_misra_report
 
 %.c.tis.log: %.c
@@ -27,6 +28,7 @@ clean:
 
 tis_preamble:
 	@clear
+	@cd ..
 	@mkdir -p $(LOGS) $(RESULTS)
 	@echo "" | tee -a $(TARGET)
 	@echo "Date:" `date`  | tee -a $(TARGET)
