@@ -1,9 +1,10 @@
 #!/bin/bash
 
-ME=$(basename $0)
-DIR="$(dirname $0)"
-CONFIG="${DIR}/tis.json"
-export CONFIG DIR
+export ME=$(basename $0)
+export DIR="$(dirname $0)"
+export CONFIG="${DIR}/tis.json"
+export LOGS="${PWD}/logs"
+export RESULTS="${PWD}/_results"
 
 if [ ! $(which jq) ]; then
    echo "Please install 'jq' to run $ME"
@@ -13,14 +14,20 @@ elif [ ! $(which parallel) ]; then
    exit 3
 fi
 
+if [ ! -f ${CONFIG} ]; then
+   echo "Configuration file ${CONFIG} not found, exiting"
+   exit 4
+fi
+
 function run_analysis {
    analysis_nbr="$1"
    opt=(
       -tis-config-load "${CONFIG}"
       -tis-config-select "${analysis_nbr}"
+      -tis-report
       -save "_results/${analysis_nbr}.save"
    )
-   tis-analyzer "${opt[@]}" | tee "${DIR}/analysis.${analysis_nbr}.log"
+   tis-analyzer "${opt[@]}" | tee "${LOGS}/analysis.${analysis_nbr}.log"
 }
 
 function usage {
@@ -60,5 +67,5 @@ nbr_analyses=$(jq '. | length' < ${CONFIG})
 echo "Main config file = $CONFIG"
 echo "Total nbr of analyses to run = $nbr_analyses"
 echo "Nbr of analyses to run in parallel = $nbr_parallel_analyses"
+mkdir -p "$LOGS"
 parallel -j $nbr_parallel_analyses run_analysis ::: $(seq 1 $nbr_analyses)
-
