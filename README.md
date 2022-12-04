@@ -2,7 +2,7 @@
 
 The purpose of this repository is to demonstrate the possible ways on integrating
 TrustInSoft Analyzer in Jenkins CI.
-The code used for this demo is the [Intel tinycrypt library](https://github.com/intel/tinycrypt) supplemented with a test driver of 10 tests used by the TrustInSoft analysis
+The code used for this demo is the [Intel tinycrypt library](https://github.com/intel/tinycrypt) supplemented with a test driver of 10 tests used for the TrustInSoft analysis
 
 ## Setup
 You must:
@@ -21,13 +21,13 @@ We'll first show explain integration using Jenkinsfile based jobs
 the drawback that the Job configuration is stored in Jenkins itself, and therefore provides little
 traceability of job configuration changes.
 
-Note: In both jobs example, we'll leverage the [trustinsoft/run_all.sh](run_all.sh) script that is quite convenient to run all the 10 analyses defined in this repository.
+Note: In both jobs example, we'll leverage the [run_all.sh](trustinsoft/run_all.sh) script that is quite convenient to run all the 10 analyses defined in this repository.
 This is a convenience only and absolutely not mandatory for the jobs.
 You may just as well run the `tis-analyzer` commands that you want directly in the job
 
 ### Jenkins job based on pipeline
 
-As per the advantage of Infrastructure as code, most of the configuration is defined in the [Jenkinsfile].
+As per the advantage of Infrastructure as code, most of the configuration is defined in the (Jenkinsfile).
 The only steps to be taken in Jenkins are:
 - Create a Job, of kind **Pipeline** or **Multibranch pipeline**. The main difference is that multi-branch pipeline will allow to conveniently analyze different branches of your code, whereas pipeline is for 1 branch only
 
