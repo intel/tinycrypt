@@ -27,7 +27,7 @@ You may just as well run the `tis-analyzer` commands that you want directly in t
 
 ### Jenkins job based on pipeline
 
-As per the advantage of Infrastructure as code, most of the configuration is defined in the (Jenkinsfile).
+As per the advantage of Infrastructure as code, most of the configuration is defined in the [Jenkinsfile](Jenkinsfile).
 The only steps to be taken in Jenkins are:
 - Create a Job, of kind **Pipeline** or **Multibranch pipeline**. The main difference is that multi-branch pipeline will allow to conveniently analyze different branches of your code, whereas pipeline is for 1 branch only
 
