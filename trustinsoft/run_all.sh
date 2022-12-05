@@ -1,5 +1,9 @@
 #!/bin/bash
 
+export FONT_BOLD=$(tput bold)
+export FONT_CYAN=$(tput setaf 6)
+export FONT_YELLOW=$(tput setaf 3)
+export FONT_RESET=$(tput sgr0)
 export ME=$(basename $0)
 export DIR="$(dirname $0)"
 export CONFIG="${DIR}/tis.json"
@@ -25,6 +29,8 @@ function run_analysis {
       -tis-report
       -save "_results/${analysis_name}.save"
    )
+
+   echo; echo "${FONT_CYAN}tis-analyzer ${opt[@]}${FONT_RESET}"; echo
    tis-analyzer "${opt[@]}" | tee "${LOGS}/analysis.${analysis_nbr}.log"
 }
 
@@ -62,9 +68,9 @@ done
 
 nbr_analyses=$(jq '. | length' < ${CONFIG})
 
-echo "Main config file = $CONFIG"
-echo "Total nbr of analyses to run = $nbr_analyses"
-echo "Nbr of analyses to run in parallel = $nbr_parallel_analyses"
+echo "${FONT_YELLOW}Main config file = $CONFIG"
+echo "${FONT_YELLOW}Total nbr of analyses to run = $nbr_analyses"
+echo "${FONT_YELLOW}Nbr of analyses to run in parallel = $nbr_parallel_analyses"
 mkdir -p "$LOGS"
 if [ $nbr_parallel_analyses -le 1 ]; then
    echo "No parallel analysis, disabling usable of parallel"
