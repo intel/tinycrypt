@@ -1,6 +1,14 @@
 [
     {
         "include": "tis-common.json",
+        "name": "sha256",
+        "files":
+        [
+            "../tests/test_sha256.c"
+        ]
+    },
+    {
+        "include": "tis-common.json",
         "name": "aes",
         "files":
         [
@@ -69,14 +77,6 @@
         "files":
         [
             "../tests/test_hmac_prng.c"
-        ]
-    },
-    {
-        "include": "tis-common.json",
-        "name": "sha256",
-        "files":
-        [
-            "../tests/test_sha256.c"
         ]
     }
 ]
