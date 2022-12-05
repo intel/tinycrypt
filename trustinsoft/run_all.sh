@@ -31,7 +31,7 @@ function run_analysis {
    )
 
    echo; echo "${FONT_CYAN}tis-analyzer ${opt[@]}${FONT_RESET}"; echo
-   tis-analyzer "${opt[@]}" | tee "${LOGS}/analysis.${analysis_nbr}.log"
+   tis-analyzer "${opt[@]}" | tee "${LOGS}/analysis.${analysis_name}.log"
 }
 
 function usage {
