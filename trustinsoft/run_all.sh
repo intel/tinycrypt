@@ -9,9 +9,6 @@ export RESULTS="${PWD}/_results"
 if [ ! $(which jq) ]; then
    echo "Please install 'jq' to run $ME"
    exit 2
-elif [ ! $(which parallel) ]; then
-   echo "Please install 'parallel' to run $ME"
-   exit 3
 fi
 
 if [ ! -f ${CONFIG} ]; then
@@ -75,5 +72,9 @@ if [ $nbr_parallel_analyses -le 1 ]; then
       run_analysis $i
    done
 else
+   if [ ! $(which parallel) ]; then
+      echo "Please install 'parallel' to run $ME with more than 1 analysis in parallel"
+      exit 3
+   fi
    parallel -j $nbr_parallel_analyses run_analysis ::: $(seq 1 $nbr_analyses)
 fi
