@@ -18,11 +18,12 @@ fi
 
 function run_analysis {
    analysis_nbr="$1"
+   analysis_name=$(jq ".[$analysis_nbr][\"name\"]" < ${CONFIG} | cut -d '"' -f 2)
    opt=(
       -tis-config-load "${CONFIG}"
       -tis-config-select "${analysis_nbr}"
       -tis-report
-      -save "_results/${analysis_nbr}.save"
+      -save "_results/${analysis_name}.save"
    )
    tis-analyzer "${opt[@]}" | tee "${LOGS}/analysis.${analysis_nbr}.log"
 }
