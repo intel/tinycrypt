@@ -44,7 +44,7 @@
         "name": "ctr_prng",
         "files":
         [
-            "../tests/test_ctr_prgn.c"
+            "../tests/test_ctr_prng.c"
         ]
     },
     {
@@ -65,10 +65,10 @@
     },
     {
         "include": "tis-common.json",
-        "name": "hmac_prgn",
+        "name": "hmac_prng",
         "files":
         [
-            "../tests/test_hmac_prgn.c"
+            "../tests/test_hmac_prng.c"
         ]
     },
     {
