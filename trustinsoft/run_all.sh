@@ -23,6 +23,9 @@ fi
 function run_analysis {
    analysis_nbr="$1"
    analysis_name=$(jq ".[$analysis_nbr][\"name\"]" < ${CONFIG} | cut -d '"' -f 2)
+   if [ "${analysis_name}" = "null" ]; then
+      analysis_name=${analysis_nbr}
+   fi
    opt=(
       -tis-config-load "${CONFIG}"
       -tis-config-select "${analysis_nbr}"
