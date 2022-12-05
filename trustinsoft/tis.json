@@ -12,7 +12,7 @@
         "name": "cbc_mode.c",
         "files":
         [
-            "../test/test_cbc_mode.c"
+            "../tests/test_cbc_mode.c"
         ]
     },
     {
