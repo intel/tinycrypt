@@ -237,6 +237,14 @@ void increment_array(int *p, int len)
     }
 }
 
+void ub()
+{
+	int *p;
+	if (*p == 1) {
+		print("Null ptr dereference");
+	}
+}
+
 int tis_test_driver()
 {
     int data[] = {1, 3, 5, 7};
