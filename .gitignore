@@ -22,3 +22,7 @@ _results/
 tis_report.html
 tis_misra_report/**
 **/*.gcno
+.scannerwork/.sonar_lock
+.scannerwork/report-task.txt
+.vscode/settings.json
+sonar-build-output/build-wrapper-dump.json
