@@ -241,7 +241,7 @@ void ub()
 {
 	int *p;
 	if (*p == 1) {
-		print("Null ptr dereference");
+		printf("Null ptr dereference");
 	}
 }
 
