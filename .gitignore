@@ -25,4 +25,4 @@ tis_misra_report/**
 .scannerwork/.sonar_lock
 .scannerwork/report-task.txt
 .vscode/settings.json
-sonar-build-output/build-wrapper-dump.json
+*/build-wrapper-dump.json
