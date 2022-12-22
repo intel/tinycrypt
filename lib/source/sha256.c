@@ -34,6 +34,16 @@
 #include <tinycrypt/constants.h>
 #include <tinycrypt/utils.h>
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <limits.h>
+
+#define SUCCESS "--> PASSED"
+#define FAILED  "--> *** FAILED ***"
+
+#define LOG printf
+
+
 static void compress(unsigned int *iv, const uint8_t *data);
 
 int tc_sha256_init(TCSha256State_t s)
@@ -214,4 +224,33 @@ static void compress(unsigned int *iv, const uint8_t *data)
 
 	iv[0] += a; iv[1] += b; iv[2] += c; iv[3] += d;
 	iv[4] += e; iv[5] += f; iv[6] += g; iv[7] += h;
+}
+
+
+void increment_array(int *p, int len)
+{
+    while (len >= 0)
+    {
+        (*p)++; // Increment the value at address p
+        p++;    // Move to next array cell
+        len--;  // Decrement counter
+    }
+}
+
+int tis_test_driver()
+{
+    int data[] = {1, 3, 5, 7};
+    char name[] = "Olivier";
+    LOG("\nRun test_increment_array()\n");
+    LOG("&data = 0x%lx &name = 0x%lx\n", (unsigned long)data, (unsigned long)name);
+    LOG("Before increment array = {%d, %d, %d, %d}, name = %s\n",
+        data[0], data[1], data[2], data[3], name);
+    increment_array(data, sizeof(data)/sizeof(int));
+    LOG("After  increment array = {%d, %d, %d, %d}, name = %s\n",
+        data[0], data[1], data[2], data[3], name);
+
+    int ok = (data[0] == 2) && (data[1] == 4) && (data[2] == 6) && (data[3] == 8);
+    printf("\nincrement_array({1, 3, 5 ,7}) = {%d, %d, %d, %d} %s\n\n",
+        data[0], data[1], data[2], data[3], ok ? SUCCESS: FAILED);
+    return (ok ? 0 : 1);
 }
