@@ -52,13 +52,12 @@
  */
 static void arrInc(uint8_t arr[], unsigned int len)
 {
-	unsigned int i;
 	if (0 != arr) {
-		for (i = len; i > 0U; i--) {
-			if (++arr[i-1] != 0U) {
+		do {
+			if (++arr[len - 1] != 0) {
 				break;
 			}
-		}
+		} while (len--);
 	}
 }
 

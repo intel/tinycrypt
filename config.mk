@@ -7,7 +7,6 @@
 ################################################################################
 
 # EDIT HERE:
-CC:=gcc
 CFLAGS:=-Os -std=c99 -Wall -Wextra -D_ISOC99_SOURCE -MMD -I../lib/include/ -I../lib/source/ -I../tests/include/
 vpath %.c ../lib/source/
 ENABLE_TESTS=true
@@ -27,7 +26,6 @@ else
 CFLAGS += -DDISABLE_TESTS
 endif
 
-export CC
 export CFLAGS
 export VPATH
 export ENABLE_TESTS
