@@ -17,6 +17,7 @@ OBJS:=aes_decrypt.o \
 	hmac.o \
 	hmac_prng.o \
 	sha256.o \
+	sha512.o \
 	ecc.o \
 	ecc_dh.o \
 	ecc_dsa.o \

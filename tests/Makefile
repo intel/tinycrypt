@@ -56,6 +56,9 @@ test_hmac_prng$(DOTEXE): test_hmac_prng.o hmac_prng.o hmac.o \
 test_sha256$(DOTEXE): test_sha256.o sha256.o utils.o
 	$(LINK.o) $^ $(LOADLIBES) $(LDLIBS) -o $@
 
+test_sha512$(DOTEXE): test_sha512.o sha512.o utils.o
+	$(LINK.o) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
 test_ecc_dh$(DOTEXE): test_ecc_dh.o ecc.o ecc_dh.o test_ecc_utils.o ecc_platform_specific.o
 	$(LINK.o) $^ $(LOADLIBES) $(LDLIBS) -o $@
 
