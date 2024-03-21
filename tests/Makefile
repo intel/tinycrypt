@@ -53,6 +53,9 @@ test_hmac_prng$(DOTEXE): test_hmac_prng.o hmac_prng.o hmac.o \
 		sha256.o utils.o
 	$(LINK.o) $^ $(LOADLIBES) $(LDLIBS) -o $@
 
+test_hkdf$(DOTEXE): test_hkdf.o hkdf.o hmac.o sha256.o utils.o
+	$(LINK.o) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
 test_sha256$(DOTEXE): test_sha256.o sha256.o utils.o
 	$(LINK.o) $^ $(LOADLIBES) $(LDLIBS) -o $@
 
